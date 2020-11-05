@@ -175,6 +175,7 @@ pre.Code {
   margin: 10px 0;
   padding: 26px 16px;
   overflow: auto;
+  font-size:12px;
 }
 
 pre.Code code {
