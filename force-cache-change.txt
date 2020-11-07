@@ -1,0 +1,2 @@
+#Arquivo apenas para forçar o cache do github pages ser atualizado.
+#As alterações neste arquivo, quando feitas diretamente na interface do github, forçam a reescrita do cache. 
