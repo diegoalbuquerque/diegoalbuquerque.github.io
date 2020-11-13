@@ -1,2 +1,4 @@
 #Arquivo apenas para forçar o cache do github pages ser atualizado.
 #As alterações neste arquivo, quando feitas diretamente na interface do github, forçam a reescrita do cache. 
+
+#2020-11-12 as 21:49h
