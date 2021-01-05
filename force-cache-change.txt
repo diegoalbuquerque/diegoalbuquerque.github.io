@@ -4,3 +4,4 @@
 #2020-11-12 as 21:49h
 #2021-01-05 as 12:44h - Inserido novo Artigo sobre GEF.
 #2021-01-05 as 12:50h - Alterado o arquivo pois tinha esquecido de copiar o index
+#2021-01-05 as 19:09h - Inserido artigo sobre como escrever na memória respeitando o Little Endian
