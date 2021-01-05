@@ -2,3 +2,4 @@
 #As alterações neste arquivo, quando feitas diretamente na interface do github, forçam a reescrita do cache. 
 
 #2020-11-12 as 21:49h
+#2021-01-05 as 12:44h - Inserido novo Artigo sobre GEF.
