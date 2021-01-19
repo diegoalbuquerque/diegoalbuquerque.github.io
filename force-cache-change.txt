@@ -5,3 +5,4 @@
 #2021-01-05 as 12:44h - Inserido novo Artigo sobre GEF.
 #2021-01-05 as 12:50h - Alterado o arquivo pois tinha esquecido de copiar o index
 #2021-01-05 as 19:09h - Inserido artigo sobre como escrever na memória respeitando o Little Endian
+#2021-01-19 as 15:18h - Inserido artigo sobre como fazer injeção de shellcode em um binário através de variáveis de ambiente
