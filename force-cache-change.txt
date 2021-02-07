@@ -7,3 +7,4 @@
 #2021-01-05 as 19:09h - Inserido artigo sobre como escrever na memória respeitando o Little Endian
 #2021-01-19 as 15:18h - Inserido artigo sobre como fazer injeção de shellcode em um binário através de variáveis de ambiente
 #2021-01-22 as 22:13h - Adicionada BIO e inserida nova seção de refeência rápida
+#2021-02-07 as 14:16h - Novo artigo sobre a influência da escolha do pattern da exploração de um binário
