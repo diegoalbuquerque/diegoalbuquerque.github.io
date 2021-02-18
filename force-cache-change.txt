@@ -12,3 +12,4 @@
 #2021-02-12 as 21:24h - Nove design com logo do Talles. Nova seção de contatos
 #2021-02-18 as 08:00h - Mudança no design
 #2021-02-18 as 13:40h - Novo ajuste no layout
+#2021-02-18 as 13:47h - Novo ajuste no layout
