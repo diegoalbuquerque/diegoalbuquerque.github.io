@@ -127,7 +127,7 @@
 /* DateTagBar */
 
 .DateTagBar {
-  font-size: 0.9rem;
+  font-size: 0.6rem;
   display: flex;
   flex-wrap: wrap;
 }
@@ -147,7 +147,7 @@
 
 .DateTagBar__Tag {
   color: hsla(45, 8%, 25%, 1);
-  font-size: 0.85rem;
+  font-size: 0.6rem;
   white-space: nowrap;
 }
 
@@ -210,8 +210,9 @@
   margin: 0;
   padding-bottom: 0.5rem;
   line-height: 1.654;
-  font-size: 1.625rem;
+  font-size: 1.1rem;
   font-weight: 700;
+  font-family: courier;
 }
 
 .Article__Title>a {
@@ -225,6 +226,8 @@
 
 .Article__Desc {
   padding-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-family: "courier new";
 }
 
 /* PageRoot (content body) */
@@ -274,7 +277,8 @@
 
 @supports (not (backdrop-filter: blur(20px))) and (not (-webkit-backdrop-filter: blur(20px))) {
   .Navbar {
-    background-color: white;
+    background-color: black;
+    color: beige;
   }
 }
 
