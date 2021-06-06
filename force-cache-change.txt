@@ -17,3 +17,4 @@
 #2021-04-19 as 20:21h - new article H2Hc, new Session Offensive Tools, new about me!
 #2021-04-19 as 20:28h - Small fix
 #2021-05-21 as 11:54h - Novo Artigo adicionado sobre buffer overflow
+#2021-06-05 as 23:34h - Novo Artigo Simple Shellcode Tale!
