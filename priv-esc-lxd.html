@@ -3,29 +3,34 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta property="og:title" content="Privilege Escalation by LXD/LXC">
-    <meta name="description" content="Como abusar de containers para escalar privilégios">
-  <meta property="og:description" content="Como abusar de containers para escalar privilégios">
-    <meta property="og:type" content="blog">
-  <title>Privilege Escalation by LXD/LXC</title>
-  <!-- Favicon -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-  <link rel="stylesheet" type="text/css" href="css/notablog.css">
-  <link rel="stylesheet" type="text/css" href="css/theme.css">
-  <style>
-    :root {
-      font-size: 18px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
 
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Privilege Escalation by LXD/LXC&nbsp;|&nbsp;www.offensivethink.com</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Privilege Escalation by LXD/LXC">
+  
+    <meta name="description" content="Como abusar de containers para escalar privilégios">
+    <meta property="og:description" content="Como abusar de containers para escalar privilégios">
+  
+  
+  <style>
     .DateTagBar {
       margin-top: 1.0rem;
     }
@@ -34,37 +39,106 @@
 
 <body>
   <nav class="Navbar">
-    <a href="index.html">
-      <div class="Navbar__Btn"> <span>Home</span></div>
-    </a>
-                                                    <span class="Navbar__Delim">&centerdot;</span>
-    <a href="referencia-rapida.html">
-      <div class="Navbar__Btn"> <span>→ Referência rápida ← </span></div>
-    </a>
-                                                                                                                                        <span class="Navbar__Delim">&centerdot;</span>
-    <a href="contacts.html">
-      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&id=ca933149-5245-4511-a885-9cf5922808e1"></span> <span>about & contacts</span></div>
-    </a>
-                <span class="Navbar__Delim">&centerdot;</span>
-    <a href="offensivetools.html">
-      <div class="Navbar__Btn"> <span>Offensive Tools</span></div>
-    </a>
-                                                                                          </nav>
-  <header class="Header">
-          <div class="Header__Cover">
-        <img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F63ccfb83-81ce-4c3b-bfb2-3ecb51c7bb26%2Froot_the_box.png?table=block&id=88160841-f1d3-4d69-987d-909149074612">
-      </div>
-          <div class="Header__Spacer ">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+      <span>Home</span>
     </div>
-        <h1 class="Header__Title">Privilege Escalation by LXD/LXC</h1>
-            <div class="DateTagBar">
-                <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Aug 6, 2020</span>
-                          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="referencia-rapida.html">
+        <div class="Navbar__Btn">
+          
+          <span>→ Referência rápida ← </span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="contacts.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&amp;id=ca933149-5245-4511-a885-9cf5922808e1"></span>&nbsp;
+          
+          <span>about &amp; contacts</span>
+        </div>
+      </a>
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="offensivetools.html">
+        <div class="Navbar__Btn">
+          
+          <span>Offensive Tools</span>
+        </div>
+      </a>
+    
+  
+</nav>
+  <header class="Header">
+    
+      <div class="Header__Cover">
+        <img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F63ccfb83-81ce-4c3b-bfb2-3ecb51c7bb26%2Froot_the_box.png?table=block&amp;id=88160841-f1d3-4d69-987d-909149074612">
+      </div>
+    
+    <div class="Header__Spacer ">
+    </div>
+    
+    <h1 class="Header__Title_post">Privilege Escalation by LXD/LXC</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Aug 6, 2020</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
             <a href="tag/privEsc.html">privEsc</a>
           </span>
-                  </div>
-          </header>
-      <article id="https://www.notion.so/88160841f1d34d69987d909149074612" class="PageRoot"><h2 id="https://www.notion.so/fabc6587ff3049cabf676564b0ae58c0" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/fabc6587ff3049cabf676564b0ae58c0"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorPurple">Too Long To Read - TL; TR;</mark></span><span class="SemanticString"> </span></span></h2><div id="https://www.notion.so/07d924e063764217aff3b490d3f496e4" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Se o usuário for do </span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed">grupo lxd</mark></span><span class="SemanticString"> é possível instanciar um container com um linux e montar a raiz do host nele, tendo assim permissão total a todos os arquivos.</span></span></p></div><pre id="https://www.notion.so/dee9ae97c25148daa09c4c5ef485fd1e" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold"><span>NO KALI ATACANTE - Montar a Imagem</span></strong></mark></span></span><span class="SemanticString"><span> 
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/88160841f1d34d69987d909149074612" class="PageRoot"><h2 id="https://www.notion.so/fabc6587ff3049cabf676564b0ae58c0" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/fabc6587ff3049cabf676564b0ae58c0"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorPurple">Too Long To Read - TL; TR;</mark></span><span class="SemanticString"> </span></span></h2><div id="https://www.notion.so/07d924e063764217aff3b490d3f496e4" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Se o usuário for do </span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed">grupo lxd</mark></span><span class="SemanticString"> é possível instanciar um container com um linux e montar a raiz do host nele, tendo assim permissão total a todos os arquivos.</span></span></p></div><pre id="https://www.notion.so/dee9ae97c25148daa09c4c5ef485fd1e" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold"><span>NO KALI ATACANTE - Montar a Imagem</span></strong></mark></span></span><span class="SemanticString"><span> 
 <span class="token punctuation">(</span>Caso a máquina atacada não tenha acesso a Internet<span class="token punctuation">)</span>
 
 $ https://github.com/diegoalbuquerque/lxd-alpine-builder
@@ -115,13 +189,14 @@ $ lxc config device <span class="token function">add</span> mycontainer mydevice
 $ lxc start mycontainer
 
 <span class="token comment"># Executando no container o comando /bin/sh</span>
-$ lxc <span class="token builtin class-name">exec</span> mycontainer /bin/sh</span></span></span></code></pre><div id="https://www.notion.so/079cac234b2c436b949e4c45bb54b762" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/f45ebd3be1284f2d81f275535fbbe4e8" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F62024c96-da5f-43a4-bd17-e954eefa5c87%2FUntitled.png?width=1029&amp;table=block&amp;id=f45ebd3b-e128-4f2d-81f2-75535fbbe4e8"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F62024c96-da5f-43a4-bd17-e954eefa5c87%2FUntitled.png?width=1029&amp;table=block&amp;id=f45ebd3b-e128-4f2d-81f2-75535fbbe4e8" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/c856be0d74284af888cdd7780aa444cc" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Uma vez agora com o shell do container , vamos acessar o diretório que mapeou a nossa raiz e obter a flag.</span></span></p></div><div id="https://www.notion.so/85f23701b8e6450f856735e9bc69ed36" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/06391202c9484d628b4b607a9025c3a9" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc9658620-ebed-4d18-b104-dad560366e6d%2FUntitled.png?width=682&amp;table=block&amp;id=06391202-c948-4d62-8b4b-607a9025c3a9"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc9658620-ebed-4d18-b104-dad560366e6d%2FUntitled.png?width=682&amp;table=block&amp;id=06391202-c948-4d62-8b4b-607a9025c3a9" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/69eb602d374c4f799a0da207d807c557" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Missão cumprida. Como somos root e temos acesso a toda a raíz do host, podemos, se fosse o caso, efetuar outras alterações no sistema, capturar o shadow, etc. </span></span></p></div></article>  <footer class="Footer">
-        <div>&copy; Offensive Articles 2019</div>
-        <div>&centerdot;</div>
-        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-            rel="noopener noreferrer">Notablog</a>.
-        </div>
-    </footer>
+$ lxc <span class="token builtin class-name">exec</span> mycontainer /bin/sh</span></span></span></code></pre><div id="https://www.notion.so/079cac234b2c436b949e4c45bb54b762" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/f45ebd3be1284f2d81f275535fbbe4e8" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F62024c96-da5f-43a4-bd17-e954eefa5c87%2FUntitled.png?width=1029&amp;table=block&amp;id=f45ebd3b-e128-4f2d-81f2-75535fbbe4e8"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F62024c96-da5f-43a4-bd17-e954eefa5c87%2FUntitled.png?width=1029&amp;table=block&amp;id=f45ebd3b-e128-4f2d-81f2-75535fbbe4e8" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/c856be0d74284af888cdd7780aa444cc" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Uma vez agora com o shell do container , vamos acessar o diretório que mapeou a nossa raiz e obter a flag.</span></span></p></div><div id="https://www.notion.so/85f23701b8e6450f856735e9bc69ed36" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/06391202c9484d628b4b607a9025c3a9" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc9658620-ebed-4d18-b104-dad560366e6d%2FUntitled.png?width=682&amp;table=block&amp;id=06391202-c948-4d62-8b4b-607a9025c3a9"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc9658620-ebed-4d18-b104-dad560366e6d%2FUntitled.png?width=682&amp;table=block&amp;id=06391202-c948-4d62-8b4b-607a9025c3a9" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/69eb602d374c4f799a0da207d807c557" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Missão cumprida. Como somos root e temos acesso a toda a raíz do host, podemos, se fosse o caso, efetuar outras alterações no sistema, capturar o shadow, etc. </span></span></p></div></article>
+  <footer class="Footer">
+  <div>&copy; www.offensivethink.com 2019-2021</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
 </body>
 
 </html>

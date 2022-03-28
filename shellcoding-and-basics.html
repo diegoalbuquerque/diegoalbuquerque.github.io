@@ -3,29 +3,34 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta property="og:title" content="Simple Shellcode Tale!">
-    <meta name="description" content="Um shellcode simples que não executa. Um código C simples e citado em vários exemplos que gera Segmentation Fault. Como tudo pode ser corrigido!">
-  <meta property="og:description" content="Um shellcode simples que não executa. Um código C simples e citado em vários exemplos que gera Segmentation Fault. Como tudo pode ser corrigido!">
-    <meta property="og:type" content="blog">
-  <title>Simple Shellcode Tale!</title>
-  <!-- Favicon -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-  <link rel="stylesheet" type="text/css" href="css/notablog.css">
-  <link rel="stylesheet" type="text/css" href="css/theme.css">
-  <style>
-    :root {
-      font-size: 18px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
 
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Simple Shellcode Tale!&nbsp;|&nbsp;www.offensivethink.com</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Simple Shellcode Tale!">
+  
+    <meta name="description" content="Um shellcode simples que não executa. Um código C simples e citado em vários exemplos que gera Segmentation Fault. Como tudo pode ser corrigido!">
+    <meta property="og:description" content="Um shellcode simples que não executa. Um código C simples e citado em vários exemplos que gera Segmentation Fault. Como tudo pode ser corrigido!">
+  
+  
+  <style>
     .DateTagBar {
       margin-top: 1.0rem;
     }
@@ -34,40 +39,110 @@
 
 <body>
   <nav class="Navbar">
-    <a href="index.html">
-      <div class="Navbar__Btn"> <span>Home</span></div>
-    </a>
-                                                    <span class="Navbar__Delim">&centerdot;</span>
-    <a href="referencia-rapida.html">
-      <div class="Navbar__Btn"> <span>→ Referência rápida ← </span></div>
-    </a>
-                                                                                                                                        <span class="Navbar__Delim">&centerdot;</span>
-    <a href="contacts.html">
-      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&id=ca933149-5245-4511-a885-9cf5922808e1"></span> <span>about & contacts</span></div>
-    </a>
-                <span class="Navbar__Delim">&centerdot;</span>
-    <a href="offensivetools.html">
-      <div class="Navbar__Btn"> <span>Offensive Tools</span></div>
-    </a>
-                                                                                          </nav>
-  <header class="Header">
-          <div class="Header__Spacer Header__Spacer--NoCover">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+      <span>Home</span>
     </div>
-        <h1 class="Header__Title">Simple Shellcode Tale!</h1>
-            <div class="DateTagBar">
-                <span class="DateTagBar__Item DateTagBar__Date">Posted on Fri, Jun 4, 2021</span>
-                          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="referencia-rapida.html">
+        <div class="Navbar__Btn">
+          
+          <span>→ Referência rápida ← </span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="contacts.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&amp;id=ca933149-5245-4511-a885-9cf5922808e1"></span>&nbsp;
+          
+          <span>about &amp; contacts</span>
+        </div>
+      </a>
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="offensivetools.html">
+        <div class="Navbar__Btn">
+          
+          <span>Offensive Tools</span>
+        </div>
+      </a>
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title_post">Simple Shellcode Tale!</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Fri, Jun 4, 2021</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
             <a href="tag/osce.html">osce</a>
           </span>
-                <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
             <a href="tag/binary-exploitation.html">binary-exploitation</a>
           </span>
-                <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
             <a href="tag/shellcoding.html">shellcoding</a>
           </span>
-                  </div>
-          </header>
-      <article id="https://www.notion.so/a8926e03f50f47728c6a50e9ea680e6c" class="PageRoot"><div id="https://www.notion.so/ae97dd96e9e34bddb68c6bb5c872acdb" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Ambiente no qual o artigo foi baseado!</span></span></p></div><pre id="https://www.notion.so/ca22c02acc2a465ab62027bae693da18" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span>diego<span class="token operator">></span> <span class="token function">uname</span> -a
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/a8926e03f50f47728c6a50e9ea680e6c" class="PageRoot"><div id="https://www.notion.so/ae97dd96e9e34bddb68c6bb5c872acdb" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Ambiente no qual o artigo foi baseado!</span></span></p></div><pre id="https://www.notion.so/ca22c02acc2a465ab62027bae693da18" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span>diego<span class="token operator">></span> <span class="token function">uname</span> -a
 Linux kali <span class="token number">5.10</span>.0-kali7-amd64 <span class="token comment">#1 SMP Debian 5.10.28-1kali1 (2021-04-12) x86_64 GNU/Linux</span></span></span></span></code></pre><div id="https://www.notion.so/140a44f9cc2641c39cce5b429761a0b8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/bb029cb192774adb8f9bfd0033dbfecd" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Hoje me peguei em um completo desespero  😂   ao tentar simplesmente executar um shellcode simples ( apenas executar um /bin/sh usando a syscall execve() ) através de um código em C &quot;simples&quot;. </span></span></p></div><div id="https://www.notion.so/f86d9c1c2d1f430b96496530aeb19ab7" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">A idéia era usar o shellcode disponível em </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="http://shell-storm.org/shellcode/files/shellcode-827.php">http://shell-storm.org/shellcode/files/shellcode-827.php</a></span><span class="SemanticString">, transcrito abaixo:</span></span></p></div><div id="https://www.notion.so/7b3d5573acba4e738df93cea094e0062" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><pre id="https://www.notion.so/ceb818ff70ac417dabeed9655f109655" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token comment">/*
     *****************************************************
     *    Linux/x86 execve /bin/sh shellcode 23 bytes    *
@@ -214,13 +289,14 @@ Disassembly of section .text:
     <span class="token function">memcpy</span><span class="token punctuation">(</span>buf<span class="token punctuation">,</span> shellcode<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>shellcode<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token punctuation">)</span>buf<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></span></span></span></code></pre><div id="https://www.notion.so/38345570a9334865b9a51a20c379cdb5" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Conseguimos executar nosso shellcode, como esperado:</span></span></p></div><div id="https://www.notion.so/a108fd848f7349f9b661d6a269cbf146" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa2f2308d-f34d-4613-9445-d6a99d1169aa%2FPasted_image_20210605192349.png?width=1916&amp;table=block&amp;id=a108fd84-8f73-49f9-b661-d6a269cbf146"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa2f2308d-f34d-4613-9445-d6a99d1169aa%2FPasted_image_20210605192349.png?width=1916&amp;table=block&amp;id=a108fd84-8f73-49f9-b661-d6a269cbf146" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><h3 id="https://www.notion.so/5a6d20c40a1340c6aaf3b81ad675a4c6" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/5a6d20c40a1340c6aaf3b81ad675a4c6"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Referências Utilizadas para entender o problema</span></span></h3><ul class="BulletedListWrapper"><li id="https://www.notion.so/e7f3ba52bada4da1b053b7ced40c4882" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://stackoverflow.com/questions/19532356/segmentation-fault-when-testing-shellcode">https://stackoverflow.com/questions/19532356/segmentation-fault-when-testing-shellcode</a></span><span class="SemanticString"> → o usuário josh5stone , mostra qual o código deve ser utilizado para mapear a região de memória e aborda a questão de que exemplos antigos não levam em consideração as proteções atuais. </span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">O que fiquei na dúvida ainda</strong></span><span class="SemanticString"> é porque mesmo desabilitando as proteções no gcc, conforme ele inclusive diz que é uma solução, ainda assim não funciona.</span></span></li><li id="https://www.notion.so/b527831bea6241779ea82e6402937ba9" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://stackoverflow.com/questions/39737813/disabling-stack-protection-in-gcc-not-working/39738016">https://stackoverflow.com/questions/39737813/disabling-stack-protection-in-gcc-not-working/39738016</a></span><span class="SemanticString"> → Neste post tem uma possível explicação onde um dos usuários coloca que o sistema operacional tomapara si a proteção contra o buffer overflow. Poderíamos usar o binpário execstack para forçar a execução do programa, mas não encontrei instalado e nem pacotes para instalar no kali.</span></span></li><li id="https://www.notion.so/5e08c29aa7944ba7881e58fa7b04a7d3" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://security.stackexchange.com/questions/191384/why-does-my-x86-shellcode-test-program-segfault">https://security.stackexchange.com/questions/191384/why-does-my-x86-shellcode-test-program-segfault</a></span><span class="SemanticString"> → O usuário Mr. E , fala sobre algumas questões que foram abordadas erradamente no shellcode do usuário que postou a questão e explicando como a execve deve ser chamada, mostra que falta zerar o edx.1 ntation-fault-when-executing-shellcode</span></span></li></ul><div id="https://www.notion.so/36f2a3a010264067946cf5a36baa9b28" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><h3 id="https://www.notion.so/9e560ac568664b369e32b11a0efc977f" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/9e560ac568664b369e32b11a0efc977f"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Agradecimentos</span></span></h3><div id="https://www.notion.so/8b626cd9bb6b4756a9b2e425cf34babc" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Gostaria de agradecer ao Hélvio (</span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://sec4us.com.br/">https://sec4us.com.br/</a></span><span class="SemanticString">) e ao Fabiano Furtado (</span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.linkedin.com/in/fabianofurtado/">https://www.linkedin.com/in/fabianofurtado/</a></span><span class="SemanticString">)  que me ajudaram no entendimento do problema. </span></span></p></div><div id="https://www.notion.so/6d28207b9fde40b884e3e39da3d0306d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>  <footer class="Footer">
-        <div>&copy; Offensive Articles 2019</div>
-        <div>&centerdot;</div>
-        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-            rel="noopener noreferrer">Notablog</a>.
-        </div>
-    </footer>
+<span class="token punctuation">}</span></span></span></span></code></pre><div id="https://www.notion.so/38345570a9334865b9a51a20c379cdb5" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Conseguimos executar nosso shellcode, como esperado:</span></span></p></div><div id="https://www.notion.so/a108fd848f7349f9b661d6a269cbf146" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa2f2308d-f34d-4613-9445-d6a99d1169aa%2FPasted_image_20210605192349.png?width=1916&amp;table=block&amp;id=a108fd84-8f73-49f9-b661-d6a269cbf146"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa2f2308d-f34d-4613-9445-d6a99d1169aa%2FPasted_image_20210605192349.png?width=1916&amp;table=block&amp;id=a108fd84-8f73-49f9-b661-d6a269cbf146" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><h3 id="https://www.notion.so/5a6d20c40a1340c6aaf3b81ad675a4c6" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/5a6d20c40a1340c6aaf3b81ad675a4c6"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Referências Utilizadas para entender o problema</span></span></h3><ul class="BulletedListWrapper"><li id="https://www.notion.so/e7f3ba52bada4da1b053b7ced40c4882" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://stackoverflow.com/questions/19532356/segmentation-fault-when-testing-shellcode">https://stackoverflow.com/questions/19532356/segmentation-fault-when-testing-shellcode</a></span><span class="SemanticString"> → o usuário josh5stone , mostra qual o código deve ser utilizado para mapear a região de memória e aborda a questão de que exemplos antigos não levam em consideração as proteções atuais. </span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">O que fiquei na dúvida ainda</strong></span><span class="SemanticString"> é porque mesmo desabilitando as proteções no gcc, conforme ele inclusive diz que é uma solução, ainda assim não funciona.</span></span></li><li id="https://www.notion.so/b527831bea6241779ea82e6402937ba9" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://stackoverflow.com/questions/39737813/disabling-stack-protection-in-gcc-not-working/39738016">https://stackoverflow.com/questions/39737813/disabling-stack-protection-in-gcc-not-working/39738016</a></span><span class="SemanticString"> → Neste post tem uma possível explicação onde um dos usuários coloca que o sistema operacional tomapara si a proteção contra o buffer overflow. Poderíamos usar o binpário execstack para forçar a execução do programa, mas não encontrei instalado e nem pacotes para instalar no kali.</span></span></li><li id="https://www.notion.so/5e08c29aa7944ba7881e58fa7b04a7d3" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://security.stackexchange.com/questions/191384/why-does-my-x86-shellcode-test-program-segfault">https://security.stackexchange.com/questions/191384/why-does-my-x86-shellcode-test-program-segfault</a></span><span class="SemanticString"> → O usuário Mr. E , fala sobre algumas questões que foram abordadas erradamente no shellcode do usuário que postou a questão e explicando como a execve deve ser chamada, mostra que falta zerar o edx.1 ntation-fault-when-executing-shellcode</span></span></li></ul><div id="https://www.notion.so/36f2a3a010264067946cf5a36baa9b28" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><h3 id="https://www.notion.so/9e560ac568664b369e32b11a0efc977f" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/9e560ac568664b369e32b11a0efc977f"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Agradecimentos</span></span></h3><div id="https://www.notion.so/8b626cd9bb6b4756a9b2e425cf34babc" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Gostaria de agradecer ao Hélvio (</span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://sec4us.com.br/">https://sec4us.com.br/</a></span><span class="SemanticString">) e ao Fabiano Furtado (</span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.linkedin.com/in/fabianofurtado/">https://www.linkedin.com/in/fabianofurtado/</a></span><span class="SemanticString">)  que me ajudaram no entendimento do problema. </span></span></p></div><div id="https://www.notion.so/6d28207b9fde40b884e3e39da3d0306d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>
+  <footer class="Footer">
+  <div>&copy; www.offensivethink.com 2019-2021</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
 </body>
 
 </html>

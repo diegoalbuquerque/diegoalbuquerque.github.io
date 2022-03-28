@@ -3,29 +3,34 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta property="og:title" content="Brincando com o Pequeno Endian">
-    <meta name="description" content="Duas formas de escrever strings, ou uma sequência de bytes, em memória, respeitando o Little endian. ">
-  <meta property="og:description" content="Duas formas de escrever strings, ou uma sequência de bytes, em memória, respeitando o Little endian. ">
-    <meta property="og:type" content="blog">
-  <title>Brincando com o Pequeno Endian</title>
-  <!-- Favicon -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-  <link rel="stylesheet" type="text/css" href="css/notablog.css">
-  <link rel="stylesheet" type="text/css" href="css/theme.css">
-  <style>
-    :root {
-      font-size: 18px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
 
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Brincando com o Pequeno Endian&nbsp;|&nbsp;www.offensivethink.com</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Brincando com o Pequeno Endian">
+  
+    <meta name="description" content="Duas formas de escrever strings, ou uma sequência de bytes, em memória, respeitando o Little endian. ">
+    <meta property="og:description" content="Duas formas de escrever strings, ou uma sequência de bytes, em memória, respeitando o Little endian. ">
+  
+  
+  <style>
     .DateTagBar {
       margin-top: 1.0rem;
     }
@@ -34,40 +39,110 @@
 
 <body>
   <nav class="Navbar">
-    <a href="index.html">
-      <div class="Navbar__Btn"> <span>Home</span></div>
-    </a>
-                                                    <span class="Navbar__Delim">&centerdot;</span>
-    <a href="referencia-rapida.html">
-      <div class="Navbar__Btn"> <span>→ Referência rápida ← </span></div>
-    </a>
-                                                                                                                                        <span class="Navbar__Delim">&centerdot;</span>
-    <a href="contacts.html">
-      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&id=ca933149-5245-4511-a885-9cf5922808e1"></span> <span>about & contacts</span></div>
-    </a>
-                <span class="Navbar__Delim">&centerdot;</span>
-    <a href="offensivetools.html">
-      <div class="Navbar__Btn"> <span>Offensive Tools</span></div>
-    </a>
-                                                                                          </nav>
-  <header class="Header">
-          <div class="Header__Spacer Header__Spacer--NoCover">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+      <span>Home</span>
     </div>
-        <h1 class="Header__Title">Brincando com o Pequeno Endian</h1>
-            <div class="DateTagBar">
-                <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, Jan 4, 2021</span>
-                          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="referencia-rapida.html">
+        <div class="Navbar__Btn">
+          
+          <span>→ Referência rápida ← </span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="contacts.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&amp;id=ca933149-5245-4511-a885-9cf5922808e1"></span>&nbsp;
+          
+          <span>about &amp; contacts</span>
+        </div>
+      </a>
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="offensivetools.html">
+        <div class="Navbar__Btn">
+          
+          <span>Offensive Tools</span>
+        </div>
+      </a>
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title_post">Brincando com o Pequeno Endian</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, Jan 4, 2021</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
             <a href="tag/bof.html">bof</a>
           </span>
-                <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
             <a href="tag/osce.html">osce</a>
           </span>
-                <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
             <a href="tag/binary-exploitation.html">binary-exploitation</a>
           </span>
-                  </div>
-          </header>
-      <article id="https://www.notion.so/541ac2e3917c46eba4abaffc917d1f5a" class="PageRoot"><div id="https://www.notion.so/5f4598f9062a4113a89c799e339badad" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Ao escrever um valor em uma região de memória (pilha) devemos nos preocupar em escrever de forma correta respeitando a convenção little endian ou big endian. </span></span></p></div><div id="https://www.notion.so/b7600945a59249c3ae883d1426ea2609" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/c31cf9a81ec04a72bdea3b7d95f2c4da" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Uma das formas de colocar valores na pilha é através da instrução assembly </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">push</code></span><span class="SemanticString">.  Ao utilizar o push devemos nos preocupar em inverter todos os bytes do valor que queremos escrever na memória e lembrar de respeitar a LIFO (Last In First Out), ou seja, também colocar os valores que queremos do final para o início. </span></span></p></div><div id="https://www.notion.so/44e0cd40d8194312b4d5c70d1d1a44e5" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/0c2ad038ee064646b57a8f6302f6692e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Logo , se precisamos colocar a string /bin/sh na pilha, devemos lembrar que: </span></span></p></div><ol class="NumberedListWrapper"><li id="https://www.notion.so/a38a9aa4903a4ea2aad05197eb5910e2" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString">A memória contém uma sequência de bytes. Para a CPU não existe o conceito de string, etc. O que ela reconhece são bytes. Uma string para um programa de alto nível nada mais é que uma seqência de bytes que termina com 0x00 (que conhecemos como NULL BYTE!)</span></span></li><li id="https://www.notion.so/62cbc979485e44dcb7b6bbb11888ac0c" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString">O push, em 32 bits ( 32 bits / 8 bits = 4 bytes), coloca blocos de 4 em 4 bytes. Se você usa um push com menos de 4 bytes o assembler vai tratar de completar com NULL BYTES (0x00) o valor. Seria como se tívemos um campo que obrigatoriamente devemos colocar 4 números. Se colocarmos 9 o programa completará com zeros para ficar 0009. Logo um </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">push 0x01</code></span><span class="SemanticString">, se tornará um 0x00 00 00 01, formando assim 4 bytes. </span></span></li><li id="https://www.notion.so/111118dd4c2e43838403c776e5fd468c" class="NumberedList" value="3"><span class="SemanticStringArray"><span class="SemanticString">Ao fazer um PUSH , o registrador ESP é decrementado de 4 bytes e os 4 bytes (arquitetura 32bits) passados são colocados no endereço de memória que o registrador ESP aponta no momento.  </span></span></li></ol><div id="https://www.notion.so/3f130521b9304bd4a9dccca3c7f31cb0" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/6738ea7a824d45d2a3555856ae73c716" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Vamos observar na prática : </span></span></p></div><div id="https://www.notion.so/b84fffa11fc64d07a7703594d40e524d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">O código abaixo tem a finalidade de chamar a syscall execve passando para ela a string /bin/sh , que é o caminho do binário que ela deve executar. </span></span></p></div><pre id="https://www.notion.so/21b78eec04b94267928581fdbcad4f6f" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span>[BITS <span class="token number">32</span>]
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/541ac2e3917c46eba4abaffc917d1f5a" class="PageRoot"><div id="https://www.notion.so/5f4598f9062a4113a89c799e339badad" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Ao escrever um valor em uma região de memória (pilha) devemos nos preocupar em escrever de forma correta respeitando a convenção little endian ou big endian. </span></span></p></div><div id="https://www.notion.so/b7600945a59249c3ae883d1426ea2609" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/c31cf9a81ec04a72bdea3b7d95f2c4da" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Uma das formas de colocar valores na pilha é através da instrução assembly </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">push</code></span><span class="SemanticString">.  Ao utilizar o push devemos nos preocupar em inverter todos os bytes do valor que queremos escrever na memória e lembrar de respeitar a LIFO (Last In First Out), ou seja, também colocar os valores que queremos do final para o início. </span></span></p></div><div id="https://www.notion.so/44e0cd40d8194312b4d5c70d1d1a44e5" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/0c2ad038ee064646b57a8f6302f6692e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Logo , se precisamos colocar a string /bin/sh na pilha, devemos lembrar que: </span></span></p></div><ol class="NumberedListWrapper"><li id="https://www.notion.so/a38a9aa4903a4ea2aad05197eb5910e2" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString">A memória contém uma sequência de bytes. Para a CPU não existe o conceito de string, etc. O que ela reconhece são bytes. Uma string para um programa de alto nível nada mais é que uma seqência de bytes que termina com 0x00 (que conhecemos como NULL BYTE!)</span></span></li><li id="https://www.notion.so/62cbc979485e44dcb7b6bbb11888ac0c" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString">O push, em 32 bits ( 32 bits / 8 bits = 4 bytes), coloca blocos de 4 em 4 bytes. Se você usa um push com menos de 4 bytes o assembler vai tratar de completar com NULL BYTES (0x00) o valor. Seria como se tívemos um campo que obrigatoriamente devemos colocar 4 números. Se colocarmos 9 o programa completará com zeros para ficar 0009. Logo um </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">push 0x01</code></span><span class="SemanticString">, se tornará um 0x00 00 00 01, formando assim 4 bytes. </span></span></li><li id="https://www.notion.so/111118dd4c2e43838403c776e5fd468c" class="NumberedList" value="3"><span class="SemanticStringArray"><span class="SemanticString">Ao fazer um PUSH , o registrador ESP é decrementado de 4 bytes e os 4 bytes (arquitetura 32bits) passados são colocados no endereço de memória que o registrador ESP aponta no momento.  </span></span></li></ol><div id="https://www.notion.so/3f130521b9304bd4a9dccca3c7f31cb0" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/6738ea7a824d45d2a3555856ae73c716" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Vamos observar na prática : </span></span></p></div><div id="https://www.notion.so/b84fffa11fc64d07a7703594d40e524d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">O código abaixo tem a finalidade de chamar a syscall execve passando para ela a string /bin/sh , que é o caminho do binário que ela deve executar. </span></span></p></div><pre id="https://www.notion.so/21b78eec04b94267928581fdbcad4f6f" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span>[BITS <span class="token number">32</span>]
 
 ; nasm -f elf32 empilha-by-push.asm -o empilha-by-push.o
 ; ld -m elf_i386 empilha-by-push.o -o empilha-by-push
@@ -148,13 +223,14 @@ section .text
     	mov al,<span class="token number">0xb</span>       ; valor da syscall <span class="token punctuation">(</span><span class="token number">0xb</span> = <span class="token number">11</span> = execve<span class="token punctuation">)</span>
     	int <span class="token number">0x80</span>         ; chama a syscall</span></span></span></code></pre><div id="https://www.notion.so/834a91bd2ed6475681d7506766bc41f6" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/f23cdc339efb48afb9c62700b8a1d93e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Vamos executar e ver o ESP voltando 8 bytes e depois escrever os bytes a partir deste novo ESP, evitando assim de sobrescrever dados essencias da pilha. </span></span></p></div><div id="https://www.notion.so/fb9b2d37c5a1404c8606d6c3c1353075" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/b7b085fd78894c138ebdb5c5a60784f3" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ffe21c7e6-f8e1-4db6-97f3-8461f2edadb0%2FGEF-debug-empilha-by-mov-2.gif?width=1425&amp;table=block&amp;id=b7b085fd-7889-4c13-8ebd-b5c5a60784f3"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ffe21c7e6-f8e1-4db6-97f3-8461f2edadb0%2FGEF-debug-empilha-by-mov-2.gif?width=1425&amp;table=block&amp;id=b7b085fd-7889-4c13-8ebd-b5c5a60784f3" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/339fb76f21c74361935b988549da6f35" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/f26d1e5adc494072946fedadc9c9e9a5" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Observe que o ESP &quot;subiu&quot; abrindo espaço na pilha para escrita dos valores evitando assim sobrescrever possíveis dados essenciais. </span></span></p></div><div id="https://www.notion.so/9f85be02734f400f8f6a0a4b6f50394d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/8149a395d6e54e1c94a9debbce24e30e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">A idéia aqui é de estudar e melhorar o entendimento. Obviamente o segundo processo de escrever byte a byte toda a string desejada, apesar de nos livrar da preocupação de &quot;pensar invertido&quot;, consome muito mais opcodes e possivelmente ciclos de CPU. Em um processo de exploração , por exemplo, onde dependendo cada byte conta, não dá para abrir mão dos push&#x27;s e eles estão ai para serem usados. </span></span></p></div><div id="https://www.notion.so/9c8040bf9b204ce1bca714bb63eec736" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/bec5422f39114d88b8ae486edda9b704" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Em tempo, fica uma dica de um  script criado pelo grande Polverari (</span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://blog.polverari.com.br/">https://blog.polverari.com.br/</a></span><span class="SemanticString">) que facilita demaisss na hora de montar os push&#x27;s &quot;invertidos&quot;</span></span></p></div><div id="https://www.notion.so/13f1e2e1a12e4f579137428e51ad2205" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><pre id="https://www.notion.so/8c690644f8004030bb79257f425c414e" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span>&gt; echo -ne &quot;/bin//sh&quot; | rev | xxd -p | fold -w8 | awk &#x27;{print &quot;push 0x&quot;$1}&#x27;
 push 0x68732f2f
-push 0x6e69622f</span></span></span></code></pre><div id="https://www.notion.so/34c4422d9ce942c1834ee44dde5ee863" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/660af3b305e54767bb1cfbddc78393c3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">É isso, até a próxima. </span></span></p></div></article>  <footer class="Footer">
-        <div>&copy; Offensive Articles 2019</div>
-        <div>&centerdot;</div>
-        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-            rel="noopener noreferrer">Notablog</a>.
-        </div>
-    </footer>
+push 0x6e69622f</span></span></span></code></pre><div id="https://www.notion.so/34c4422d9ce942c1834ee44dde5ee863" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/660af3b305e54767bb1cfbddc78393c3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">É isso, até a próxima. </span></span></p></div></article>
+  <footer class="Footer">
+  <div>&copy; www.offensivethink.com 2019-2021</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
 </body>
 
 </html>

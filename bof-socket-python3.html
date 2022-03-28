@@ -3,29 +3,34 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta property="og:title" content="BoF + Sockets + Erros de Codificação com o Python3">
-    <meta name="description" content="Como o python3 mudou o seu entendimento sobre a codificação de strings e como isso afeta na escripta de exploits na hora de enviar payloads para exploração de Buffer Overflow">
-  <meta property="og:description" content="Como o python3 mudou o seu entendimento sobre a codificação de strings e como isso afeta na escripta de exploits na hora de enviar payloads para exploração de Buffer Overflow">
-    <meta property="og:type" content="blog">
-  <title>BoF + Sockets + Erros de Codificação com o Python3</title>
-  <!-- Favicon -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-  <link rel="stylesheet" type="text/css" href="css/notablog.css">
-  <link rel="stylesheet" type="text/css" href="css/theme.css">
-  <style>
-    :root {
-      font-size: 18px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
 
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>BoF + Sockets + Erros de Codificação com o Python3&nbsp;|&nbsp;www.offensivethink.com</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="BoF + Sockets + Erros de Codificação com o Python3">
+  
+    <meta name="description" content="Como o python3 mudou o seu entendimento sobre a codificação de strings e como isso afeta na escripta de exploits na hora de enviar payloads para exploração de Buffer Overflow">
+    <meta property="og:description" content="Como o python3 mudou o seu entendimento sobre a codificação de strings e como isso afeta na escripta de exploits na hora de enviar payloads para exploração de Buffer Overflow">
+  
+  
+  <style>
     .DateTagBar {
       margin-top: 1.0rem;
     }
@@ -34,34 +39,102 @@
 
 <body>
   <nav class="Navbar">
-    <a href="index.html">
-      <div class="Navbar__Btn"> <span>Home</span></div>
-    </a>
-                                                    <span class="Navbar__Delim">&centerdot;</span>
-    <a href="referencia-rapida.html">
-      <div class="Navbar__Btn"> <span>→ Referência rápida ← </span></div>
-    </a>
-                                                                                                                                        <span class="Navbar__Delim">&centerdot;</span>
-    <a href="contacts.html">
-      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&id=ca933149-5245-4511-a885-9cf5922808e1"></span> <span>about & contacts</span></div>
-    </a>
-                <span class="Navbar__Delim">&centerdot;</span>
-    <a href="offensivetools.html">
-      <div class="Navbar__Btn"> <span>Offensive Tools</span></div>
-    </a>
-                                                                                          </nav>
-  <header class="Header">
-          <div class="Header__Spacer Header__Spacer--NoCover">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+      <span>Home</span>
     </div>
-        <h1 class="Header__Title">BoF + Sockets + Erros de Codificação com o Python3</h1>
-            <div class="DateTagBar">
-                <span class="DateTagBar__Item DateTagBar__Date">Posted on Wed, Oct 28, 2020</span>
-                          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="referencia-rapida.html">
+        <div class="Navbar__Btn">
+          
+          <span>→ Referência rápida ← </span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="contacts.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&amp;id=ca933149-5245-4511-a885-9cf5922808e1"></span>&nbsp;
+          
+          <span>about &amp; contacts</span>
+        </div>
+      </a>
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="offensivetools.html">
+        <div class="Navbar__Btn">
+          
+          <span>Offensive Tools</span>
+        </div>
+      </a>
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title_post">BoF + Sockets + Erros de Codificação com o Python3</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Wed, Oct 28, 2020</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
             <a href="tag/bof.html">bof</a>
           </span>
-                  </div>
-          </header>
-      <article id="https://www.notion.so/f5fa69fc96554ec3b56726571281d382" class="PageRoot"><div id="https://www.notion.so/8968fbb5f76b4e1f9572bd6e1c904c0b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Com a vinda do Python 3 a forma com que as strings são &quot;tratadas&quot; mudou. O que antes, no Python 2 era um conjunto de caracteres ASCII , agora são Unicode. E o que isso muda para quem tá escrevendo exploits para explorar Buffer Overflow e até mesmo para quem deseja simplesmente enviar algo por um socket ? </span></span></p></div><div id="https://www.notion.so/a6fedaa0690040c7a974a50d7e7d1f6a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Quando &quot;chamamos&quot; a função send() de um socket, esta espera como parâmetro Bytes. Se você tenta simplesmente enviar uma string como ocorria no Python2, um erro surge, informando: </span><span class="SemanticString"><em class="SemanticString__Fragment SemanticString__Fragment--Italic"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed">TypeError: a bytes-like object is required, not &#x27;str&#x27; with send function</mark></em></span></span></p></div><div id="https://www.notion.so/5515114e8aee4d438f84d65f13b6ff2f" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Para contornar, você precisará codificar a string que você quer enviar na codificação que deseja, ou simplesmente, informar que trata-se de uma sequência de bytes, colocando um b antes dela: </span></span></p></div><div id="https://www.notion.so/b52f78f0e95c43cb9c6fce3a0aba6983" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><pre id="https://www.notion.so/e6378cc967704a70a4fde5278c9be302" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">import</span> sys<span class="token punctuation">,</span>socket
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/f5fa69fc96554ec3b56726571281d382" class="PageRoot"><div id="https://www.notion.so/8968fbb5f76b4e1f9572bd6e1c904c0b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Com a vinda do Python 3 a forma com que as strings são &quot;tratadas&quot; mudou. O que antes, no Python 2 era um conjunto de caracteres ASCII , agora são Unicode. E o que isso muda para quem tá escrevendo exploits para explorar Buffer Overflow e até mesmo para quem deseja simplesmente enviar algo por um socket ? </span></span></p></div><div id="https://www.notion.so/a6fedaa0690040c7a974a50d7e7d1f6a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Quando &quot;chamamos&quot; a função send() de um socket, esta espera como parâmetro Bytes. Se você tenta simplesmente enviar uma string como ocorria no Python2, um erro surge, informando: </span><span class="SemanticString"><em class="SemanticString__Fragment SemanticString__Fragment--Italic"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed">TypeError: a bytes-like object is required, not &#x27;str&#x27; with send function</mark></em></span></span></p></div><div id="https://www.notion.so/5515114e8aee4d438f84d65f13b6ff2f" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Para contornar, você precisará codificar a string que você quer enviar na codificação que deseja, ou simplesmente, informar que trata-se de uma sequência de bytes, colocando um b antes dela: </span></span></p></div><div id="https://www.notion.so/b52f78f0e95c43cb9c6fce3a0aba6983" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><pre id="https://www.notion.so/e6378cc967704a70a4fde5278c9be302" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">import</span> sys<span class="token punctuation">,</span>socket
 
 host<span class="token operator">=</span><span class="token string">"127.0.0.1"</span>"
 port<span class="token operator">=</span><span class="token number">12345</span>
@@ -97,13 +170,14 @@ s<span class="token punctuation">.</span>connect<span class="token punctuation">
 <span class="token keyword">print</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token number">4096</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 s<span class="token punctuation">.</span>sendall<span class="token punctuation">(</span><span class="token builtin">buffer</span><span class="token punctuation">)</span>
 <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"[+] Sending Exploit %s"</span> <span class="token operator">%</span> <span class="token builtin">buffer</span> <span class="token punctuation">)</span>
-s<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></span></span></span></code></pre><div id="https://www.notion.so/20265a07503e4a4d9261d8adc2b29a1c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>  <footer class="Footer">
-        <div>&copy; Offensive Articles 2019</div>
-        <div>&centerdot;</div>
-        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-            rel="noopener noreferrer">Notablog</a>.
-        </div>
-    </footer>
+s<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></span></span></span></code></pre><div id="https://www.notion.so/20265a07503e4a4d9261d8adc2b29a1c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>
+  <footer class="Footer">
+  <div>&copy; www.offensivethink.com 2019-2021</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
 </body>
 
 </html>

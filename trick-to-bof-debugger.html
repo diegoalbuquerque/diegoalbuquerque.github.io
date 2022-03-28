@@ -3,29 +3,34 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta property="og:title" content="Como automaticamente atachar um processo a um debugger. ">
-    <meta name="description" content="Uma pequena dica de como "attachar" automaticamente um processo ao debugger ao iniciar facilitando assim a construção do exploit">
-  <meta property="og:description" content="Uma pequena dica de como "attachar" automaticamente um processo ao debugger ao iniciar facilitando assim a construção do exploit">
-    <meta property="og:type" content="blog">
-  <title>Como automaticamente atachar um processo a um debugger. </title>
-  <!-- Favicon -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-  <link rel="stylesheet" type="text/css" href="css/notablog.css">
-  <link rel="stylesheet" type="text/css" href="css/theme.css">
-  <style>
-    :root {
-      font-size: 18px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
 
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Como automaticamente atachar um processo a um debugger. &nbsp;|&nbsp;www.offensivethink.com</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Como automaticamente atachar um processo a um debugger. ">
+  
+    <meta name="description" content="Uma pequena dica de como &#34;attachar&#34; automaticamente um processo ao debugger ao iniciar facilitando assim a construção do exploit">
+    <meta property="og:description" content="Uma pequena dica de como &#34;attachar&#34; automaticamente um processo ao debugger ao iniciar facilitando assim a construção do exploit">
+  
+  
+  <style>
     .DateTagBar {
       margin-top: 1.0rem;
     }
@@ -34,47 +39,118 @@
 
 <body>
   <nav class="Navbar">
-    <a href="index.html">
-      <div class="Navbar__Btn"> <span>Home</span></div>
-    </a>
-                                                    <span class="Navbar__Delim">&centerdot;</span>
-    <a href="referencia-rapida.html">
-      <div class="Navbar__Btn"> <span>→ Referência rápida ← </span></div>
-    </a>
-                                                                                                                                        <span class="Navbar__Delim">&centerdot;</span>
-    <a href="contacts.html">
-      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&id=ca933149-5245-4511-a885-9cf5922808e1"></span> <span>about & contacts</span></div>
-    </a>
-                <span class="Navbar__Delim">&centerdot;</span>
-    <a href="offensivetools.html">
-      <div class="Navbar__Btn"> <span>Offensive Tools</span></div>
-    </a>
-                                                                                          </nav>
-  <header class="Header">
-          <div class="Header__Spacer Header__Spacer--NoCover">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+      <span>Home</span>
     </div>
-        <h1 class="Header__Title">Como automaticamente atachar um processo a um debugger. </h1>
-            <div class="DateTagBar">
-                <span class="DateTagBar__Item DateTagBar__Date">Posted on Wed, Nov 11, 2020</span>
-                          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="referencia-rapida.html">
+        <div class="Navbar__Btn">
+          
+          <span>→ Referência rápida ← </span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="contacts.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&amp;id=ca933149-5245-4511-a885-9cf5922808e1"></span>&nbsp;
+          
+          <span>about &amp; contacts</span>
+        </div>
+      </a>
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="offensivetools.html">
+        <div class="Navbar__Btn">
+          
+          <span>Offensive Tools</span>
+        </div>
+      </a>
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title_post">Como automaticamente atachar um processo a um debugger. </h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Wed, Nov 11, 2020</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
             <a href="tag/bof.html">bof</a>
           </span>
-                <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
             <a href="tag/osce.html">osce</a>
           </span>
-                <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
             <a href="tag/binary-exploitation.html">binary-exploitation</a>
           </span>
-                  </div>
-          </header>
-      <article id="https://www.notion.so/ded04abcbe12447cb7e8fe551aa3c131" class="PageRoot"><div id="https://www.notion.so/1f82c627a84e4623b4941ef39a9fc7cc" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">No processo de criação de um exploit, no estudo de Buffer Overflow por exemplo, temos várias fases: fuzzing, poc, teste de badchars, etc. Isso acaba envolvendo muito trabalho repetitivo de abrir o excutável alvo, abrir o debugger e então anexar o processo. </span></span></p></div><div id="https://www.notion.so/16b9abbfcea242e5bbe5c4ae1d248317" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Uma forma de agilizar um pouco é fazer com que, ao abrir o aplicativo que você deseja testar, ele seja automaticamente &quot;atachado&quot; ao debugger de sua preferência. </span></span></p></div><div id="https://www.notion.so/6ad9732b4cd647b484ebaad50a7da558" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/98b31174f1c94abe95388aff87e078e6" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Para isso, basta fazer:</span></span></p></div><ol class="NumberedListWrapper"><li id="https://www.notion.so/a8b101ba92d54116ae94061cdc173bf8" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString">Criar uma nova chave com o nome exato do aplicativo, incluindo a extensão, no registro em </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\</code></span></span></li><li id="https://www.notion.so/fe6a221c596c43c58d970f90a5feff7d" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString">Dentro dessa nova chave criar uma entrada do </span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed">tipo string</mark></span><span class="SemanticString"> de </span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">nome debugger</strong></mark></span><span class="SemanticString">. </span></span></li><li id="https://www.notion.so/094e24a5c1b943f2a01c4a6b273baea8" class="NumberedList" value="3"><span class="SemanticStringArray"><span class="SemanticString">O valor da entrada debugger deve ser o caminho completo, incluindo o executável, do debugger de sua preferência. </span></span></li></ol><div id="https://www.notion.so/c62cb23342fe4ba8a1b218e938c07c52" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/282d1a7bc5c342c882f4f68bb3e2ba71" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Abaixo, como fica no regedit, a criação da entrada para um aplicativo de nome trainingserver.exe que deverá ser automaticamente anexado ao Immunity Debugger, ao ser iniciado. 
- </span></span></p></div><div id="https://www.notion.so/8beb2c6975794679a94cdd4b51a609a3" class="Image Image--Normal"><figure><a href="https://diegoalbuquerque.github.io/imgs/trick-to-bof-debugger.png?width=672"><img src="https://diegoalbuquerque.github.io/imgs/trick-to-bof-debugger.png?width=672" style="width:672px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/138f4b44931e49499159d4bc0f561f86" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/9b567b50a36f4a22a9a74dfecb77e007" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Agora é só iniciar o aplicativo e ele já abrirá no debugger. Só dar play e se divertir. ;D </span></span></p></div><div id="https://www.notion.so/e1efceaf81354851808b0a0afeeca46f" class="Bookmark"><a href="https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2008/a329t4ed(v=vs.90)?redirectedfrom=MSDN"><h5 class="Bookmark__Title">How to: Launch the Debugger Automatically</h5><p class="Bookmark__Desc">Sometimes, you may need to debug the startup code for an application that is launched by another process. Examples include services and custom setup actions. In these scenarios, you can have the debugger launch and automatically attach when your application starts. Start the Registry Editor (regedit). In the Registry Editor, open the HKEY_LOCAL_MACHINE folder.</p><p class="Bookmark__Link">https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2008/a329t4ed(v=vs.90)?redirectedfrom=MSDN</p></a></div></article>  <footer class="Footer">
-        <div>&copy; Offensive Articles 2019</div>
-        <div>&centerdot;</div>
-        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-            rel="noopener noreferrer">Notablog</a>.
-        </div>
-    </footer>
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/ded04abcbe12447cb7e8fe551aa3c131" class="PageRoot"><div id="https://www.notion.so/1f82c627a84e4623b4941ef39a9fc7cc" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">No processo de criação de um exploit, no estudo de Buffer Overflow por exemplo, temos várias fases: fuzzing, poc, teste de badchars, etc. Isso acaba envolvendo muito trabalho repetitivo de abrir o excutável alvo, abrir o debugger e então anexar o processo. </span></span></p></div><div id="https://www.notion.so/16b9abbfcea242e5bbe5c4ae1d248317" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Uma forma de agilizar um pouco é fazer com que, ao abrir o aplicativo que você deseja testar, ele seja automaticamente &quot;atachado&quot; ao debugger de sua preferência. </span></span></p></div><div id="https://www.notion.so/6ad9732b4cd647b484ebaad50a7da558" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/98b31174f1c94abe95388aff87e078e6" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Para isso, basta fazer:</span></span></p></div><ol class="NumberedListWrapper"><li id="https://www.notion.so/a8b101ba92d54116ae94061cdc173bf8" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString">Criar uma nova chave com o nome exato do aplicativo, incluindo a extensão, no registro em </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\</code></span></span></li><li id="https://www.notion.so/fe6a221c596c43c58d970f90a5feff7d" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString">Dentro dessa nova chave criar uma entrada do </span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed">tipo string</mark></span><span class="SemanticString"> de </span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">nome debugger</strong></mark></span><span class="SemanticString">. </span></span></li><li id="https://www.notion.so/094e24a5c1b943f2a01c4a6b273baea8" class="NumberedList" value="3"><span class="SemanticStringArray"><span class="SemanticString">O valor da entrada debugger deve ser o caminho completo, incluindo o executável, do debugger de sua preferência. </span></span></li></ol><div id="https://www.notion.so/c62cb23342fe4ba8a1b218e938c07c52" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/282d1a7bc5c342c882f4f68bb3e2ba71" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Abaixo, como fica no regedit, a criação da entrada para um aplicativo de nome trainingserver.exe que deverá ser automaticamente anexado ao Immunity Debugger, ao ser iniciado. 
+ </span></span></p></div><div id="https://www.notion.so/8beb2c6975794679a94cdd4b51a609a3" class="Image Image--Normal"><figure><a href="https://diegoalbuquerque.github.io/imgs/trick-to-bof-debugger.png?width=672"><img src="https://diegoalbuquerque.github.io/imgs/trick-to-bof-debugger.png?width=672" style="width:672px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/138f4b44931e49499159d4bc0f561f86" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/9b567b50a36f4a22a9a74dfecb77e007" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Agora é só iniciar o aplicativo e ele já abrirá no debugger. Só dar play e se divertir. ;D </span></span></p></div><div id="https://www.notion.so/e1efceaf81354851808b0a0afeeca46f" class="Bookmark"><a href="https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2008/a329t4ed(v=vs.90)?redirectedfrom=MSDN"><h5 class="Bookmark__Title">How to: Launch the Debugger Automatically</h5><p class="Bookmark__Desc">Sometimes, you may need to debug the startup code for an application that is launched by another process. Examples include services and custom setup actions. In these scenarios, you can have the debugger launch and automatically attach when your application starts. Start the Registry Editor (regedit). In the Registry Editor, open the HKEY_LOCAL_MACHINE folder.</p><p class="Bookmark__Link">https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2008/a329t4ed(v=vs.90)?redirectedfrom=MSDN</p></a></div></article>
+  <footer class="Footer">
+  <div>&copy; www.offensivethink.com 2019-2021</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
 </body>
 
 </html>
