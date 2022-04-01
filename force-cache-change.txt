@@ -21,4 +21,4 @@
 #2021-06-29 as 17:57h - OSCE adicionada ao Curriculo!
 #2021-08-10 as 22:31h - Novo Artigo - CMD de uma forma alternativa
 #2022-03-28 as 10:28h - Novo tema do site - Novo Artigo - Talk no Meetup Natal
-#2022-03-31 as 18:12h - Novo Artigo : My LIttle Powershell C2
+#2022-03-31 as 18:12h - Novo Artigo : My LIttle Powershell Command and Execute
