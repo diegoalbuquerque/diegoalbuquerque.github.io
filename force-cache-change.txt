@@ -22,3 +22,4 @@
 #2021-08-10 as 22:31h - Novo Artigo - CMD de uma forma alternativa
 #2022-03-28 as 10:28h - Novo tema do site - Novo Artigo - Talk no Meetup Natal
 #2022-03-31 as 18:12h - Novo Artigo : My LIttle Powershell Command and Execute
+#2022-07-03 as 20:15h - Novo Artigo : MS17-010
