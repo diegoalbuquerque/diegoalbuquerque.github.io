@@ -24,3 +24,4 @@
 #2022-03-31 as 18:12h - Novo Artigo : My LIttle Powershell Command and Execute
 #2022-07-03 as 20:15h - Novo Artigo : MS17-010
 #2022-08-21 as 11:00h - Atualizada página de contatos
+#2023-05-30 as 22:59h - Adicionado artigo de dicas da eCPPTv2 e sistema de comentários https://utteranc.es/
