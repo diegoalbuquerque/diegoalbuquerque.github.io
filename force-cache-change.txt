@@ -25,4 +25,4 @@
 #2022-07-03 as 20:15h - Novo Artigo : MS17-010
 #2022-08-21 as 11:00h - Atualizada página de contatos
 #2023-05-30 as 22:59h - Adicionado artigo de dicas da eCPPTv2 e adicionado sistema de comentários https://utteranc.es/
-#2023-05-31 as 15:35h - ajustes
+#2023-05-31 as 15:35h - ajustes 
