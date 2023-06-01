@@ -71,10 +71,10 @@ body {
 .Header,
 .PageRoot,
 .ArticleList {
-  width: 98%;
+  width: 95%;
   max-width: 100%;
   margin: 0px auto;
-  padding: 0px 96px;
+  /*padding: 0px 96px;*/
 }
 
 @media only screen and (max-width: 900px) {
@@ -279,7 +279,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  padding: 5rem 3rem;
+  padding: 3rem;
   color: rgba(55, 53, 47, 0.6);
 }
 
