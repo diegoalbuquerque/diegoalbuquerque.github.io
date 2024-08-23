@@ -9,7 +9,7 @@
 }
 
 :root {
-  --color-text-default: rgb(255, 255, 255);
+  --color-text-default: rgb(55, 53, 47);
   --color-text-default-light: rgba(55, 53, 47, 0.6);
   --color-text-gray: rgb(155, 154, 151);
   --color-text-brown: rgb(100, 71, 58);
@@ -876,7 +876,6 @@ pre.Code code {
 .SemanticString__Fragment--Code {
   border-radius: 5px;
   background-color: rgba(135, 131, 120, 0.15);
-  color: #ff4081;
   font-size: 0.9em;
   padding: 0.2em 0.4em;
   word-break: break-word;
@@ -1029,7 +1028,6 @@ pre.Code code {
 .Text__Content {
   padding: 3px 2px;
   margin: 2px 0;
-  color: white;
 }
 
 .Text__Children {

