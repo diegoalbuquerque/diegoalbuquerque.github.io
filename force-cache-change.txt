@@ -29,3 +29,4 @@
 #2023-06-01 as 12:39 - giscus comments adicionado no lugar do utteranc.es
 #2023-06-01          - ajustes
 #2024-08-23          - adicionada pagina OSCP para relatar a experiencia da certificacao
+#2025-05-27          - Alterado o banner de entrada do site
