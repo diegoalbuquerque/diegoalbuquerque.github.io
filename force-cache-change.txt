@@ -31,3 +31,7 @@
 #2024-08-23          - adicionada pagina OSCP para relatar a experiencia da certificacao
 #2025-05-27          - Alterado o banner de entrada do site
 #2025-05-27          - Alterado banner de entrada e certificações em about
+#
+#
+#
+
