@@ -19,7 +19,7 @@
 
   /* Tipografia */
   --font-main: 'Anonymous Pro', monospace;
-  --font-heading: 'Press+Start+2P', monospace;
+  --font-heading: 'Press Start 2P', monospace;
   --font-code: 'Hack', 'Anonymous Pro', monospace; /* Fallback para Anonymous Pro */
 
   /* Animações */
@@ -172,37 +172,42 @@ a:hover, a:focus {
    ========================================================================== */
 /* Cabeçalho e Navegação */
 header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 3rem;
-  text-align: center;
-  position: relative; /* Garante o contexto de posicionamento para a navbar */
-  z-index: 10; /* Coloca o cabeçalho acima dos efeitos de overlay */
 }
 
-/* CORREÇÃO: Estilos para a barra de navegação */
+/* CORREÇÃO FINAL: Força a barra de navegação a ficar no topo e na horizontal */
 .navbar {
-  display: flex;
-  justify-content: center;
-  padding: 1rem 0;
+  order: -1; /* Garante que a navbar apareça antes do h1 */
   width: 100%;
+  padding: 1rem 0;
 }
 
 .navbar ul {
+  display: flex;
+  flex-wrap: wrap; /* Permite que o menu quebre em telas pequenas */
+  justify-content: center;
+  align-items: center;
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  gap: 2rem; /* Espaçamento entre os itens do menu */
-  align-items: center;
+  gap: 1.5rem;
 }
 
 .navbar li {
-  display: inline;
+  /* Não precisa de estilos específicos de display aqui */
 }
 
 .navbar a {
   font-family: var(--font-main);
   font-size: 1.2rem;
   padding: 0.5rem;
+  display: inline-flex;
+  align-items: center;
 }
 
 header h1 {
@@ -256,25 +261,25 @@ blockquote p {
 
 /* Imagens com filtro retro e dimensionamento correto */
 img {
-  display: block; /* Garante que a imagem não tenha espaçamento extra abaixo */
-  max-width: 100%; /* Garante que a imagem não ultrapasse o contentor */
-  height: auto; /* Mantém a proporção da imagem */
-  margin: 2rem auto; /* Adiciona espaçamento vertical e centra a imagem */
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 2rem auto;
   filter: saturate(0) contrast(1.5) brightness(1.1);
   border: 1px solid var(--text-color);
   padding: 5px;
 }
 
-/* CORREÇÃO: Estilo específico para o ícone SVG no menu */
+/* CORREÇÃO FINAL: Estilo específico para o ícone SVG no menu */
 .inline-img-icon {
-  width: 1.2rem; /* Tamanho fixo para o ícone */
-  height: 1.2rem; /* Tamanho fixo para o ícone */
-  display: inline-block; /* Para alinhar com o texto do menu */
-  vertical-align: middle; /* Alinhamento vertical */
-  margin: 0; /* Remove margens indesejadas */
-  border: none; /* Remove a borda */
-  padding: 0; /* Remove o padding */
-  filter: none; /* Remove o filtro de imagem */
+  width: 1.2rem!important; /* Força o tamanho correto */
+  height: 1.2rem!important; /* Força o tamanho correto */
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  border: none;
+  padding: 0;
+  filter: none;
 }
 
 /* ==========================================================================
