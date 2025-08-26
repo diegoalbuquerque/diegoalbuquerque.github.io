@@ -174,6 +174,34 @@ a:hover, a:focus {
 header {
   margin-bottom: 3rem;
   text-align: center;
+  position: relative; /* Garante o contexto de posicionamento para a navbar */
+  z-index: 10; /* Coloca o cabeçalho acima dos efeitos de overlay */
+}
+
+/* CORREÇÃO: Estilos para a barra de navegação */
+.navbar {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.navbar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 2rem; /* Espaçamento entre os itens do menu */
+  align-items: center;
+}
+
+.navbar li {
+  display: inline;
+}
+
+.navbar a {
+  font-family: var(--font-main);
+  font-size: 1.2rem;
+  padding: 0.5rem;
 }
 
 header h1 {
@@ -234,6 +262,18 @@ img {
   filter: saturate(0) contrast(1.5) brightness(1.1);
   border: 1px solid var(--text-color);
   padding: 5px;
+}
+
+/* CORREÇÃO: Estilo específico para o ícone SVG no menu */
+.inline-img-icon {
+  width: 1.2rem; /* Tamanho fixo para o ícone */
+  height: 1.2rem; /* Tamanho fixo para o ícone */
+  display: inline-block; /* Para alinhar com o texto do menu */
+  vertical-align: middle; /* Alinhamento vertical */
+  margin: 0; /* Remove margens indesejadas */
+  border: none; /* Remove a borda */
+  padding: 0; /* Remove o padding */
+  filter: none; /* Remove o filtro de imagem */
 }
 
 /* ==========================================================================
