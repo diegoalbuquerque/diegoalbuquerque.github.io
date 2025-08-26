@@ -181,6 +181,11 @@ header {
 }
 
 /* CORREÇÃO FINAL: Força a barra de navegação a ficar no topo e na horizontal */
+nav {
+  display: flex;
+  justify-content: center;
+}
+
 .navbar {
   display: flex;
   justify-content: center;
