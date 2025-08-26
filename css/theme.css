@@ -182,6 +182,8 @@ header {
 
 /* CORREÇÃO FINAL: Força a barra de navegação a ficar no topo e na horizontal */
 .navbar {
+  display: flex;
+  justify-content: center;
   order: -1; /* Garante que a navbar apareça antes do h1 */
   width: 100%;
   padding: 1rem 0;
