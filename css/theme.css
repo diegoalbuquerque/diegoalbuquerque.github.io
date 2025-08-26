@@ -1,0 +1,338 @@
+/* ==========================================================================
+   1. VARIÁVEIS ROOT E DEFINIÇÕES DE TEMA
+   ========================================================================== */
+/* 
+ * As variáveis CSS são usadas para definir a paleta de cores, fontes e 
+ * tempos de animação. Isto permite uma fácil personalização e a 
+ * implementação de múltiplos temas. O tema padrão é "Fósforo Verde".
+ */
+@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&family=Press+Start+2P&display=swap');
+
+:root {
+  /* Cores do Tema Fósforo Verde */
+  --bg-color: #050505;
+  --text-color: #33FF33;
+  --glow-color: rgba(51, 255, 51, 0.4);
+  --glow-color-subtle: rgba(51, 255, 51, 0.2);
+  --accent-color: #00FFFF;
+  --accent-glow-color: rgba(0, 255, 255, 0.5);
+
+  /* Tipografia */
+  --font-main: 'Anonymous Pro', monospace;
+  --font-heading: 'Press Start 2P', monospace;
+  --font-code: 'Hack', 'Anonymous Pro', monospace; /* Fallback para Anonymous Pro */
+
+  /* Animações */
+  --flicker-speed: 0.15s;
+  --scanline-speed: 10s;
+}
+
+/* 
+ * Tema alternativo "Âmbar Terminal".
+ * Pode ser ativado adicionando a classe 'theme-amber' ao elemento <body>.
+ */
+body.theme-amber {
+  --text-color: #FFB000;
+  --glow-color: rgba(255, 176, 0, 0.4);
+  --glow-color-subtle: rgba(255, 176, 0, 0.2);
+  --accent-color: #FFA500;
+  --accent-glow-color: rgba(255, 165, 0, 0.5);
+}
+
+/* ==========================================================================
+   2. ESTILOS GLOBAIS E FUNDAÇÃO CRT
+   ========================================================================== */
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-main);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+  padding: 2rem;
+  text-shadow: 0 0 2px var(--glow-color-subtle);
+  overflow-x: hidden;
+  
+  /* Efeito de curvatura e vinheta do ecrã CRT */
+  border-radius: 20px;
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.7);
+}
+
+/* Efeito de Scanlines e Cintilação (Flicker) */
+body::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+  animation: flicker var(--flicker-speed) infinite;
+}
+
+/* Animação de Scanline a mover-se */
+body::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(18, 16, 16, 0.1);
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+    animation: scanline var(--scanline-speed) linear infinite;
+}
+
+/* Keyframes para as animações */
+@keyframes flicker {
+  0% { opacity: 0.27861; }
+  5% { opacity: 0.34769; }
+  10% { opacity: 0.23604; }
+  15% { opacity: 0.90626; }
+  20% { opacity: 0.18128; }
+  25% { opacity: 0.83891; }
+  30% { opacity: 0.65583; }
+  35% { opacity: 0.67807; }
+  40% { opacity: 0.26559; }
+  45% { opacity: 0.84693; }
+  50% { opacity: 0.96019; }
+  55% { opacity: 0.08594; }
+  60% { opacity: 0.20313; }
+  65% { opacity: 0.71988; }
+  70% { opacity: 0.53455; }
+  75% { opacity: 0.37288; }
+  80% { opacity: 0.71428; }
+  85% { opacity: 0.70419; }
+  90% { opacity: 0.7003; }
+  95% { opacity: 0.36108; }
+  100% { opacity: 0.24387; }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+/* Contentor principal */
+.main-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* ==========================================================================
+   3. TIPOGRAFIA
+   ========================================================================== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  text-shadow: 0 0 10px var(--glow-color);
+  letter-spacing: 1px;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; text-shadow: 0 0 5px var(--glow-color); }
+h4 { font-size: 1.2rem; text-shadow: 0 0 5px var(--glow-color); }
+
+p, li {
+  text-shadow: 0 0 2px var(--glow-color-subtle);
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  text-shadow: 0 0 8px var(--accent-glow-color);
+  transition: all 0.2s ease-in-out;
+}
+
+a:hover, a:focus {
+  background-color: var(--accent-color);
+  color: var(--bg-color);
+  text-shadow: none;
+}
+
+/* ==========================================================================
+   4. LAYOUT E ELEMENTOS DE CONTEÚDO
+   ========================================================================== */
+/* Cabeçalho e Navegação */
+header {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+header h1 {
+  /* Efeito de Máquina de Escrever (Typewriter) */
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right:.10em solid var(--text-color);
+  width: 0;
+  animation: typing 3.5s steps(30, end) forwards, blink.75s step-end infinite;
+}
+
+/* Blocos de Código */
+pre, code {
+  font-family: var(--font-code);
+  font-size: 1rem;
+  text-shadow: none; /* Remove o brilho para máxima legibilidade do código */
+}
+
+pre {
+  background-color: rgba(0,0,0,0.2);
+  padding: 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--text-color);
+}
+
+/* Citações em Bloco com bordas ASCII */
+blockquote {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  position: relative;
+  border: none;
+}
+
+blockquote::before {
+  content: '┌────────────────────────────────────────┐\A│                                        │\A│                                        │\A│                                        │\A└────────────────────────────────────────┘';
+  white-space: pre;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: var(--text-color);
+  opacity: 0.5;
+}
+
+blockquote p {
+  position: relative;
+  z-index: 1;
+}
+
+/* Imagens com filtro retro */
+img {
+  max-width: 100%;
+  height: auto;
+  filter: saturate(0) contrast(1.5) brightness(1.1);
+  border: 1px solid var(--text-color);
+  padding: 5px;
+}
+
+/* ==========================================================================
+   5. ELEMENTOS INTERATIVOS E ANIMAÇÕES
+   ========================================================================== */
+/* Animação de Máquina de Escrever (Typewriter) */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* Animação do cursor a piscar */
+@keyframes blink {
+  from, to { border-color: transparent }
+  50% { border-color: var(--text-color); }
+}
+
+/* Efeito de Glitch para interações */
+.glitch-hover {
+  position: relative;
+}
+
+.glitch-hover:hover::before,.glitch-hover:hover::after {
+  content: attr(data-text); /* O texto deve ser colocado no atributo data-text do elemento HTML */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-color);
+  overflow: hidden;
+  clip-path: inset(50% 50% 50% 50%);
+}
+
+.glitch-hover:hover::before {
+  left: -2px;
+  text-shadow: -1px 0 red;
+  animation: glitch-anim-1 1s infinite linear alternate-reverse;
+}
+
+.glitch-hover:hover::after {
+  left: 2px;
+  text-shadow: -1px 0 blue;
+  animation: glitch-anim-2 1s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim-1 {
+  0% { clip-path: inset(40% 0 60% 0); }
+  20% { clip-path: inset(10% 0 85% 0); }
+  40% { clip-path: inset(50% 0 30% 0); }
+  60% { clip-path: inset(70% 0 10% 0); }
+  80% { clip-path: inset(90% 0 5% 0); }
+  100% { clip-path: inset(40% 0 60% 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip-path: inset(20% 0 80% 0); }
+  20% { clip-path: inset(80% 0 5% 0); }
+  40% { clip-path: inset(15% 0 75% 0); }
+  60% { clip-path: inset(40% 0 55% 0); }
+  80% { clip-path: inset(65% 0 20% 0); }
+  100% { clip-path: inset(20% 0 80% 0); }
+}
+
+
+/* ==========================================================================
+   6. ELEMENTOS DE FORMULÁRIO
+   ========================================================================== */
+input[type="text"],
+input[type="email"],
+textarea {
+  background-color: transparent;
+  border: 1px solid var(--text-color);
+  color: var(--text-color);
+  font-family: var(--font-main);
+  padding: 0.5rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px var(--accent-glow-color);
+}
+
+button,
+input[type="submit"] {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  border: none;
+  font-family: var(--font-heading);
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover,
+input[type="submit"]:hover {
+  background-color: var(--accent-color);
+  box-shadow: 0 0 15px var(--accent-glow-color);
+}
