@@ -225,10 +225,12 @@ blockquote p {
   z-index: 1;
 }
 
-/* Imagens com filtro retro */
+/* Imagens com filtro retro e dimensionamento correto */
 img {
-  max-width: 100%;
-  height: auto;
+  display: block; /* Garante que a imagem não tenha espaçamento extra abaixo */
+  max-width: 100%; /* Garante que a imagem não ultrapasse o contentor */
+  height: auto; /* Mantém a proporção da imagem */
+  margin: 2rem auto; /* Adiciona espaçamento vertical e centra a imagem */
   filter: saturate(0) contrast(1.5) brightness(1.1);
   border: 1px solid var(--text-color);
   padding: 5px;
