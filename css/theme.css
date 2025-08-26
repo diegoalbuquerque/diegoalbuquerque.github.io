@@ -54,7 +54,7 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: var(--font-main);
-  font-size: 1.1rem;
+  font-size: 1rem;
   line-height: 1.6;
   margin: 0;
   padding: 2rem;
@@ -64,6 +64,9 @@ body {
   /* Efeito de curvatura e vinheta do ecrã CRT */
   border-radius: 20px;
   box-shadow: inset 0 0 50px rgba(0,0,0,0.7);
+
+  max-width: 160ch;
+  justify-self: center;
 }
 
 /* Efeito de Scanlines e Cintilação (Flicker) */
@@ -145,10 +148,10 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 1px;
 }
 
-h1 { font-size: 2.5rem; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.5rem; text-shadow: 0 0 5px var(--glow-color); }
-h4 { font-size: 1.2rem; text-shadow: 0 0 5px var(--glow-color); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1rem; text-shadow: 0 0 5px var(--glow-color); }
+h4 { font-size: 0.8rem; text-shadow: 0 0 5px var(--glow-color); }
 
 p, li {
   text-shadow: 0 0 2px var(--glow-color-subtle);
