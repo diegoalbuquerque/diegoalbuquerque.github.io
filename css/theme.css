@@ -19,7 +19,7 @@
 
   /* Tipografia */
   --font-main: 'Anonymous Pro', monospace;
-  --font-heading: 'Press Start 2P', monospace;
+  --font-heading: 'Press+Start+2P', monospace;
   --font-code: 'Hack', 'Anonymous Pro', monospace; /* Fallback para Anonymous Pro */
 
   /* Animações */
@@ -183,6 +183,7 @@ header {
   display: flex;
   justify-content: center;
   padding: 1rem 0;
+  width: 100%;
 }
 
 .navbar ul {
