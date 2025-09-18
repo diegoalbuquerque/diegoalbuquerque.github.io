@@ -33,7 +33,7 @@
 #2025-05-27          - Alterado banner de entrada e certificações em about
 #2025-08-25          - Tentativa de novo tema
 #2025-09-17          - contacts updated - curriculo
-#
+#2025-09-17          - ajustes minimos
 #
 
 
