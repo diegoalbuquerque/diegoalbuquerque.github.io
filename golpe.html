@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALERTA DE SEGURANÇA</title>
+    <style>
+        /* Reset básico e fontes */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d0d0d; /* Fundo quase preto */
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 600px;
+            border: 2px solid #ff3333; /* Borda vermelha de alerta */
+            border-radius: 10px;
+            background-color: #1a0505; /* Fundo vermelho muito escuro */
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.4);
+            margin: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        /* Animação sutil de pulso na borda */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 51, 51, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0); }
+        }
+
+        .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        h1 {
+            color: #ff3333; /* Vermelho vivo */
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .message-box {
+            background-color: #ffffff;
+            color: #000000;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+
+        p.explanation {
+            color: #cccccc;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #666;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+        }
+
+        /* Botão para voltar (psicológico) */
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <span class="icon">⛔</span>
+
+        <h1>VOCÊ FOI O ALVO!</h1>
+
+        <p style="color: #ff6666;">Isto poderia ter sido um roubo de credenciais ou um malware.</p>
+
+        <div class="message-box">
+            "A urgência alinhada à competitividade somada à confiabilidade é uma arma poderosa para comprometer alguém!"
+        </div>
+
+        <p class="explanation">
+            Você clicou por impulso para ganhar pontos, confiando no orador e pressionado pelo tempo. <br><br>
+            <strong>Na vida real, hackers usam exatamente essa mesma tática.</strong>
+        </p>
+
+        <a href="#" class="btn" onclick="window.close()">Voltar para a Apresentação</a>
+
+        <div class="footer">
+            Simulação Educativa: Golpes Digitais na Era da IA
+        </div>
+    </div>
+
+</body>
+</html>
