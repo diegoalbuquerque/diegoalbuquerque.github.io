@@ -35,5 +35,6 @@
 #2025-09-17          - contacts updated - curriculo
 #2025-09-17          - ajustes minimos
 #2025-10-01          - test-cache.html
+#2026-01-30          - golpe.html
 
 
