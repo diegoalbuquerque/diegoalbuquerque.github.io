@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Como automaticamente atachar um processo a um debugger. - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     COMO AUTOMATICAMENTE ATACHAR UM PROCESSO A UM DEBUGGER.
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : Como automaticamente atachar um processo a um debugger.
+        autor  : offensive think
+        data   : Wed, Nov 11, 2020
+        tags   : bof, osce, binary-exploitation
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/trick-to-bof-debugger.html &lt;--
+
+No processo de criação de um exploit, no estudo de Buffer Overflow por exemplo, temos várias fases: fuzzing, poc, teste de badchars, etc. Isso acaba envolvendo muito trabalho repetitivo de abrir o excutável alvo, abrir o debugger e então anexar o processo.
+Uma forma de agilizar um pouco é fazer com que, ao abrir o aplicativo que você deseja testar, ele seja automaticamente &quot;atachado&quot; ao debugger de sua preferência.
+Para isso, basta fazer:
+1. Criar uma nova chave com o nome exato do aplicativo, incluindo a extensão, no registro em Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\
+2. Dentro dessa nova chave criar uma entrada do *tipo string* de *nome debugger*.
+3. O valor da entrada debugger deve ser o caminho completo, incluindo o executável, do debugger de sua preferência.
+Abaixo, como fica no regedit, a criação da entrada para um aplicativo de nome trainingserver.exe que deverá ser automaticamente anexado ao Immunity Debugger, ao ser iniciado.
+</pre>
+<a href="../images/trick-to-bof-debugger.png" target="_blank"><img src="../images/trick-to-bof-debugger.png"  ></a>
+<pre>
+Agora é só iniciar o aplicativo e ele já abrirá no debugger. Só dar play e se divertir. ;D
+How to: Launch the Debugger Automatically
+https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2008/a329t4ed(v=vs.90)?redirectedfrom=MSDN
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

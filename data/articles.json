@@ -1,0 +1,16 @@
+[
+  {
+    "title": "Recon local antes do payload",
+    "slug": "recon-local-antes-do-payload",
+    "date": "2026-05-08",
+    "author": "offensive think",
+    "summary": "Um exemplo técnico em formato zine/NFO mostrando reconhecimento local controlado antes de qualquer payload.",
+    "tags": [
+      "linux",
+      "pentest",
+      "opsec",
+      "recon"
+    ],
+    "path": "posts/recon-local-antes-do-payload.html"
+  }
+]

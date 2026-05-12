@@ -1,823 +1,167 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!doctype html>
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- iOS Safari -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<!-- Chrome, Firefox OS and Opera Status Bar Color -->
-<meta name="theme-color" content="#FFFFFF">
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-<link rel="stylesheet" type="text/css"
-  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-<link rel="stylesheet" type="text/css" href="css/theme.css">
-<link rel="stylesheet" type="text/css" href="css/notablog.css">
-<!-- Favicon -->
-
-  <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐞&lt;/text&gt;&lt;/svg&gt;">
-
-<style>
-  :root {
-    font-size: 20px;
-  }
-</style>
-  <title>www.offensivethink.com</title>
-  <meta property="og:type" content="blog">
-  <meta property="og:title" content="www.offensivethink.com">
-  
-    <meta name="description" content="Este site é um compilado de artigos e outras coisas que tenho escrito como forma de aprendizado. 
-
-Caso queira trocar uma idéia sobre algum dos artigos, sobre segurança ofensiva no geral só me achar por ai! 
-Por total falta de tempo não coloquei nenhuma funcionalidade neste site, sequer algo que possa avisar sobre possíveis novos artigos. Por enquanto, sempre aviso nos canais que participo quando publiquei algo novo. ">
-    <meta property="og:description" content="Este site é um compilado de artigos e outras coisas que tenho escrito como forma de aprendizado. 
-
-Caso queira trocar uma idéia sobre algum dos artigos, sobre segurança ofensiva no geral só me achar por ai! 
-Por total falta de tempo não coloquei nenhuma funcionalidade neste site, sequer algo que possa avisar sobre possíveis novos artigos. Por enquanto, sempre aviso nos canais que participo quando publiquei algo novo. ">
-  
-  
-    <meta property="og:image" content="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐞&lt;/text&gt;&lt;/svg&gt;">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OffensiveThink :: zine</title>
+  <link rel="stylesheet" href="assets/zine.css">
 </head>
-
 <body>
-  <nav class="Navbar">
-  <a href="index.html">
-    <div class="Navbar__Btn">
-      
-        <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐞&lt;/text&gt;&lt;/svg&gt;"></span>&nbsp;
-      
-      <span>Home</span>
-    </div>
-  </a>
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <span class="Navbar__Delim">&centerdot;</span>
-      <a href="referencia-rapida.html">
-        <div class="Navbar__Btn">
-          
-          <span>→ Referência rápida ← </span>
-        </div>
-      </a>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-      <span class="Navbar__Delim">&centerdot;</span>
-      <a href="contacts.html">
-        <div class="Navbar__Btn">
-          
-            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12e48681-f6a0-41cb-aa1f-73a46f35c5d3%2FOffensiveThink_Logo_Negative_notion_-_280x280.png?table=block&amp;id=ca933149-5245-4511-a885-9cf5922808e1"></span>&nbsp;
-          
-          <span>about &amp; contacts</span>
-        </div>
-      </a>
-    
-  
-    
-      <span class="Navbar__Delim">&centerdot;</span>
-      <a href="offensivetools.html">
-        <div class="Navbar__Btn">
-          
-          <span>Offensive Tools</span>
-        </div>
-      </a>
-    
-  
-    
-  
-    
-  
-    
-  
-</nav>
-  <header class="Header">
-    
-      <div class="Header__Cover">
-        <img src="/imgs/banner_blog.png">
-      </div>
-    
-    <div class="Header__Spacer ">
-    </div>
-    
-      <div class="Header__Icon" style="heigh:110px">
-        <span></span>
-      </div>
-    
-    <h1 class="Header__Title">www.offensivethink.com</h1>
-    
-      <div class="Header__Desc">
-        <span class="Header__DescBigQuoteMark">&ldquo;</span>
-        <span class="SemanticStringArray"><span class="SemanticString">Este site é um compilado de artigos e outras coisas que tenho escrito como forma de aprendizado. 
+<main class="page home-page">
+<pre class="nfo-hero">
+ ▒█████    █████▒ █████▒▓█████  ███▄    █   ██████  ██▓ ██▒   █▓▓█████ 
+▒██▒  ██▒▓██   ▒▓██   ▒ ▓█   ▀  ██ ▀█   █ ▒██    ▒ ▓██▒▓██░   █▒▓█   ▀ 
+▒██░  ██▒▒████ ░▒████ ░ ▒███   ▓██  ▀█ ██▒░ ▓██▄   ▒██▒ ▓██  █▒░▒███   
+▒██   ██░░▓█▒  ░░▓█▒  ░ ▒▓█  ▄ ▓██▒  ▐▌██▒  ▒   ██▒░██░  ▒██ █░░▒▓█  ▄ 
+░ ████▓▒░░▒█░   ░▒█░    ░▒████▒▒██░   ▓██░▒██████▒▒░██░   ▒▀█░  ░▒████▒
+░ ▒░▒░▒░  ▒ ░    ▒ ░    ░░ ▒░ ░░ ▒░   ▒ ▒ ▒ ▒▓▒ ▒ ░░▓     ░ ▐░  ░░ ▒░ ░
+  ░ ▒ ▒░  ░      ░       ░ ░  ░░ ░░   ░ ▒░░ ░▒  ░ ░ ▒ ░   ░ ░░   ░ ░  ░
+░ ░ ░ ▒   ░ ░    ░ ░       ░      ░   ░ ░ ░  ░  ░   ▒ ░     ░░     ░   
+    ░ ░                    ░  ░         ░       ░   ░        ░     ░  ░
+                                                            ░          
+                  ▄▄▄█████▓ ██░ ██  ██▓ ███▄    █  ██ ▄█▀              
+                  ▓  ██▒ ▓▒▓██░ ██▒▓██▒ ██ ▀█   █  ██▄█▒               
+                  ▒ ▓██░ ▒░▒██▀▀██░▒██▒▓██  ▀█ ██▒▓███▄░               
+                  ░ ▓██▓ ░ ░▓█ ░██ ░██░▓██▒  ▐▌██▒▓██ █▄               
+                    ▒██▒ ░ ░▓█▒░██▓░██░▒██░   ▓██░▒██▒ █▄              
+                    ▒ ░░    ▒ ░░▒░▒░▓  ░ ▒░   ▒ ▒ ▒ ▒▒ ▓▒              
+                      ░     ▒ ░▒░ ░ ▒ ░░ ░░   ░ ▒░░ ░▒ ▒░              
+                    ░       ░  ░░ ░ ▒ ░   ░   ░ ░ ░ ░░ ░               
+                            ░  ░  ░ ░           ░ ░  ░                 
+</pre>
 
-Caso queira trocar uma idéia sobre algum dos artigos, sobre segurança ofensiva no geral só me achar por ai! 
-Por total falta de tempo não coloquei nenhuma funcionalidade neste site, sequer algo que possa avisar sobre possíveis novos artigos. Por enquanto, sempre aviso nos canais que participo quando publiquei algo novo. </span></span>
-        <span class="Header__DescBigQuoteMark">&bdquo;</span>
-      </div>
-    
-  </header>
-  <article class="ArticleList">
+<pre class="menu">
+  <a href="index.html">[ Home ]</a>  <a href="posts/referencia-rapida.html">[ Ref.Rapida ]</a>  <a href="posts/about.html">[ About ]</a>  <a href="https://github.com/diegoalbuquerque">[ Github ]</a>   <a href="https://www.linkedin.com/in/dialbuquerque/">[ Linkedin ]</a>
+</pre>
 
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="oscp.html">
-        OSCP - Aprendizados
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Algumas dicas e aprendizados após a OSCP obtidas em agosto de 2024!</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Aug 22, 2024</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/certifications.html">certifications</a>
-        </span>
-      
-    </div>
-  </article>
+<pre class="section-block">
+  <span class="section-title">&gt;&gt;&gt; Sobre/About</span>
 
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="ecpptv2.html">
-        eCPPTv2 - aprendizados
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Alguns aprendizados sobre a eCPPTv2</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, May 29, 2023</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/certifications.html">certifications</a>
-        </span>
-      
-    </div>
-  </article>
+    binary-exploitation, shellcoding, bof, pivoting, privesc, sqli, windows, powershell,
+    certifications, talks, tools.
 
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="ms17-010.html">
-        MS17-010 - Exploiting Manually
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Como explorar a vulnerabilidade MS17-010 (Ethernalblue/DoublePusar) de forma manual. </span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Fri, Jul 1, 2022</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--pink">
-          <a href="tag/windows.html">windows</a>
-        </span>
-      
-    </div>
-  </article>
+    A little about everything , a passion about binary exploitation.
 
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="my-little-c2.html">
-        My Little Power Comand and Control
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Um pequeno teste de utilização apenas de powershell e ferramenta gratuita de hospedagem de textos para simular um pequeno command and control. </span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Wed, Mar 30, 2022</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
-          <a href="tag/#powershell.html">#powershell</a>
-        </span>
-      
-    </div>
-  </article>
+</pre>
 
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="meetup-owasp-natal.html">
-        Meetup OWASP Natal 2022 - SIDE EFFECT 
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Talk feita no dia 24.03.2022 no primeiro meetup do capítulo OWASP de NATAL, abordando o porque devemos dar atenção a nossos servidores internos na mesma prioridade que nossos servidores expostos.
+<!-- <pre class="separator">------------------------------------------------------------------------</pre> -->
 
-Nesta talk mostramos que um agente malicioso externo pode comprometer um servidor interno, remotamente, sem acesso a rede interna do alvo. 
+<pre class="section-block">
+  <span class="section-title">&gt;&gt;&gt; Artigos/Articles</span>
+</pre>
 
-Ainda levantamos questões sobre a real efetividade de um levantamento de vulnerabilidades (scan) versus um pentest feito por um profissional qualificado.</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Fri, Mar 25, 2022</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
-          <a href="tag/techinique.html">techinique</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/talk.html">talk</a>
-        </span>
-      
-    </div>
-  </article>
+<!-- _+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_ ARTICLES_START +_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_ -->
+<div class="controls">
+  <label for="articleSearch">busca&gt;</label>
+  <input id="articleSearch" name="q" type="search" placeholder="filtrar por texto, tag ou ano" autocomplete="off">
+  <button class="zbtn" id="clearFilters" type="button">limpar</button>
+</div>
+<div class="filters" aria-label="filtros por tag e ano"><button class="zbtn" data-tag="linux">#linux</button> <button class="zbtn" data-tag="opsec">#opsec</button> <button class="zbtn" data-tag="pentest">#pentest</button> <button class="zbtn" data-tag="recon">#recon</button> <button class="zbtn" data-year="2026">2026</button></div>
+<pre class="article-list" id="articleList">
+<a class="article-row" href="posts/oscp.html" data-index="0" data-title="oscp - aprendizados" data-tags="certifications" data-year="2024">OSCP - Aprendizados......................................................08.2024
+<span class="article-tags">certifications</span></a>
+<a class="article-row" href="posts/ecpptv2.html" data-index="1" data-title="ecpptv2 - aprendizados" data-tags="certifications" data-year="2023">eCPPTv2 - aprendizados...................................................05.2023
+<span class="article-tags">certifications</span></a>
+<a class="article-row" href="posts/ms17-010.html" data-index="2" data-title="ms17-010 - exploiting manually" data-tags="windows" data-year="2022">MS17-010 - Exploiting Manually...........................................07.2022
+<span class="article-tags">windows</span></a>
+<a class="article-row" href="posts/lets-dump-lsass.html" data-index="3" data-title="lets dump lsass" data-tags="lolbins,windows" data-year="2022">Lets dump LSASS..........................................................04.2022
+<span class="article-tags">lolbins  windows</span></a>
+<a class="article-row" href="posts/my-little-c2.html" data-index="4" data-title="my little power comand and control" data-tags="#powershell" data-year="2022">My Little Power Comand and Control.......................................03.2022
+<span class="article-tags">#powershell</span></a>
+<a class="article-row" href="posts/meetup-owasp-natal.html" data-index="5" data-title="meetup owasp natal 2022 - side effect" data-tags="techinique,talk" data-year="2022">Meetup OWASP Natal 2022 - SIDE EFFECT....................................03.2022
+<span class="article-tags">techinique  talk</span></a>
+<a class="article-row" href="posts/open-cmd-alternate-way.html" data-index="6" data-title="abrindo um cmd em possíveis ambientes restritos." data-tags="tips,windows" data-year="2021">Abrindo um CMD em possíveis ambientes restritos..........................08.2021
+<span class="article-tags">tips  windows</span></a>
+<a class="article-row" href="posts/shellcoding-and-basics.html" data-index="7" data-title="simple shellcode tale!" data-tags="osce,binary-exploitation,shellcoding" data-year="2021">Simple Shellcode Tale!...................................................06.2021
+<span class="article-tags">osce  binary-exploitation  shellcoding</span></a>
+<a class="article-row" href="posts/buffer-overflow-insights.html" data-index="8" data-title="alguns aprendizados no caminho do buffer overflow" data-tags="binary-exploitation,osce,oscp" data-year="2021">Alguns aprendizados no caminho do Buffer Overflow........................05.2021
+<span class="article-tags">binary-exploitation  osce  oscp</span></a>
+<a class="article-row" href="posts/h2hc-magazine.html" data-index="9" data-title="h2hc magazine - &quot;saltando sem jmp,call,pop&quot;" data-tags="binary-exploitation,osce,shellcoding,techinique" data-year="2021">H2HC Magazine - &quot;Saltando sem jmp,call,pop&quot;..............................04.2021
+<span class="article-tags">binary-exploitation  osce  shellcoding  techinique</span></a>
+<a class="article-row" href="posts/choosing-correct-patterns.html" data-index="10" data-title="a escolha do pattern importa ?" data-tags="binary-exploitation,bof" data-year="2021">A escolha do pattern importa ?...........................................02.2021
+<span class="article-tags">binary-exploitation  bof</span></a>
+<a class="article-row" href="posts/referencia-rapida.html" data-index="11" data-title="→ referência rápida ←" data-tags="" data-year="2021">→ Referência rápida ←....................................................01.2021</a>
+<a class="article-row" href="posts/inserting-shellcode-by-enviroment.html" data-index="12" data-title="injetando shellcode através de variáveis de ambiente" data-tags="bof,binary-exploitation,osce" data-year="2021">Injetando Shellcode através de variáveis de ambiente.....................01.2021
+<span class="article-tags">bof  binary-exploitation  osce</span></a>
+<a class="article-row" href="posts/about-gef.html" data-index="13" data-title="algumas coisas sobre o gef" data-tags="binary-exploitation,debug,osce" data-year="2021">Algumas coisas sobre o GEF...............................................01.2021
+<span class="article-tags">binary-exploitation  debug  osce</span></a>
+<a class="article-row" href="posts/little-endian.html" data-index="14" data-title="brincando com o pequeno endian" data-tags="bof,osce,binary-exploitation" data-year="2021">Brincando com o Pequeno Endian...........................................01.2021
+<span class="article-tags">bof  osce  binary-exploitation</span></a>
+<a class="article-row" href="posts/trick-to-bof-debugger.html" data-index="15" data-title="como automaticamente atachar um processo a um debugger." data-tags="bof,osce,binary-exploitation" data-year="2020">Como automaticamente atachar um processo a um debugger...................11.2020
+<span class="article-tags">bof  osce  binary-exploitation</span></a>
+<a class="article-row" href="posts/binary-exploitation-with-pwntools.html" data-index="16" data-title="usando a pwntools para binary exploitation" data-tags="bof,osce,binary-exploitation" data-year="2020">Usando a pwntools para Binary Exploitation...............................11.2020
+<span class="article-tags">bof  osce  binary-exploitation</span></a>
+<a class="article-row" href="posts/bof-socket-python3.html" data-index="17" data-title="bof + sockets + erros de codificação com o python3" data-tags="bof" data-year="2020">BoF + Sockets + Erros de Codificação com o Python3.......................10.2020
+<span class="article-tags">bof</span></a>
+<a class="article-row" href="posts/pivoting.html" data-index="18" data-title="pivoteando por túneis" data-tags="techinique,pivoting" data-year="2020">Pivoteando por Túneis....................................................08.2020
+<span class="article-tags">techinique  pivoting</span></a>
+<a class="article-row" href="posts/priv-esc-lxd.html" data-index="19" data-title="privilege escalation by lxd/lxc" data-tags="privEsc" data-year="2020">Privilege Escalation by LXD/LXC..........................................08.2020
+<span class="article-tags">privEsc</span></a>
+<a class="article-row" href="posts/reverse-shell.html" data-index="20" data-title="melhorando seu shell reverso" data-tags="shell,techinique" data-year="2020">Melhorando seu Shell Reverso.............................................07.2020
+<span class="article-tags">shell  techinique</span></a>
+<a class="article-row" href="posts/sqli-kioptrix4.html" data-index="21" data-title="sqli(injection) com reverse shell no kiotprix4" data-tags="sqli" data-year="2020">SQLi(injection) com Reverse Shell no Kiotprix4...........................07.2020
+<span class="article-tags">sqli</span></a>
+<a class="article-row" href="posts/sqli-to-root.html" data-index="22" data-title="do sqli ao root em 2 passos" data-tags="sqli" data-year="2020">Do SQLi ao Root em 2 Passos..............................................07.2020
+<span class="article-tags">sqli</span></a>
+<a class="article-row" href="posts/writeup-dc9.html" data-index="23" data-title="writeup - dc9 - oscp like vm" data-tags="lfi,fuzz" data-year="2020">Writeup - DC9 - OSCP Like VM.............................................07.2020
+<span class="article-tags">lfi  fuzz</span></a>
+<!-- _+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_ ARTICLES_END +_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_ -->
+</pre>
 
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="open-cmd-alternate-way.html">
-        Abrindo um CMD em possíveis ambientes restritos.
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Uma forma diferente de ter acesso a um prompt de comando do windows.</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, Aug 9, 2021</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
-          <a href="tag/tips.html">tips</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--pink">
-          <a href="tag/windows.html">windows</a>
-        </span>
-      
-    </div>
-  </article>
+<pre class="ascii-art">
+                                                                            
+                    .*=.                          .#+                       
+                     :#%+                       :%%+.                       
+                       ::+%*:    :#%@@@%#:  .+%+:.                          
+                            .:=#%@##@@%*%@@%=                               
+                            :%@@@@@@@@@@@@@@@%*.                            
+                           #@@@@@@@@@@@@@@@@@@@%+                           
+                         -%@@@@@@@@@@@@@@@@@@@@@@#.                         
+                        -@@@@@@@@@@@@@@@@@@@@@@@@@#.                        
+                     .*%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%+.                    
+                  .+%@@@@%%#######%%%%@%%%%######%%@@@@@#-                  
+                .*@@@@@%#######%#####%@#####%%######%%@@@@%=.               
+               =@@@@@%#######@@@@####%@#%##%@@@%#######%@@@@%:              
+             .#@@@@%#########%@@%####%@####%@@@%%#######%%@@@%+             
+            :%@@@@%##################%@####%%%%%%%%#######%@@@@*            
+           .%@@@@%######%@@%%########%@####%%%%%@@@%%######%@@@@*           
+          .#@@@@#######@@@@@@%#######%@####%%%%@@@@@%%######%@@@@-          
+          -%@@@%#######%@@@@@%#######%@#%#%%%%%@@@@@%%%%####%%@@@%.         
+         .#@@@%#%%@%%###%%%%#########%@#%#%%%%%%%%%%%%%%%@@%%%%@@%+         
+         :@@@%#%@@@@@%###############%@%%%%%%%%%%%%%%%%@@@@@@%%@@@#.        
+         +%@@%#%@@@@@%########%######%@%%%%%%%%%%%%%%%%@@@@@@%%%@@%:        
+        .#@@@####%%%%########%%######%@%%%%%%%%%%%%%%%%%%%%%%%%%@@@:        
+        .#@@%#####%#%%%%%%####%#####%%@%%%%%%%%%%%%%%%%%%%%%%%%%@@@-        
+        .#@@%#####%@@@@@@@@@@@%#%%%%%%@%%%%%%%%%%@@@@@@@@@%%%%%%@@@-        
+        .#@@%####%@@@@@@@@@@@@@%%%%%%%@%%%%%%%@@@@@@@@@@@@@%%%%%@@@-        
+         *%@%####%@@@@@@@@@@@@@@@%%%%%@%%%%%@@@@@@@@@@@@@@@%%%%%@@%:        
+         .@@@####%@@@@@@@@@@@@@@@@%%%%@%%%%@@@@@@@@@@@@@@@@%%%%%@@#.        
+          =@@%###%@@@@@@@@@@@@@@@@@%%%@%%%@@@@@@@@@@@@@@@@@%%%%%@@:         
+          .%@@###%@@@@@@@@@@@@@@@@@%%%@%%%@@@@@@@@@@@@@@@@@%%%%@@=          
+           .%@%##%%%@@@@@@@@@@@@@@%%%%@%%%@@@@@@@@@@@@@@@@%%%%%@%.          
+            +@@###%%%%@@@@@@@@@@%%%%%%@%%%%%@@@@@@@@@@@%%%%%%%@%.           
+            .@@%##%%%%%%%%%%%%%%%%%%%@@@%%%%%%%%%%%%%%%%%%%%%%@*            
+             #@%###%%%%%%%%%%%%%%%%%@%#%@%%%%%%%%%%%%%%%%%%%%@@=            
+             :@@%###%%%%%%%%%%%%%%%@%###%@%%%%%%%%%%%%%%%%%%%@%.            
+              *@@%##%%%%@@@@%%%%%@@%##%##%@%%%%%%%@@@@%%%%%%@%:             
+               +@@%##%%%@@@@%%%%@@@%%%@%%%@@@%%%%%@@@%%%%%%@%:              
+                .%@@%#%%%%%%%%@@@@@@@@@@@@@@@@@%%%%%%%%%%@@#.               
+                  -%@@%%%%%@@@%@@@@@@@@@@@@@@@%@@@%%%%@@@%.                 
+                    :#%@@@@%*. -@@@@@@@@@@@@%: -%@@@@@%+.                   
+                       .+-     =@@@@@@@@@@@@%=    .-=.                      
+                               *@@@@@@@@@@@@%+                              
+                               +%%=#%%=%%##%%=                              
+                 
+                               
 
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="shellcoding-and-basics.html">
-        Simple Shellcode Tale!
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Um shellcode simples que não executa. Um código C simples e citado em vários exemplos que gera Segmentation Fault. Como tudo pode ser corrigido!</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Fri, Jun 4, 2021</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
-          <a href="tag/osce.html">osce</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/binary-exploitation.html">binary-exploitation</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
-          <a href="tag/shellcoding.html">shellcoding</a>
-        </span>
-      
-    </div>
-  </article>
+</pre>
 
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="buffer-overflow-insights.html">
-        Alguns aprendizados no caminho do Buffer Overflow
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Alguns pontos de atenção que fui aprendendo até agora no meu desenvolvimento em binary exploitation</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, May 20, 2021</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/binary-exploitation.html">binary-exploitation</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
-          <a href="tag/osce.html">osce</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--pink">
-          <a href="tag/oscp.html">oscp</a>
-        </span>
-      
-    </div>
-  </article>
 
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="h2hc-magazine.html">
-        H2HC Magazine - &#34;Saltando sem jmp,call,pop&#34;
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Tive a honra e o prazer de publicar um artigo e o conteúdo da seção curiosidades da H2HC Magazine numero 15. O artigo é sobre técnicas utilizadas em shellcodes para fazer saltos e na seção curiosidades alguns pequenos truques de como saber qual a instrução gerada pela combinação de dois hexadecimais.</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Sat, Apr 17, 2021</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/binary-exploitation.html">binary-exploitation</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
-          <a href="tag/osce.html">osce</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
-          <a href="tag/shellcoding.html">shellcoding</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
-          <a href="tag/techinique.html">techinique</a>
-        </span>
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="choosing-correct-patterns.html">
-        A escolha do pattern importa ? 
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Um caso interessante mostrando quando a escolha de um pattern pode fazer diferença na exploração de um binário</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Sat, Feb 6, 2021</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/binary-exploitation.html">binary-exploitation</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
-          <a href="tag/bof.html">bof</a>
-        </span>
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="referencia-rapida.html">
-        → Referência rápida ← 
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Nova seção adicionada no menu superior! Algumas referências rápidas para resolver dúvidas na hora dos problemas!</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Jan 21, 2021</span>
-      
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="inserting-shellcode-by-enviroment.html">
-        Injetando Shellcode através de variáveis de ambiente
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Uma forma de exploração de Buffer Overflow simples, em linux, usando variáveis de ambiente como ponto de entrada para a inserção do shellcode</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, Jan 18, 2021</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
-          <a href="tag/bof.html">bof</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/binary-exploitation.html">binary-exploitation</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
-          <a href="tag/osce.html">osce</a>
-        </span>
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="little-endian.html">
-        Brincando com o Pequeno Endian
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Duas formas de escrever strings, ou uma sequência de bytes, em memória, respeitando o Little endian. </span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, Jan 4, 2021</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
-          <a href="tag/bof.html">bof</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
-          <a href="tag/osce.html">osce</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/binary-exploitation.html">binary-exploitation</a>
-        </span>
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="about-gef.html">
-        Algumas coisas sobre o GEF
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Um pequeno apanhado de comandos do GEF que podem auxiliar na hora do debug</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, Jan 4, 2021</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/binary-exploitation.html">binary-exploitation</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--brown">
-          <a href="tag/debug.html">debug</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
-          <a href="tag/osce.html">osce</a>
-        </span>
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="trick-to-bof-debugger.html">
-        Como automaticamente atachar um processo a um debugger. 
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Uma pequena dica de como &quot;attachar&quot; automaticamente um processo ao debugger ao iniciar facilitando assim a construção do exploit</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Wed, Nov 11, 2020</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
-          <a href="tag/bof.html">bof</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
-          <a href="tag/osce.html">osce</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/binary-exploitation.html">binary-exploitation</a>
-        </span>
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="binary-exploitation-with-pwntools.html">
-        Usando a pwntools para Binary Exploitation
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Uma forma de fazer binary exploitation usando a pwntools de forma a facilitar o processo de exploitation</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Tue, Nov 3, 2020</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
-          <a href="tag/bof.html">bof</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
-          <a href="tag/osce.html">osce</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/binary-exploitation.html">binary-exploitation</a>
-        </span>
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="bof-socket-python3.html">
-        BoF + Sockets + Erros de Codificação com o Python3
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Como o python3 mudou o seu entendimento sobre a codificação de strings e como isso afeta na escripta de exploits na hora de enviar payloads para exploração de Buffer Overflow</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Wed, Oct 28, 2020</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
-          <a href="tag/bof.html">bof</a>
-        </span>
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="pivoting.html">
-        Pivoteando por Túneis
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Uma forma de criar túnel usando ssh</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Fri, Aug 7, 2020</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
-          <a href="tag/techinique.html">techinique</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--brown">
-          <a href="tag/pivoting.html">pivoting</a>
-        </span>
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="priv-esc-lxd.html">
-        Privilege Escalation by LXD/LXC
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Como abusar de containers para escalar privilégios</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Aug 6, 2020</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/privEsc.html">privEsc</a>
-        </span>
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="writeup-dc9.html">
-        Writeup - DC9 - OSCP Like VM
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">A DC-9 é uma VM do Vulnhub para estudoi para a OSCP.</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Jul 30, 2020</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--purple">
-          <a href="tag/lfi.html">lfi</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
-          <a href="tag/fuzz.html">fuzz</a>
-        </span>
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="reverse-shell.html">
-        Melhorando seu Shell Reverso
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Algumas técnicas para melhorar o reverse shell.</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Jul 30, 2020</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--brown">
-          <a href="tag/shell.html">shell</a>
-        </span>
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
-          <a href="tag/techinique.html">techinique</a>
-        </span>
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="sqli-kioptrix4.html">
-        SQLi(injection) com Reverse Shell no Kiotprix4
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Algumas formas de ganhar shell reverso usando SQLi</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Jul 30, 2020</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--default">
-          <a href="tag/sqli.html">sqli</a>
-        </span>
-      
-    </div>
-  </article>
-
-  <article class="Article">
-    <h3 class="Article__Title">
-      
-      <a href="sqli-to-root.html">
-        Do SQLi ao Root em 2 Passos
-      </a>
-    </h3>
-    
-      <p class="Article__Desc">
-        <span class="SemanticStringArray"><span class="SemanticString">Como em dois passos pode-se chegar ao root se o mysql estiver configurado para rodar com usuário superprivilegiado.</span></span>
-      </p>
-    
-    <div class="DateTagBar">
-      
-        <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Jul 30, 2020</span>
-      
-      
-        <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--default">
-          <a href="tag/sqli.html">sqli</a>
-        </span>
-      
-    </div>
-  </article>
-
-</article>
-  <footer class="Footer">
-  <div>&copy; www.offensivethink.com 2024</div>
-  <div>&centerdot;</div>
-  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-      rel="noopener noreferrer">Notablog</a>.
-  </div>
-</footer>
-
+<pre class="footer">
+(c) www.offensivethink.com 2026
+::..::..::..::..::..::..::..::..::..::..::..::..::..::..::..::..::..::..::..::..::..::..::..::..
+</pre>
+</main>
+<script src="assets/zine.js"></script>
 </body>
-
 </html>

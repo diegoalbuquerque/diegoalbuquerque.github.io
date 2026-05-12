@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recon local antes do payload - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     ___  ___  ___  ___  _  _       _     ___   ___   ___   _    _     
+    | _ \/ __|/ __|/ _ \| \| |     | |   / _ \ / __| /   \ | |  | |    
+    |   /\__ \ (__| (_) | .` |     | |__| (_) | (__  | - | | |__| |__  
+    |_|_\|___/\___|\___/|_|\_|     |____|\___/ \___| |_|_| |____|____| 
+
+
+------------------------------------------------------------------------
+titulo : Recon local antes do payload
+autor  : offensive think
+data   : 2026-05-08
+tags   : linux, pentest, opsec, recon
+------------------------------------------------------------------------
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        --&gt; https://www.offensivethink.com/posts/recon-local-antes-do-payload.html &lt;--
+
+---[ INDEX ]----------------------------------------------------------------
+0 - Introdução
+1 - Escopo e postura operacional
+2 - Coleta mínima de contexto
+3 - Leitura defensiva dos sinais
+4 - Checklist de saída
+5 - Referências
+
+
+---[ 0X00 - INTRODUÇÃO ]----------------------------------------------------
+
+Reconhecimento local não é sinônimo de barulho. Em uma avaliação autorizada,
+a primeira fase deveria responder uma pergunta simples:
+
+    "qual é o terreno antes de qualquer ação mais intrusiva?"
+
+Este texto demonstra um fluxo mínimo, escrito para ambientes de laboratório ou
+contratos formais de pentest. A intenção é reduzir erro operacional, registrar
+hipóteses e evitar payloads desnecessários.
+
+[!] Use apenas em sistemas próprios, laboratório controlado ou ambiente com autorização explícita.
+
+
+---[ 0X01 - ESCOPO E POSTURA OPERACIONAL ]----------------------------------
+
+Antes da técnica, vem o escopo:
+
+- qual host pode ser analisado;
+- qual janela de execução foi aprovada;
+- quais comandos são permitidos;
+- quais evidências devem ser coletadas;
+- quem recebe o relatório se algo inesperado aparecer.
+
+:: regra de ouro
+
+Se o comando não ajuda a responder uma hipótese do teste, ele provavelmente é ruído.
+
+[*] Em zines antigos, muita coisa era escrita como receita. Em operação real, trate como método: hipótese, evidência, decisão.
+
+
+---[ 0X02 - COLETA MÍNIMA DE CONTEXTO ]-------------------------------------
+
+Comece por comandos que descrevem o ambiente sem modificar estado relevante.
+
+    $ whoami
+    analyst
+
+    $ hostname
+    lab-edge-01
+
+    $ id
+    uid=1000(analyst) gid=1000(analyst) groups=1000(analyst),27(sudo)
+
+    $ uname -a
+    Linux lab-edge-01 6.6.0-lab x86_64 GNU/Linux
+
+
+:: usuários e sessões
+
+    $ w
+     10:42:11 up 3 days,  2:13,  2 users,  load average: 0.20, 0.18, 0.16
+    USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+    analyst  pts/0    10.10.10.5       10:01    1.00s  0.04s  0.00s w
+    ops      pts/1    10.10.10.9       09:55    8:17   0.02s  0.02s -bash
+
+
+[*] Se há usuário ativo, a prioridade vira coordenação e cautela.
+
+:: rede local
+
+    $ ip -br addr
+    lo               UNKNOWN        127.0.0.1/8 ::1/128
+    eth0             UP             10.10.20.14/24 fe80::42:acff:fe11:2/64
+
+    $ ss -tulpn
+    Netid State  Local Address:Port  Peer Address:Port Process
+    udp   UNCONN 127.0.0.53:53       0.0.0.0:*       -
+    tcp   LISTEN 127.0.0.1:5432      0.0.0.0:*       -
+    tcp   LISTEN 0.0.0.0:22          0.0.0.0:*       -
+
+
+---[ 0X03 - LEITURA DEFENSIVA DOS SINAIS ]----------------------------------
+
+O operador ofensivo responsável também observa sinais defensivos. Isso evita
+gerar incidentes artificiais e melhora o relatório final.
+
+[+] sinais úteis
+
+- agentes EDR instalados;
+- processos de backup em execução;
+- conexões administrativas ativas;
+- arquivos sensíveis fora do escopo;
+- serviços expostos apenas em localhost.
+
+    $ ps aux | grep -Ei 'edr|sensor|falcon|defender|audit|osquery' | grep -v grep
+    root        771  0.1  1.2  921100 49840 ?        Ssl  May05   6:42 osqueryd
+
+    $ systemctl is-active auditd
+    active
+
+
+[+] nota operacional
+
+Registrar esses sinais não é "desviar" do teste. É documentar o ambiente para
+explicar risco, cobertura e possíveis limitações.
+
+---[ 0X04 - CHECKLIST DE SAÍDA ]--------------------------------------------
+
+Antes de encerrar a fase de recon local:
+
+- salve comandos e horários;
+- separe observações de evidências;
+- marque tudo que exige autorização adicional;
+- remova arquivos temporários criados durante o teste;
+- registre limitações sem tentar compensá-las com improviso.
+
+    $ history | tail -n 20
+    $ rm -f /tmp/ot-recon-*.txt
+    $ date -Iseconds
+    2026-05-08T13:37:00-03:00
+
+
+---[ 0X05 - REFERÊNCIAS ]---------------------------------------------------
+
+[0] MITRE ATT&amp;CK - Discovery
+[1] NIST SP 800-115 - Technical Guide to Information Security Testing and Assessment
+[2] Linux man-pages project
+
+---[ EOF ]---------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

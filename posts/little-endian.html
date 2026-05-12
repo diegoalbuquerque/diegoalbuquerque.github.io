@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Brincando com o Pequeno Endian - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     BRINCANDO COM O PEQUENO ENDIAN
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : Brincando com o Pequeno Endian
+        autor  : offensive think
+        data   : Mon, Jan 4, 2021
+        tags   : bof, osce, binary-exploitation
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/little-endian.html &lt;--
+
+Ao escrever um valor em uma região de memória (pilha) devemos nos preocupar em escrever de forma correta respeitando a convenção little endian ou big endian.
+Uma das formas de colocar valores na pilha é através da instrução assembly push.  Ao utilizar o push devemos nos preocupar em inverter todos os bytes do valor que queremos escrever na memória e lembrar de respeitar a LIFO (Last In First Out), ou seja, também colocar os valores que queremos do final para o início.
+Logo , se precisamos colocar a string /bin/sh na pilha, devemos lembrar que:
+1. A memória contém uma sequência de bytes. Para a CPU não existe o conceito de string, etc. O que ela reconhece são bytes. Uma string para um programa de alto nível nada mais é que uma seqência de bytes que termina com 0x00 (que conhecemos como NULL BYTE!)
+2. O push, em 32 bits ( 32 bits / 8 bits = 4 bytes), coloca blocos de 4 em 4 bytes. Se você usa um push com menos de 4 bytes o assembler vai tratar de completar com NULL BYTES (0x00) o valor. Seria como se tívemos um campo que obrigatoriamente devemos colocar 4 números. Se colocarmos 9 o programa completará com zeros para ficar 0009. Logo um push 0x01, se tornará um 0x00 00 00 01, formando assim 4 bytes.
+3. Ao fazer um PUSH , o registrador ESP é decrementado de 4 bytes e os 4 bytes (arquitetura 32bits) passados são colocados no endereço de memória que o registrador ESP aponta no momento.
+Vamos observar na prática :
+O código abaixo tem a finalidade de chamar a syscall execve passando para ela a string /bin/sh , que é o caminho do binário que ela deve executar.
+
+    [BITS 32]
+    
+    ; nasm -f elf32 empilha-by-push.asm -o empilha-by-push.o
+    ; ld -m elf_i386 empilha-by-push.o -o empilha-by-push
+    ; gdb -q empilha-by-push
+    
+    
+    section .text
+    
+    	global _start
+    
+    	_start:
+    
+    	xor eax,eax
+    	push eax         ; Insere NULL BYTES na pilha para indicar o fim da string
+    
+    	; Insere na pilha /bin//sh , escrevendo de forma invertida 
+      ; em blocos de 4 bytes
+      ; python -c &quot;print &#x27;/bin//sh&#x27;.encode(&#x27;hex&#x27;)&quot;  =&gt; 2f62696e2f2f7368
+    
+    	push 0x68732f2f  ; hs//
+      push 0x6e69622f  ; nib/
+    
+    
+      ; construcao dos parametros da execve
+      mov ebx,esp      ; 1o param - endereco da string do comando a ser executado
+      mov ecx,eax      ; 2o param - 0 = sem argumentos
+      mov al,0xb       ; valor da syscall (0xb = 11 = execve)
+      int 0x80         ; chama a syscall
+
+Vamos focar nos push&#x27;s. Bem a string (sequencia de bytes) que queremos colocar na memória é /bin//sh, em hexa : 2f 62 69 6e 2f 2f 73 68.
+*observação:*_ colocamos duas barras após o bin e antes do sh para que possamos ter 8 bytes , facilitando assim o push. Lembra que o push coloca blocos de 4 bytes ?_
+Observe que para escrever na memória devemos inverter os bytes e depois, agrupados em 4 bytes, colocar de forma de trás para frente, o que ficaria:
+2f 62 69 6e 2f 2f 73 68 → 68 73 2f 2f  + 6e 69 62 2f
+Montando os pushs então, colocando primeiro do último para o primeiro bloco, fica :
+push 0x68732f2f  ; hs//
+push 0x6e69622f  ; nib/
+Isso faz sentido mesmo ? Vamos ver no debug como isso se comporta.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc02094ad-b6b8-4fd3-8e9a-137ae58b2409%2FUntitled.png?width=1425&amp;table=block&amp;id=abdc1290-1e29-4976-8dfe-45fd6be988ae" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc02094ad-b6b8-4fd3-8e9a-137ae58b2409%2FUntitled.png?width=1425&amp;table=block&amp;id=abdc1290-1e29-4976-8dfe-45fd6be988ae"  ></a>
+<pre>
+Bem no início da execução temos em (1) as instruções e em (2) e (3) o endereço onde o ESP está apontando, ou seja, o topo do pilha. *Observe e compare ao final. O endereço é o 0xffffd730.*
+Na tela abaixo, depois de executado os push&#x27;s temos:
+1 → Endereço do registrador ESP, que aponta para o topo da pilha (*Observe que o endereço é o 0xffffd724 ou seja 12 bytes a menos que o inicial 0xffffd730*)
+O endereço do ESP foi descolado 12 bytes &quot;para trás&quot;, devido os pushs.
+Pode haver uma certa confusão de como 0x...24 para 0x...30 tem 12 bytes e não apenas 6 bytes, afinal, 30 - 24 = 6, correto ? Ai que está, precisamos lembrar que estamos tratando do sistema de numeração hexadecimal ( que possui 16 símbolos - 0 1 2 3 4 5 6 7 8 9 A B C D E F ) mas temos como hábito usar o sistema decimal (que possui 10 símbolos - 0 1 2 3 4 5 6 7 8 9 ).
+Vejamos, usando nosso amigo python:
+python -c &quot;print(0xffffd730 - 0xffffd724)&quot;  → 12
+python -c &quot;print(0x30 - 0x24)&quot; → 12
+Mas como assim ?! Basta contar, lembrando que a contagem não deve ser &quot;vinta quatro&quot;, &quot;vinte cinco&quot;, &quot;vinte seis&quot; ... &quot;vinte nove&quot;, mas sim &quot;dois quatro&quot; , &quot;dois cinco&quot; , &quot;dois seis&quot; , ... , &quot;dois nove&quot; , &quot;dois , letra a&quot; , &quot;dois , letra b&quot; ...  Percebem a diferença ? Veja:
+24 - 25 - 26 - 27 - 28 - 29 - 2A - 2B - 2C - 2D - 2E - 2F - 30  = 12 bytes de diferença entre o 24 (dois quatro ) e o 30 (três zero)
+2 → As instruç!oes que foram executadas ( os push&#x27;s )
+3 → A Pilha depois da execução dos push&#x27;s
+4 → Uma outra forma de ver o que tem no endereço de memória apontado pelo ESP, ou seja, uma outra forma de visualizar o conteúdo da pilha.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F25871a54-12e0-4d52-a539-dcc6a34da22b%2FUntitled.png?width=1437&amp;table=block&amp;id=fc1dcc22-a83d-4318-84e1-8a5bdbb7468f" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F25871a54-12e0-4d52-a539-dcc6a34da22b%2FUntitled.png?width=1437&amp;table=block&amp;id=fc1dcc22-a83d-4318-84e1-8a5bdbb7468f"  ></a>
+<pre>
+O que observamos é:
+Fizemos um push eax, que é zero, e foram colocados 4 bytes 0x00. Observe na imagem (4) que eles estão no final, na linha debaixo. Primeiros a entrar ficam embaixo da pilha. (LIFO!)
+O próximo push é push 0x68732f2f  ; hs// , ou seja, o final da string, de trás pra frente. Agora olha que interessante nós passamos 68 73 2f 2f , no push. Mas observe como eles foram colocados na memória (4) na forma 2f 2f 73 68 ( / / s h ), ou seja, já de forma &quot;desinvertida&quot;
+O próximo push é o push 0x6e69622f  ; nib/ . Mais uma vez eles foram colocados na memória (4) na forma 2f 62 69 6e ( / b i n ), ou seja, já de forma &quot;desinvertiva&quot;
+Ao final, o ESP aponta para a região da memória que tem o primeiro caracter da string de forma correta , que é  o / (0x2f)
+O que acontece é que quando você escreve em blocos de bytes na memória a  &quot;CPU&quot; já trata de desinverter os blocos. Por isso que , se você tentar fazer um push sem inverter os bytes, eles serão colocados na memória de forma invertida.
+Observe também que o PUSH, como colocado acima, fez com que o ESP se deslocasse para endereços menores. Foi de 0xFFFFD730 para 0xFFFFD724
+
+:: E se for de byte em byte ?!
+
+Agora, isso também é verdade se escrevermos de byte em byte na pilha , ao invés de usar blocos de 4 bytes com as instruções push ? Vamos verificar.
+Vamos ao código que terá a mesma finalidade do código anterior mas ao invés de usar PUSH vamos usar mov para colocar a string byte a byte na pilha.
+
+    [BITS 32]
+    
+    section .text
+    	global _start
+    
+    	_start:
+    
+    		xor eax,eax            ; zera o eax que vai ser usado para 
+    													 ; definir o valor da syscall
+    
+        ; Colocando a string na pilha byte a byte em forma direto
+    		mov byte [esp],0x2f    ; /
+    		mov byte [esp+1],0x62  ; b
+    		mov byte [esp+2],0x69  ; i
+    		mov byte [esp+3],0x6e  ; n
+    		mov byte [esp+4],0x2f  ; / 
+    		mov byte [esp+5],0x73  ; s
+    		mov byte [esp+6],0x68  ; h
+    		mov byte [esp+7],0x00  ; NULL BYTE 
+    	
+    		; construcao dos parametros da execve
+        mov ebx,esp        ; 1o param - endereco da string do comando 
+    											 ;            a ser executado
+        mov ecx,eax        ; segundo parametro - 0 = sem argumentos
+        mov al,0xb         ; valor da syscall (0xb = 11 = execve)
+        int 0x80           ; chama a syscall
+
+Na imagem abaixo temos
+1 → instruções responsáveis por escrever byte a byte na pilha
+2 → endereço apontado para o topo da pilha antes de começar a escrita ( 0xFFFFD730 ). Observe este valor de ESP do mesmo modo como fizemos quando observamos o código anterior que usava PUSH&#x27;s
+3 → valores encontrados no endereço (pilha) apontado pelo ESP
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F024395c3-dfcb-432d-baa3-f39f3aba1baf%2FUntitled.png?width=1421&amp;table=block&amp;id=d35e4b0b-a9e1-43b6-9440-cd1b674fffde" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F024395c3-dfcb-432d-baa3-f39f3aba1baf%2FUntitled.png?width=1421&amp;table=block&amp;id=d35e4b0b-a9e1-43b6-9440-cd1b674fffde"  ></a>
+<pre>
+Vamos executar o código passo a passo e verificar calmamente a escrita dos valores em memória. Observe o ESP e o conteúdo da pilha!
+Executaremos inscrução por instrução usando o comando ni (next instruction do gdb) e você deve observar na janela lateral o que está ocorrendo com o registrador ESP e o que está ocorrendo com a stack (pilha).
+Usaremos ainda o comando x/8b $esp , para pedir que o gdb nos mostre 8 bytes a partir do endereço apontado pelo registrador ESP.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F3c46fb8e-9553-4555-bc45-9596900ac444%2FGEF-debug-empilha-by-mov.gif?width=1425&amp;table=block&amp;id=8b1a96a3-fb49-4ba6-a5dc-9b3b14580753" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F3c46fb8e-9553-4555-bc45-9596900ac444%2FGEF-debug-empilha-by-mov.gif?width=1425&amp;table=block&amp;id=8b1a96a3-fb49-4ba6-a5dc-9b3b14580753"  ></a>
+<pre>
+Na primeira execução nada mudou no ESP nem na memória, afinal, apenas foi executado um xor eax,eax, ou seja, zeramos o eax.
+A partir da segunda instrução você verá que o conteúdo da pilha começa a ser modificado mas o ESP permanece inalterado, afinal, não estamos &quot;mexendo com ele&quot; apenas usando-o para apontar o local da memória onde queremos escrever.
+Observe ainda que o GEF tenta já interpretar os valores que estamos colocando na pilha e já começa a mostrar o /bin ...  só que em determinado momento (após os 4 bytes iniciais) ele &quot;se perde&quot; e depois se acha quando inserimos o NULL BYTE, fechando assim a string.
+Observe que, desta forma, eu não preciso me preocupar em inverter os bytes , me preocupar com o LIFO, etc. Eu simplesmente mando escrever o byte que eu quero , na posição de memória que eu quero, e a CPU coloca lá. Não tem o que inverter, correto ? Afinal, estamos tratando de um byte apenas.
+Ao final, como podem observar, teremos o ESP também apontando para o início da nossa string desejada.  *Não mudou e apenas estamos escrevendo byte a byte a partir dele para frente!*
+*Veja, esse código não deve ser utilizado assim, pois a escrita do ESP para regiões posteriores pode e vai sobrescrever dados na pilha**.* Se não fosse uma POC, deveríamos ter reservado espaço na pilha para escrever nossos dados, como é esperado. Isso pode ser feito , subtraindo a quantidade de bytes desejados  do ESP, fazendo ele se movimentar &quot;pra trás&quot;, ou seja, para endereços menores ( como acontece com o push) para então poder escrever os dados. O código ficaria:
+
+    [BITS 32]
+    
+    section .text
+    	global _start
+    
+    	_start:
+    
+    		xor eax,eax        ; zera o eax que vai ser usado 
+                           ; para definir o valor da syscall
+    
+    		sub esp,8			   ; separando 8 bytes na pilha &lt;------
+    
+    		mov byte [esp],0x2f    ; /
+    		mov byte [esp+1],0x62  ; b
+    		mov byte [esp+2],0x69  ; i
+    		mov byte [esp+3],0x6e  ; n
+    		mov byte [esp+4],0x2f  ; / 
+    		mov byte [esp+5],0x73  ; s
+    		mov byte [esp+6],0x68  ; h
+    		mov byte [esp+7],0x00  ; NULL BYTE 
+    	
+    		; construcao dos parametros da execve
+        	mov ebx,esp      ; 1o param - endereco da string do comando 
+        	mov ecx,eax      ; 2o param - 0 = sem argumentos
+        	mov al,0xb       ; valor da syscall (0xb = 11 = execve)
+        	int 0x80         ; chama a syscall
+
+Vamos executar e ver o ESP voltando 8 bytes e depois escrever os bytes a partir deste novo ESP, evitando assim de sobrescrever dados essencias da pilha.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ffe21c7e6-f8e1-4db6-97f3-8461f2edadb0%2FGEF-debug-empilha-by-mov-2.gif?width=1425&amp;table=block&amp;id=b7b085fd-7889-4c13-8ebd-b5c5a60784f3" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ffe21c7e6-f8e1-4db6-97f3-8461f2edadb0%2FGEF-debug-empilha-by-mov-2.gif?width=1425&amp;table=block&amp;id=b7b085fd-7889-4c13-8ebd-b5c5a60784f3"  ></a>
+<pre>
+Observe que o ESP &quot;subiu&quot; abrindo espaço na pilha para escrita dos valores evitando assim sobrescrever possíveis dados essenciais.
+A idéia aqui é de estudar e melhorar o entendimento. Obviamente o segundo processo de escrever byte a byte toda a string desejada, apesar de nos livrar da preocupação de &quot;pensar invertido&quot;, consome muito mais opcodes e possivelmente ciclos de CPU. Em um processo de exploração , por exemplo, onde dependendo cada byte conta, não dá para abrir mão dos push&#x27;s e eles estão ai para serem usados.
+Em tempo, fica uma dica de um  script criado pelo grande Polverari (https://blog.polverari.com.br/) que facilita demaisss na hora de montar os push&#x27;s &quot;invertidos&quot;
+
+    &gt; echo -ne &quot;/bin//sh&quot; | rev | xxd -p | fold -w8 | awk &#x27;{print &quot;push 0x&quot;$1}&#x27;
+    push 0x68732f2f
+    push 0x6e69622f
+
+É isso, até a próxima.
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

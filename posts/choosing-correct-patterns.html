@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A escolha do pattern importa ? - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     A ESCOLHA DO PATTERN IMPORTA ?
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : A escolha do pattern importa ?
+        autor  : offensive think
+        data   : Sat, Feb 6, 2021
+        tags   : binary-exploitation, bof
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/choosing-correct-patterns.html &lt;--
+
+_Neste artigo trataremos de um Buffer Overflow do tipo Vanilla em um binário compilado sem nenhuma proteção, com o ASLR do sistema operacional desabilitado. O ambiente é um Kali Linux e usaremos o gdb com o plugin gef para debug._
+No geral, em um processo de exploração de Buffer Overflow,  o primeiro passo é fazer _fuzzing_ na aplicação para encontrar entradas vulneráveis a técnica. Testa-se exaustivamente todas as possíveis entradas com combinações de caracteres dos mais variados tipos e tamanhos, até achar uma combinação que leve a falha.
+Após a confirmação de que a aplicação está vulnerável elabora-se um POC (proof-of-concept), enviando a string, que levou ao erro no programa, seguida de uma sequência de caracteres que permita o atacante confirmar, através de um debugger, que consegue manipular o registrador EIP e consequentemente controlar o fluxo de execução do programa.
+
+    $ python -c &quot;print&#x27;A&#x27;*100+&#x27;BBBB&#x27;&quot; 
+
+Bem, este é o caso de uma aplicação onde podemos enxergar a importância na escolha do Pattern para atingir nossos objetivos.
+A escolha da string, no processo inicial de exploração, já é importante uma vez que o erro pode ser causado não apenas pelo tamanho da string mas pelo tamanho e/ou formação da string. Já ouvi falar por ai que o _fuzzing_ por si só é uma ciência.  Observe, o que seria um exemplo de _fuzzing_ manual com duas strings de tamanhos iguais mas usando caracteres diferentes:
+
+    $ python -c &quot;print &#x27;A&#x27;*100&quot; | ./jdark-overflowme-if-you-can
+    Enter your name: Filtered Name: AAAAAAAAAAAA
+     
+    [1]    17427 done                python -c &quot;print &#x27;A&#x27;*100&quot; | 
+           17428 segmentation fault  ./jdark-overflowme-if-you-can
+
+
+    $ python -c &quot;print &#x27;a&#x27;*100&quot; | ./jdark-overflowme-if-you-can
+    Enter your name: Filtered Name: aaaaaaaaaaaa
+     
+    $
+
+BoF - same size , different chars, different results.
+https://asciinema.org/a/389638
+Observe, do exemplo acima, que a mesma quantidade de caracteres podem ou não levar a um buffer overflow, dependendo da combinação de caracteres escolhidos.
+O próximo passo então, diante de um segmentation fault, seria, utilizando um debuger, validar que conseguiremos, por exemplo, controlar o valor que irá ser atribuído ao registrador EIP. Vamos confirmar para o caso onde conseguimos gerar o segmentation fault:
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F58186135-d113-4087-8b74-514433021345%2FUntitled.png?width=959&amp;table=block&amp;id=1d014593-3679-4c90-84f9-89389973ec96" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F58186135-d113-4087-8b74-514433021345%2FUntitled.png?width=959&amp;table=block&amp;id=1d014593-3679-4c90-84f9-89389973ec96"  ></a>
+<pre>Executando o POC dentro do debugger para validar a sobrescrita do EIP</pre>
+<pre>
+Observe que conseguimos escrever em várias regiões de memória e alguns registradores, mas apenas parcialmente no EIP que ficou apontando para o endereço 0x414141F6,transformando em caracteres ASCII, &quot;AAAö&quot;.
+Para o caso deste binário, este comportamento se repetirá inserindo 100,200,300,400,1000 e até mais caracteres, sempre com o endereço terminando em 0xF6.
+BoF - Always Same EIP
+https://asciinema.org/a/389644
+Podemos então observar que poderemos apenas controlar 3 bytes do endereço que será colocado no EIP, montando a nossa exploração para tentar abusar destes fato.
+Vamos avançar e observar que a correta escolha do conjunto de caracteres pode nos levar não somente a controlar todo o endereço do EIP mas também influenciará na descoberta do offset que nos levará ao controle deste registrador.
+_Os padrões aqui escolhidos não foram ao acaso. Existe um motivo que tentarei explicar em um segundo artigo mostrando o porque de tudo isso estar ocorrendo!_
+Como primeiro exemplo, admitindo que conseguiremos explorar direcionando o fluxo do programa para uma região de memória que termina em 0xF6, vamos então achar o offset que nos levaria a sobrescrita do endereço parcial do EIP, usando o comando msf-pattern_create do Metasploit Framework e em seguida enviando o pattern na entrada do nosso binário.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F104678bd-afb1-49ae-8177-e58d87f03e80%2FUntitled.png?width=1030&amp;table=block&amp;id=7af4ce14-ca40-4d0d-8007-2de1eb2faa45" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F104678bd-afb1-49ae-8177-e58d87f03e80%2FUntitled.png?width=1030&amp;table=block&amp;id=7af4ce14-ca40-4d0d-8007-2de1eb2faa45"  ></a>
+<pre>Mesma quantidade (100) de caracteres enviados, resultado normal!</pre>
+<pre>
+Observe que enviamos a mesma quantidade de caracteres de antes (100) só que não conseguimos gerar o erro! Já começamos a ver que a escolha do pattern terá influência em como conseguiremos explorar o binário.
+Vamos tentar usando o pattern da pwntools!
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fec4a65a3-c621-4d44-b43e-3a98629a2ba0%2FUntitled.png?width=1023&amp;table=block&amp;id=addb00a9-e205-45a7-a70f-6924c9ba5d15" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fec4a65a3-c621-4d44-b43e-3a98629a2ba0%2FUntitled.png?width=1023&amp;table=block&amp;id=addb00a9-e205-45a7-a70f-6924c9ba5d15"  ></a>
+<pre>Mesmo resultado do anterior!</pre>
+<pre>
+Mais uma vez, não conseguimos gerar a falha!
+Vamos então criar patterns personalizados, usando o pwntools,  e ver o que acontece.
+_Obs.: É possível usar o msf-pattern_create também para criar patterns personalizados._
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F7559dd7f-7cc6-402f-bee2-9f7836b231fd%2FUntitled.png?width=1032&amp;table=block&amp;id=d6213fed-9863-45dd-a394-93b09c11ac87" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F7559dd7f-7cc6-402f-bee2-9f7836b231fd%2FUntitled.png?width=1032&amp;table=block&amp;id=d6213fed-9863-45dd-a394-93b09c11ac87"  ></a>
+<pre>Usando um pattern personalizado para tentar controlar o EIP!</pre>
+<pre>
+Com a opção -a , do comando pwn cyclic, conseguimos personalizar qual a sequência de caracteres que desejamos que exista em nosso pattern.
+Observe que conseguimos forçar a falha e o EIP, desta vez, aponta para um suposto endereço que na verdade é um pedaço de nosso pattern, diferentemente do que aconteceu anteriormente, onde só conseguimos controlar uma parte do endereço. Ou seja, com esse padrão conseguimos não só forçar a falha mas também controlar completamente o EIP.
+Vamos confirmar se o pattern funcionou, procurando o offset, e tentando forçar o EIP a receber o valor 0x42424242 (&quot;BBBB&quot;).
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F0c57c6cf-4fca-496c-b61f-880482e7426f%2FUntitled.png?width=1024&amp;table=block&amp;id=7cdb065e-29eb-44fe-8de7-a7b8a4f2b482" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F0c57c6cf-4fca-496c-b61f-880482e7426f%2FUntitled.png?width=1024&amp;table=block&amp;id=7cdb065e-29eb-44fe-8de7-a7b8a4f2b482"  ></a>
+<pre>
+Observe que dos comandos acima, conseguimos definir qual o offset. Para fins de facilitar, geramos o mesmo padrão anterior só que com o tamanho exato que precisamos (32 bytes neste caso). Em seguida enviamos nosso POC  composto agora do padrão do tamanho exato e a sequência de BBBB&#x27;s.  Desta forma, conseguimos validar que conseguimos controlar o EIP.
+Veja o que acontece com simplesmente adicionando um caracter na sequência que gerará o novo padrão, neste caso, mudando de 0123 para 01234.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Faa03e1f2-75c6-41dc-90ba-8eb86bc3cf77%2FUntitled.png?width=1019&amp;table=block&amp;id=b350c329-126a-40da-9cd3-1e9784e79d55" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Faa03e1f2-75c6-41dc-90ba-8eb86bc3cf77%2FUntitled.png?width=1019&amp;table=block&amp;id=b350c329-126a-40da-9cd3-1e9784e79d55"  ></a>
+<pre>Usando um novo pattern e obtendo um novo offset!</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F83be9db2-49e4-471f-ac12-2c2dc05b8539%2FUntitled.png?width=1030&amp;table=block&amp;id=bff5bc4b-701b-44d1-a253-510216789d31" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F83be9db2-49e4-471f-ac12-2c2dc05b8539%2FUntitled.png?width=1030&amp;table=block&amp;id=bff5bc4b-701b-44d1-a253-510216789d31"  ></a>
+<pre>continuando com a exploração usando o novo offset.</pre>
+<pre>
+Observe, das imagens acima, que a mudança do pattern também nos permitiu gerar a interrupção que desejamos, mas observe que o offset mudou de 32 para 29. Mesmo assim, conseguimos controlar o EIP uma vez que ele aponta para o nosso BBBB.
+Agora é continuar a explorar.
+Com isso, conseguimos observar que até mesmo a escolha do nosso pattern pode influenciar em vários detalhes na nossa exploração que pode nos levar ao êxito ou a falha!
+Já era esperado que mudanças de caracteres enviados para a entrada do programa gerassem falhas ou não, uma vez que esse é o processo de fuzzing. Mas é interessante notar que mesmo depois de atingida a falha, a escolha do pattern pode dificultar achar o offset (caso 1 onde usamos o  msf-pattern_create e o programa não gerou um erro sequer!) e talvez o offset seja apenas um dos possíveis.
+Qual o motivo da mudança do offset ?
+Bem , de acordo como o programa é estruturado, podem existir várias funções aninhadas ou não e consequentemente vários retornos (instrução ret) que podem ser sobrescritos em pontos diferentes da execução.
+Em uma próxima mostro o código do binário e a importância de aprofundar os conhecimentos em assembly, engenharia reversa, dentre outros assuntos correlatos. Estes conhecimentos podem se tornar cruciais para a exploração ou não de uma falha.
+Até a próxima!
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

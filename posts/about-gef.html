@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Algumas coisas sobre o GEF - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     ALGUMAS COISAS SOBRE O GEF
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : Algumas coisas sobre o GEF
+        autor  : offensive think
+        data   : Mon, Jan 4, 2021
+        tags   : binary-exploitation, debug, osce
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/about-gef.html &lt;--
+
+Um pequeno apanhado de algumas coisas que achei legais e úteis no GEF ? Não conhecem o GEF ? O GEF é um projeto que adciona uma série de comandos e melhorias adicionais ao GDB e facilita demais a vida de quem está debugando binários no linux.
+hugsy/gef
+https://github.com/hugsy/gef
+Sem mais delongas.
+
+:: context→ mostra várias informações (stack, registradores, commandos, etc.) no momento atual
+
+
+:: entry-break→ executa até o entry point do processo
+
+
+:: gef config→ mostra ou altera várias configurações do GEF
+
+
+:: gef config context.redirect &lt;terminal&gt;→ envia as informações mostradas no centexto para outro terminal
+
+Exibe uma série de informações do que está conetcendo no momento, como estado da pilha, valores dos registradores, código que vai ser executado, etc.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F1f28697d-d46b-4706-a619-f8c1e21478a4%2FUntitled.png?width=1482&amp;table=block&amp;id=78a1734e-ef1b-4556-9308-7162ef2d7ae3" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F1f28697d-d46b-4706-a619-f8c1e21478a4%2FUntitled.png?width=1482&amp;table=block&amp;id=78a1734e-ef1b-4556-9308-7162ef2d7ae3"  ></a>
+<pre>
+É possível ainda ver de forma organizada apenas o conteúdo dos registradores, da stack, etc.
+gef&gt; context regs
+gef&gt; context stack
+Procura o entry point de um processo e executa-o até este ponto.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F5b156be2-eb76-4975-9b14-cd83133f6b1d%2FUntitled.png?width=743&amp;table=block&amp;id=bab7dc16-23b1-447f-8f42-3dbef68a90b5" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F5b156be2-eb76-4975-9b14-cd83133f6b1d%2FUntitled.png?width=743&amp;table=block&amp;id=bab7dc16-23b1-447f-8f42-3dbef68a90b5"  ></a>
+<pre>
+Mostra ou altera as configurações do GEF como por exemplo, o que ele exibe no contexto. Vale a pena dar uma personalizada.
+
+:: Enviando a saída do comando Context para outro Terminal!
+
+Uma das coisas que achei interessante é poder enviar a saída do contexto para um outro terminal. Para quem tem dois monitores ou mesmo um monitor grande acho que fica legal para ajudar no debug. Dá uma olhada:
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F4110686f-cad2-4794-a9a3-5e1a8ccd00b8%2FGEF-tips-1.gif?width=1427&amp;table=block&amp;id=4c79ecbe-f705-4ac4-b19e-b797b2a7279c" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F4110686f-cad2-4794-a9a3-5e1a8ccd00b8%2FGEF-tips-1.gif?width=1427&amp;table=block&amp;id=4c79ecbe-f705-4ac4-b19e-b797b2a7279c"  ></a>
+<pre>
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

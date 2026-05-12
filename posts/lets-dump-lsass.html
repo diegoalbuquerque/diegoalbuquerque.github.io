@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lets dump LSASS - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     LETS DUMP LSASS
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : Lets dump LSASS
+        autor  : offensive think
+        data   : Tue, Apr 5, 2022
+        tags   : lolbins, windows
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/lets-dump-lsass.html &lt;--
+
+---[ INDEX ]------------------------------------------------------------
+0 - Based on
+1 - Step by step
+2 - USE WITH CAUTION!
+
+
+
+
+---[ 0x00 - BASED ON ]--------------------------------------------------
+(2) mr.d0x no Twitter: &quot;LOLBIN to dump LSASS: Path: C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\TestPlatform\Extensions Binary: DumpMinitool.exe The params are case sensitive. https://t.co/pNGsLlx6Al&quot; / Twitter (https://twitter.com/mrd0x/status/1511415432888131586?t=LmU2gmuJDALBC2l-h0b9wQ&amp;s=09)
+
+
+---[ 0x01 - STEP BY STEP ]----------------------------------------------
+Download VStest → diegoalbuquerque/vstest: Visual Studio Test Platform is the runner and engine that powers test explorer and vstest.console. (github.com) (https://github.com/diegoalbuquerque/vstest)
+Download and Install Visual Studio Code 2022 → https://visualstudio.microsoft.com/vs/community/
+Download and Install .Net Framework 4.5,4.6,4.7 normal and developer options → Instalar o pacote para desenvolvedores ou o redistribuível do .NET Framework - .NET Framework | Microsoft Docs (https://docs.microsoft.com/pt-br/dotnet/framework/install/guide-for-developers)
+Download and Install .Net SDK 6.0 → .NET SDKs downloads for Visual Studio (microsoft.com) (https://dotnet.microsoft.com/en-us/download/visual-studio-sdks)
+Delete or rename global.json on the root directory of application
+Open DumpMiniTool.csproj ( C:\Users\Diego\Downloads\vstest-main\src\DataCollectors\DumpMinitool)  on Visual Studio.
+Click Compile → Solution Compile or press F6
+Your DumpMiniToll will be at C:\Users\Diego\Downloads\vstest-main\src\DataCollectors\DumpMinitool\bin\Debug\net451\win7-x86
+
+
+---[ 0x02 - USE WITH CAUTION! ]-----------------------------------------
+*FAZER UM PROJETINHO* para disponibilizar o executavel como se fosse o real, mas que na verdade, apenas dispare um ping como canary token em um server controlado para ver quantas pessoas tentaram executar o exe e mostrar uma mensagem: Não confie em executáveis de terceiros, siga o passo a passo para compilar o seu em https://www.offensive....
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

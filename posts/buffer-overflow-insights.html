@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alguns aprendizados no caminho do Buffer Overflow - OffensiveThink</title>
+  <link rel="stylesheet" href="../assets/zine.css">
+</head>
+<body class="article">
+<main class="page article-page">
+<pre>
+     ALGUNS APRENDIZADOS NO CAMINHO DO BUFFER OVERFLOW
+
+
+        ----------------------------------------------------------------
+        offensive think :: artigo técnico em formato zine / nfo
+        ----------------------------------------------------------------
+
+        titulo : Alguns aprendizados no caminho do Buffer Overflow
+        autor  : offensive think
+        data   : Thu, May 20, 2021
+        tags   : binary-exploitation, osce, oscp
+
+        ----------------------------------------------------------------
+        --&gt; https://www.offensivethink.com/posts/buffer-overflow-insights.html &lt;--
+
+---[ INDEX ]------------------------------------------------------------
+0 - [ Bases! Decore a organização da stack ]
+1 - [ Bases! Você não sobrescreve o EIP ]
+2 - [ BASES! Cada endereço de memória guarda 1 byte ]
+3 - [ BASES! É da direita para a esquerda ]
+4 - [ O Fuzz é importante ]
+5 - [ O Pattern importa ]
+6 - [ O Tamanho do Buffer importa ]
+7 - [ Observe como seu payload está sendo escrito ]
+8 - [ Olhe e entenda ]
+9 - [ Olhe para o código do seu shellcode ]
+10 - [ Se der escolha caracteres &quot;printáveis&quot; ]
+11 - [ Não se prenda. Salte para onde quiser ]
+12 - [ O assembly pode ser modificado em runtime ]
+13 - [ Use os registradores ]
+14 - [ Comportamento Padrão! O que esperar!  ]
+
+
+Quando voltei a estudar sobre exploração de binários tive grandes mestres que me ensinaram muito e a medida que ia lendo e estudando o mesmo assunto, milhares de vezes, em perspectivas diferentes, aqui e acolá ia me deparando com &quot;detalhes&quot; que achei que deveria anotar e internalizar. Notei que, estão neles, a diferença entre conseguir ou não conseguir uma exploração.
+Estes detalhes estão na base que as vezes ignoramos. Os conceitos. Algumas vezes até acabamos nos atendo a seguir um roteiro que irá funcionar em 99,9% das vezes mas com isso deixamos de perceber os detalhes e sem os detalhes nos vemos sem entender porque um buffer overflow que deveria ser simples, do tipo vanilla, até mesmo sem proteção alguma, não funciona!
+Relatei um pouco disso no meu artigo *&quot;a escolha do pattern importa?&quot;*  , e agora coloco outros pontos de atenção que acho que pode ser de ajuda para alguém mas que também me servirá como fonte de eterna consulta.
+*Atenção!*
+_Por se tratar de um blog pessoal onde os artigos não passam por revisão como em uma revista, livro ou outro material acadêmico, vários tipos de erros podem ocorrer. Peço sempre que analise, teste tudo que eu digo, duvide e o mais importante, se achar alguma inconsistência ou até mesmo uma melhor forma de escrever, por favor, entre em contato para que possamos corrigir e/ou melhorar_
+
+
+---[ 0x00 - [ BASES! DECORE A ORGANIZAÇÃO DA STACK ] ]------------------
+Já que estamos tratando de buffer overflow na pilha é fundamental que se conheça como ela se organiza, nem que seja minimamente.
+Toda função tem um stack frame associado, que é um  &quot;pedaço da pilha&quot; para guardar variáveis locais, ajudar as instruções utilizadas pela CPU para algumas operações, etc.
+Um stack frame é sempre colocado &quot;em cima&quot; de outro stack frame. O stack frame da função que foi &quot;invocada&quot; fica &quot;em cima&quot; do stack frame da função que a chamou.
+Essa é a formação , digamos no caso de uma função main() que chamou a funcao1()
+
+              +---------------------------------+                                     
+        ESP -&gt;|                                 | Provavelmente onde você injetará seu
+              |    Variaveis Locais  func1()    | payload                             
+              |                                 |                                     
+              |---------------------------------|                                     
+      func1 -&gt;|                                 |                                     
+       EBP    |    Stack Frame Pointer (SFP)    | Endereço do Stack Frame Anterior!   
+              |                                 |                                     
+              |---------------------------------|                                     
+              |                                 |                                     
+              |  Return Address ( goes to EIP ) | Endereço da instrução para qual a   
+              |                                 | CPU deve retornar! Em um Vanilla,   
+              |                                 | o que você quer controlar!          
+              |---------------------------------|                                     
+              |      Parâmetros da func1()      |                                     
+              |                                 |                                     
+              |---------------------------------|                                     
+              |                                 |                                     
+              |    Variaveis Locais main()      |                                     
+              |                                 |                                     
+              |           .                     |                                     
+              |           .                     |                                     
+              |           .                     |                                                                
+              +---------------------------------+
+
+Em assembly não existe o conceito de variável, podemos dizer que tudo está em algum lugar da memória, neste caso, estamos falando em endereços da Stack!
+O acesso ao valor destas variáveis e aos parâmetros da função são, em assembly, *acesso a endereços de memória a partir da base da stack frame da função*, ou seja, um deslocamento a partir de EBP.
+
+
+---[ 0x01 - [ BASES! VOCÊ NÃO SOBRESCREVE O EIP ] ]---------------------
+Este é apenas um detalhe &quot;sintático&quot; digamos assim. Nós não sobrescrevemos o EIP, nós sobrescrevemos uma área da memória que está na pilha. Ao sobrescrever esta área esperamos que, continuando o fluxo de execução do programa, &quot;em algum momento&quot; (quando a instrução ret for executada para sair da função atual, por exemplo) este valor seja colocado em EIP (pela CPU) e isso desviará o fluxo do programa para onde queremos (no geral, nosso shellcode!)
+Não há problema em falar vamos sobrescrever o EIP, mas acho que sem esse entendimento consolidado na cabeça, durante um tempo fiquei, por exemplo, procurando outras maneiras de escrever diretamente no EIP, e isso não é possível!
+
+
+---[ 0x02 - [ BASES! CADA ENDEREÇO DE MEMÓRIA GUARDA 1 BYTE ] ]---------
+É importante perceber que apesar do debugger nos mostrar uma representação da memória de 4 e 4 bytes (32 bits) ou 8 em 8 bytes (64 bits), cada endereço de memória guarda apenas 1 byte! Note que isso está &quot;explícito&quot; no debugger quando observamos que os endereços são incrementados de 4 em 4 bytes.
+
+    0xFFFFD600   00000000
+    0xFFFFD604   00000000
+    0xFFFFD608   ffffd638   
+    0xFFFFD60C   5655621b  
+
+
+
+---[ 0x03 - [ BASES! É DA DIREITA PARA A ESQUERDA ] ]-------------------
+Primeiro de tudo, *nós só escrevemos na memória 1 byte por vez*! Memos que enviemos 3000 A&#x27;s , eles serão escritos um por vez!
+A representação do conteúdo da memória , em um debbuger, é da direita para a esquerda, ou seja, quando escrevemos 0X42 (1 byte) no endereço 0XFFFFD600, veja que ele vai parar mais a direita, pois essa é a real posição do endereço 0xFFFFD600
+
+    0xFFFFD600   00000042
+
+Se escrevemos agora 0x43 veja que ele vai parar antes do 0x42, ou seja, voltando da direita para a esquerda, pois essa é a real posição do endereço 0xFFFFD601:
+
+    0xFFFFD600   00004342
+
+*Nas referências rápidas, aqui no site,  coloquei um diagrama que mostra algo do tipo: **https://www.offensivethink.com/referencia-rapida.html*
+
+
+---[ 0x04 - [ O FUZZ É IMPORTANTE ] ]-----------------------------------
+Não é só enviar uma quantidade suficientes de A&#x27;s que você conseguirá atingir um overflow, mesmo que o campo seja vulnerável.
+As vezes a condição de overflow só é atingida quando uma condição específica de combinação de caracteres é enviada.
+Podemos até imaginar uma situação onde a aplicação filtre e não permita um mesmo caracter seguidas vezes ( vários A&#x27;s ) em um campo de password, por políticas de segurança. Se este campo for vulnerável a um buffer overflow mas se testarmos apenas enviando A&#x27;s em tamanhos cada vez maiores, podemos nunca atingir a condição de overflow.
+Dizem que fuzzing é um assunto a parte que merece um estudo a parte.
+
+
+---[ 0x05 - [ O PATTERN IMPORTA ] ]-------------------------------------
+Dê uma olhada no artigo *&quot;a escolha do pattern importa?&quot;*.
+Dependendo de como o binário foi escrito você pode conseguir atingir o overflow mas ter dificuldade de identificar o offset do ponto onde você tem que escrever na memória para controlar, por exemplo, o EIP, SFP, SEH, etc.
+As vezes será necessário &quot;contar&quot; manualmente no debug ou criar algum pattern personalizado para a situação.
+O que acontece é que um determinado binários pode ter alguns filtros para tratamento de uma determinada entrada vulnerável a buffer overflow mas que se você não usar os caracteres certos pode não conseguir estourar o buffer.  Não é só enviar uma sequência de A&#x27;s tão longa quanto possível que fará disparar uma possível condição de overflow.
+Podemos ainda encontrar uma outra situação onde o programa pode ter alguma rotina de tratamento da sua entrada e os caracteres do seu pattern, na hora de você procurar o offset, podem ser transformados em outros caracteres ou mesmo &quot;excluídos&quot;, se comportando como badchars, logo você pode nunca atingir o overflow ou atingir o overflow mas não conseguir definir bem o offset.
+
+
+---[ 0x06 - [ O TAMANHO DO BUFFER IMPORTA ] ]---------------------------
+É importante *manter sempre as mesmas condições que causou overflow*, ou seja, se a aplicação foi explorada com um payload de 800 bytes, podemos até tentar verificar se conseguimos colocar mais bytes na memória, mas não menos, mesmo que você não venha a precisar de de todos os bytes.
+A pilha é dinâmica logo qualquer mudança pode alterar o comportamento esperado.
+
+
+---[ 0x07 - [ OBSERVE COMO SEU PAYLOAD ESTÁ SENDO ESCRITO ] ]-----------
+Se a entrada de um buffer é através de uma função gets(), ao final deste buffer a função adicionará um byte 0x00 indicando que é o final da string.
+Entender este tipo de comportamento é importante para detectar as vezes o motivo de seu payload não funcionar.
+Por exemplo, digamos que queremos sobrescrever o endereço do SFP. Veja, *não é o EIP*.
+Lembrando que pela pilha temos:
+
+    Variáveis Locais (N bytes)
+    SFP (4 bytes)
+    Return Address (4 bytes)
+
+Vamos supor que o buffer seja de 8 bytes apenas e em seguida estaremos no ponto de sobrescrever o SFP.  Vamos supor que o estado da pilha seja:
+
+    ESP -&gt;  0xFFFFD600   00000000
+            0xFFFFD604   00000000
+    EBP -&gt;  0xFFFFD608   ffffd638  &lt;- endereço do SFP (4 bytes)
+            0xFFFFD60C   5655621b  &lt;- Return Address (4 bytes)
+
+Queremos que o o endereço de memória SFP seja sobrescrito com o endereço 0xFFFFD604. Lembrando do little endian, precisaremos então enviar:  AAAAAAAA\x04\xD6\xFF\XFF.
+Observe que, como a função gets() adiciona o 0x00 ao final da string que enviamos, acabamos sobrescrevendo também o return address, e com isso, você pode ter uma ação inesperada que é a aplicação soltar para um ponto onde não devia ou não desejado:
+
+    ESP -&gt;  0xFFFFD600   42424242 &lt;- AAAAA
+            0xFFFFD604   42424242 &lt;- AAAAA
+    EBP -&gt;  0xFFFFD608   FFFFD604  &lt;- endereço do SFP (4 bytes)
+            0xFFFFD60C   56556200  &lt;- modificado de 5655621b para 56556200
+
+
+
+---[ 0x08 - [ OLHE E ENTENDA ] ]----------------------------------------
+Um dos passos na exploração de um buffer overflow do tipo vanilla é colocar no payload o endereço de uma instrução jmp esp  que irá ser colocado no registrador EIP e com isso o fluxo da execução será desviado para o payload.
+Fazemos isso, muitas vezes de forma automática, mas o que estamos assumindo é que, ao chegar no momento da exploração, o ESP conterá o endereço do nosso payload na memória.
+Mas contém mesmo ? E se o nosso payload estiver endereçado em outro registrador ? e se o ESP aponta para outro endereço que não o nosso payload ? Será que o payload está correto ?
+Afinal, se o ESP não &quot;aponta&quot; para o nosso shellcode, não haverá sucesso!
+Logo, observe sempre os registradores e para onde eles apontam!  Observe onde seu payload, seu shellcode, está na pilha!
+
+
+---[ 0x09 - [ OLHE PARA O CÓDIGO DO SEU SHELLCODE ] ]-------------------
+Muitas vezes usamos o msfvenom ou mesmo outros shellcodes já prontos para conseguir a exploração.
+Uma das técnicas utilizadas na construção de alguns shellcodes consiste em mapear em que endereço de memória o código está sendo executado para que se possa fazer saltos a partir dele. Escrevi um pouco sobre algumas das técnicas no artigo &quot;*saltando sem jmp,call,pop&quot;*  da H2HC Magazine, 15a edição:
+https://github.com/h2hconference/H2HCMagazine/blob/master/RevistaH2HC_15.pdf
+Podemos observar que as técnicas utilizam a pilha de alguma forma para armazenar o endereço corrente e depois obtê-lo através de uma instrução pop.
+O que acontece é que algumas vezes, o código inicial do shellcode, muitas vezes, um decrypt por exemplo, ao alterar a pilha acaba alterando também o próprio shellcode , pois este também está na pilha e ai não entendemos porque conseguimos fazer um jmp esp, chegar no shellcode, mas ele não executa!
+Exemplo: É &quot;comum&quot; encontrar em alguns shellcodes gerados pelo msfvenon com encryptação (x86/alpha_mixed) um código do tipo:
+
+    FCMOVNB ST,ST(6)
+    FSTENV (28-BYTE) PTR DS:[EAX-C]
+    POP EBP
+
+Este conjunto de instruções, que utiliza instruções do processador aritmético, que tem a finalidade de armazenar em EBP o endereço da instrução atual, como referência de offset para vários outros pontos do shellcode, acaba por, utilizando a pilha, sobrescrever parte do próprio shellcode que, está na pilha.
+Neste caso, uma das soluções consiste em, logo no início do shellcode, inserir uma instrução para  mover o ESP (sub esp,0x20) um pouco, a afim de que as alterações na pilha feitas pelo código (afinal escrevemos e alteramos a pilha através de onde o ESP aponta) não sobrescrevam o próprio shellcode
+
+
+---[ 0x0A - [ SE DER ESCOLHA CARACTERES &quot;PRINTÁVEIS&quot; ] ]----------------
+Se puder escolha endereços de instruções ( jmp esp, pop pop ret, rop gadgets, etc. ) ou até mesmo codifique seu shellcode em caracteres printáveis (ASCII PRINT)  (mais ou menos de 0x21 a 0x7e) pois isso pode ajudar a evitar badchars!
+
+
+---[ 0x0B - [ NÃO SE PRENDA. SALTE PARA ONDE QUISER ] ]-----------------
+É comum usarmos um jmp esp na exploração de um bof Vanilla ou um pop pop ret em um um bof SEH, e ainda no seh pensar em fazer um pop pop ret que chegará no seu código que fará um jump 8 bytes pra frente ! Mas você pode saltar para onde quiser! Pode ser que, por exemplo, em um bof SEH, o espaço antes da cadeia SEH já seja grande suficiente para colocar seu shellcode e por algum motivo após seja bem pequeno. Então você pode saltar para trás!
+
+
+---[ 0x0C - [ O ASSEMBLY PODE SER MODIFICADO EM RUNTIME ] ]-------------
+Lembre-se que a CPU monta seu código assembly, digamos, de forma &quot;adaptável&quot;, logo, você pode se aproveitar de bytes já presentes na memória e alterando apenas o anterior ou o posterior , por exemplo, transformar aquela instrução em outra.
+Digamos que você encontre o seguinte caso onde você consegue injetar código em duas áreas de memória separadas apenas por um único byte : 0x2F ( uma /  ) , por exemplo.
+Em assembly 0x2F é o opcode para a instrução DAS ( _Decimal Adjust AL after Subtraction _)  - https://www.felixcloutier.com/x86/das
+Se por algum motivo esta instrução ao ser executada causa algum comportamento indesejado em seu shellcode ou mesmo na aplicação, você pode evitá-la, por exemplo, injetando logo antes dela um byte 0x6A.
+Desta forma, a CPU entenderá que 0x6A2F significa push 0x2f.
+Claro, se você tiver que manter o estado da pilha, poderá então, logo no início do seu shellcode, tentar voltar ao estado anterior com um pop edi, por exemplo.
+
+
+---[ 0x0D - [ USE OS REGISTRADORES ] ]----------------------------------
+As vezes, por null byte ou alguma outra restrição de bytes, você não consegue inserir um jmp &lt;endereço-shell-code&gt;. Observe para onde os registradores apontam. Se o ESP, por exemplo, apontar para um endereço próximo ao seu shell code, você pode tentar injetar, por exemplo,  um add esp, &lt;valor&gt; e jmp esp e conseguir o efeito desejado.
+
+
+---[ 0x0E - [ COMPORTAMENTO PADRÃO! O QUE ESPERAR!  ] ]-----------------
+O que esperar na hora da exploração. Estando atento ao que esperar podemos detectar possíveis detalhes que estão fazendo não conseguirmos explorar!
+*Bof Vanilla*
+O que esperamos como padrão quando estamos explorando um Buffer overflow vanilla é, na hora do stack overflow:
+- O registrador ESP aponta para o nosso payload!
+- O EIP está com o endereço que controlamos (inicialmente : 42424242 - AAAA)
+*Bof SEH *
+- O endereço do início da cadeia SEH está no registrador FS no offset 0x0 ( FS[0] )
+- O registrador ESP aponta para nosso payload
+- O EIP está com o endereço que controlamos (inicialmente : 42424242 - AAAA)
+- Conseguimos sobrescrever a cadeia SEH ( immunity → View → SEH Chain )
+- Um pedaço do nosso payload está em ESP+8, por isso precisaremos de um POP (&quot;pula o endereço em esp atual&quot;), POP (&quot;pula o endereço do ESP+4&quot;), RET (obtém o endereço em ESP+8 e coloca em EIP)
+Por enquanto, é isso.
+_. _
+
+---[ EOF ]--------------------------------------------------------------
+
+                    offensive think / 2026
+</pre>
+</main>
+</body>
+</html>
