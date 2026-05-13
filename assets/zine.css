@@ -299,3 +299,13 @@ a:visited { color: var(--green); }
   display: block;
   margin: 12px auto;
 }
+
+.page .article-page .nfo-hero {
+  font-family: ibmcga, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.1;
+  white-space: pre;
+  overflow-x: auto;
+  overflow-y: hidden;
+  text-align: center;
+}
